@@ -33,14 +33,21 @@ menu_settings:
   menu_items:
     - title: 'Design'
       url: /design
-    - title: 'Developer'
-      url: '/features'     
-    - title: 'User Guide'
-      url: /pricing        
-    - title: 'Production'
-      url: '/features'
-    - title: 'Quickstart'
-      url: '/about'
+    - title: 'Development'
+      url: '/development'     
+    - title: 'Documentation'
+      submenu_items:
+      - title: 'User Guide'
+        url: '/user'   
+      - title: 'Production Install'
+        url: '/production'
+      - title: 'Quickstart'
+        url: '/quickstart'
+    - title: 'Contribute'
+      url: '/quickstart'
+    - title: 'Github'
+      url: 'https://github.com/G-Research/armada'
+
 
 footer_settings:
   footer_tagline: Armada Project
@@ -66,17 +73,11 @@ social_settings:
   linkedin_url: ''
 
 authors:
-  tom:
-    name: Tom
-    picture: /assets/img/faces/team-1.jpg
-  jane:
-    name: Jane
-    picture: /assets/img/faces/team-4.jpg
-  michael:
-    name: Michael
-    picture: /assets/img/faces/michael.jpg
 
 advanced_settings:
   analytics_code: 
-  header_js: 
+  header_js: <script type="text/javascript">
+    var element = document.getElementByClassName("nav-item");
+    element[5].className += "buttton-primary";
+      </script>
   footer_js: 

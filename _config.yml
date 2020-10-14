@@ -1,4 +1,4 @@
-site: Argon Jekyll Theme
+site: Armada
 
 url: https://argon.jekyllthemes.io
 baseurl: 
@@ -8,7 +8,7 @@ collections:
     output: true
     permalink: /:name
   posts:
-    output: true
+    output: false
     permalink: /blog/:slug
     type: "post"
 

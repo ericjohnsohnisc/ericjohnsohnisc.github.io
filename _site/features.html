@@ -38,6 +38,9 @@
   
 
   
+  <!-- Extra Header JS Code -->
+  <script type="text/javascript"> var element = document.getElementByClassName("nav-item"); element[5].className += "buttton-primary"; </script>
+  
 
 </head>
 
@@ -88,32 +91,50 @@
               
                 
                   <li class="nav-item">
-                    <a href="/features" class="nav-link">
-                      <span class="nav-link-inner--text">Developer</span>
+                    <a href="/development" class="nav-link">
+                      <span class="nav-link-inner--text">Development</span>
+                    </a>
+                  </li>
+                
+              
+                
+                  <li class="nav-item dropdown">
+                    <a href="javascript:;" class="nav-link" data-toggle="dropdown" role="button">
+                      <span class="nav-link-inner--text">Documentation</span>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                      
+                      <a class="dropdown-item" href="/user">
+                        <i class="ni "></i>
+                        User Guide
+                      </a>
+                      
+                      <a class="dropdown-item" href="/production">
+                        <i class="ni "></i>
+                        Production Install
+                      </a>
+                      
+                      <a class="dropdown-item" href="/quickstart">
+                        <i class="ni "></i>
+                        Quickstart
+                      </a>
+                      
+                    </div>
+                  </li>
+                
+              
+                
+                  <li class="nav-item">
+                    <a href="/quickstart" class="nav-link">
+                      <span class="nav-link-inner--text">Contribute</span>
                     </a>
                   </li>
                 
               
                 
                   <li class="nav-item">
-                    <a href="/pricing" class="nav-link">
-                      <span class="nav-link-inner--text">User Guide</span>
-                    </a>
-                  </li>
-                
-              
-                
-                  <li class="nav-item">
-                    <a href="/features" class="nav-link">
-                      <span class="nav-link-inner--text">Production</span>
-                    </a>
-                  </li>
-                
-              
-                
-                  <li class="nav-item">
-                    <a href="/about" class="nav-link">
-                      <span class="nav-link-inner--text">Quickstart</span>
+                    <a href="https://github.com/G-Research/armada" class="nav-link">
+                      <span class="nav-link-inner--text">Github</span>
                     </a>
                   </li>
                 
@@ -144,729 +165,68 @@
     
 
     <div id="main" class="container">
-      <hr />
+      <h1 id="high-level-design-of-armada">High level design of Armada</h1>
+<p>Armada is job queueing system for multiple Kubernetes clusters.</p>
 
-<h4 id="getting-started">Getting Started</h4>
-<p>You’ll find some helpful samples on this page of what is possible with this theme below.</p>
+<h2 id="goals-for-the-project">Goals for the project</h2>
+<ul>
+  <li>Easily handle large queues of jobs (million +)</li>
+  <li>Enforce fair share over time</li>
+  <li>Failure of some worker clusters should not cause an outage</li>
+  <li>Reasonable latency between job submission and job start when there is resource available (in order of 10s)</li>
+  <li>Maximize utilization of the cluster</li>
+  <li>Smart queueing instead of scheduler - implement only minimum logic needed on global level, let cluster scheduler do its own work.</li>
+  <li>All components should be highly available</li>
+</ul>
 
-<p>Any component or section present in the <a href="https://demos.creative-tim.com/argon-design-system-pro/docs/1.0/getting-started/overview.html">Argon Pro docs</a> can be used.</p>
+<h2 id="data-model">Data model</h2>
+<h3 id="job">Job</h3>
+<p>A Job is an executable unit, currently containing a Kubernetes pod specification.</p>
 
-<p>This template can be edited and changed in _pages/features.md. Just pick the components you like, then edit them to display your features.</p>
+<h3 id="job-set">Job Set</h3>
+<p>All jobs are grouped into Job Sets with user-specified identifier. A Job Set represents a project or other higher level unit of work. Users can observe events in Job Sets through the API.</p>
 
-<hr />
-<p><code class="language-plaintext highlighter-rouge">components/features/feature-1.html</code></p>
-<div class="section features-1">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-8 mx-auto text-center">
-          <span class="badge badge-primary badge-pill mb-3">Insight</span>
-          <h3 class="display-3">Full-Funnel Social Analytics</h3>
-          <p class="lead">The time is now for it to be okay to be great. For being a bright color. For standing out.</p>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-4">
-          <div class="info">
-            <div class="icon icon-lg icon-shape icon-shape-primary shadow rounded-circle">
-              <i class="ni ni-settings-gear-65"></i>
-            </div>
-            <h6 class="info-title text-uppercase text-primary">Social Conversations</h6>
-            <p class="description opacity-8">We get insulted by others, lose trust for those others. We get back stabbed by friends. It becomes harder for us to give others a hand.</p>
-            <a href="javascript:;" class="text-primary">More about us
-              <i class="ni ni-bold-right text-primary"></i>
-            </a>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="info">
-            <div class="icon icon-lg icon-shape icon-shape-success shadow rounded-circle">
-              <i class="ni ni-atom"></i>
-            </div>
-            <h6 class="info-title text-uppercase text-success">Analyze Performance</h6>
-            <p class="description opacity-8">Don't get your heart broken by people we love, even that we give them all we have. Then we lose family over time. As we live, our hearts turn colder.</p>
-            <a href="javascript:;" class="text-primary">Learn about our products
-              <i class="ni ni-bold-right text-primary"></i>
-            </a>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="info">
-            <div class="icon icon-lg icon-shape icon-shape-warning shadow rounded-circle">
-              <i class="ni ni-world"></i>
-            </div>
-            <h6 class="info-title text-uppercase text-warning">Measure Conversions</h6>
-            <p class="description opacity-8">What else could rust the heart more over time? Blackgold. The time is now for it to be okay to be great. or being a bright color. For standing out.</p>
-            <a href="javascript:;" class="text-primary">Check our documentation
-              <i class="ni ni-bold-right text-primary"></i>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+<h3 id="queue">Queue</h3>
+<p>All jobs need to be placed into queues. Resources allocation is controlled using queues.</p>
 
-<hr />
-<p><code class="language-plaintext highlighter-rouge">components/features/feature-2.html</code></p>
-<div class="section features-2">
-  <div class="container">
-    <div class="row align-items-center">
-      <div class="col-lg-4 col-md-8 mr-auto text-left">
-        <div class="pr-md-5">
-          <div class="icon icon-lg icon-shape icon-shape-primary shadow rounded-circle mb-5">
-            <i class="ni ni-favourite-28"></i>
-          </div>
-          <h3>Awesome features</h3>
-          <p>The kit comes with three pre-built pages to help you get started faster. You can change the text and images and you're good to go.</p>
-          <ul class="list-unstyled mt-5">
-            <li class="py-2">
-              <div class="d-flex align-items-center">
-                <div>
-                  <div class="badge badge-circle badge-primary mr-3">
-                    <i class="ni ni-settings-gear-65"></i>
-                  </div>
-                </div>
-                <div>
-                  <h6 class="mb-0">Carefully crafted components</h6>
-                </div>
-              </div>
-            </li>
-            <li class="py-2">
-              <div class="d-flex align-items-center">
-                <div>
-                  <div class="badge badge-circle badge-primary mr-3">
-                    <i class="ni ni-html5"></i>
-                  </div>
-                </div>
-                <div>
-                  <h6 class="mb-0">Amazing page examples</h6>
-                </div>
-              </div>
-            </li>
-            <li class="py-2">
-              <div class="d-flex align-items-center">
-                <div>
-                  <div class="badge badge-circle badge-primary mr-3">
-                    <i class="ni ni-satisfied"></i>
-                  </div>
-                </div>
-                <div>
-                  <h6 class="mb-0">Super friendly support team</h6>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div class="col-lg-7 col-md-12 pl-md-0">
-        <div class="row">
-          <div class="col-lg-4 col-md-4">
-            <div class="info text-left bg-info shadow">
-              <div class="icon icon-shape bg-gradient-white shadow rounded-circle text-primary">
-                <i class="ni ni-satisfied text-info"></i>
-              </div>
-              <h5 class="info-title text-white">Best Quality</h5>
-              <p class="description">What matters is the people who are sparked by it. And the people who are like offended by it.</p>
-            </div>
-          </div>
-          <div class="col-lg-4 col-md-4">
-            <div class="info text-left bg-danger info-raised shadow">
-              <div class="icon icon-shape bg-gradient-white shadow rounded-circle text-primary">
-                <i class="ni ni-palette text-danger"></i>
-              </div>
-              <h5 class="info-title text-white">Awesome Design</h5>
-              <p class="description">Because it's about motivating the doers. Because I’m here to follow my dreams and inspire the world.</p>
-            </div>
-          </div>
-          <div class="col-lg-4 col-md-4">
-            <div class="info text-left bg-default shadow">
-              <div class="icon icon-shape bg-gradient-white shadow rounded-circle text-primary">
-                <i class="ni ni-spaceship text-default"></i>
-              </div>
-              <h5 class="info-title text-white">Great Performance</h5>
-              <p class="description">There’s nothing I really wanted to do in life that I wasn’t able to get good at. We’re constantly growing.</p>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-lg-4 col-md-4">
-            <div class="info text-left bg-primary shadow">
-              <div class="icon icon-shape bg-gradient-white shadow rounded-circle text-primary">
-                <i class="ni ni-planet text-primary"></i>
-              </div>
-              <h5 class="info-title text-white">Fast Development</h5>
-              <p class="description">I always felt like I could do anything. That’s the main thing people are controlled by the force! </p>
-            </div>
-          </div>
-          <div class="col-lg-4 col-md-4">
-            <div class="info text-left bg-warning info-raised shadow">
-              <div class="icon icon-shape bg-gradient-white shadow rounded-circle text-primary">
-                <i class="ni ni-glasses-2 text-warning"></i>
-              </div>
-              <h5 class="info-title text-white">Super Fresh</h5>
-              <p class="description">Thoughts- their perception of themselves! They're slowed down by their perception of themselves.</p>
-            </div>
-          </div>
-          <div class="col-lg-4 col-md-4">
-            <div class="info text-left bg-success shadow">
-              <div class="icon icon-shape bg-gradient-white shadow rounded-circle text-primary">
-                <i class="ni ni-notification-70 text-success"></i>
-              </div>
-              <h5 class="info-title text-white">Organized Content</h5>
-              <p class="description">If you're taught you can’t do anything, you won’t do anything. I was taught I could do everything.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<p><strong>Queue Current Priority</strong>: Current priority is calculated from resource usage of jobs in the queue. This number approaches the amount of resource used by the queue with configurable speed by <code class="language-plaintext highlighter-rouge">priorityHalfTime</code> configuration. If the queue priority is <code class="language-plaintext highlighter-rouge">A</code> and queue is using <code class="language-plaintext highlighter-rouge">B</code> amount of resource, after time defined by <code class="language-plaintext highlighter-rouge">priorityHalfTime</code> the new priority will be <code class="language-plaintext highlighter-rouge">A + (B - A) / 2</code>.</p>
 
-<hr />
-<p><code class="language-plaintext highlighter-rouge">components/features/feature-3.html</code></p>
-<div class="section features-3 my-5 fullWidth" style="background-image: url(' /assets/img/ill/p31.svg')">
-  <div class="container">
-    <div class="row text-center justify-content-center">
-      <div class="col-lg-8">
-        <h3 class="display-3 text-white">Build something great<span class="text-success"> with our products</span></h3>
-        <p class="lead text-white">We’re constantly trying to express ourselves and actualize our dreams. If you have the opportunity to play this game of life you need to appreciate every moment.</p>
-      </div>
-    </div>
-    <div class="row row-grid mt-5">
-      <div class="col-lg-6">
-        <div class="info info-horizontal bg-white">
-          <div class="icon icon-shape icon-shape-info rounded-circle text-white">
-            <i class="ni ni-hat-3 text-info"></i>
-          </div>
-          <div class="description pl-4">
-            <h5 class="title text-info">Modular Components</h5>
-            <p>The Arctic Ocean freezes every winter and much of the sea-ice then thaws every summer, and that process will continue whatever.</p>
-            <a href="#" class="text-info">Learn more</a>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-6">
-        <div class="info info-horizontal bg-white">
-          <div class="icon icon-shape icon-shape-warning rounded-circle text-white">
-            <i class="ni ni-istanbul text-warning"></i>
-          </div>
-          <div class="description pl-4">
-            <h5 class="title text-warning">Modern Interface</h5>
-            <p>If everything I did failed - which it doesn't, it actually succeeds - just the fact that I'm willing to fail is an inspiration.</p>
-            <a href="#" class="text-warning">Learn more</a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row row-grid">
-      <div class="col-lg-6">
-        <div class="info info-horizontal bg-white">
-          <div class="icon icon-shape icon-shape-danger rounded-circle text-white">
-            <i class="ni ni-trophy text-danger"></i>
-          </div>
-          <div class="description pl-4">
-            <h5 class="title text-danger">Great Features</h5>
-            <p>People are so scared to lose that they don't even try. Like, one thing people can't say is that I'm not trying, and I'm not trying my hardest.</p>
-            <a href="#" class="text-danger">Learn more</a>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-6">
-        <div class="info info-horizontal bg-white">
-          <div class="icon icon-shape icon-shape-success rounded-circle text-white">
-            <i class="ni ni-image text-success"></i>
-          </div>
-          <div class="description pl-4">
-            <h5 class="title text-success">Awesome Support</h5>
-            <p>The time is now for it to be okay to be great. People in this world shun people for being great. For being a bright color.</p>
-            <a href="#" class="text-success">Learn more</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<p><strong>Queue Priority Factor</strong>: Each queue has priority factor which determines how important the queue is (lower number makes queue more important).</p>
 
-<hr />
-<p><code class="language-plaintext highlighter-rouge">components/features/feature-4.html</code></p>
-<div class="section features-4">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-8 text-center mx-auto">
-        <h3 class="display-3">The time is now</h3>
-        <p class="lead">The time is now to be okay to be the greatest you. Would you believe in what you believe in, if you were the only one who believed it?</p>
-      </div>
-    </div>
-    <div class="row align-items-center">
-      <div class="col-lg-4 mr-auto text-left mt-4">
-        <div class="card bg-default shadow border-0">
-          <img src="/assets/img/theme/img-1-1200x1000.jpg" class="card-img-top" />
-          <blockquote class="card-blockquote">
-            <svg preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 583 95" class="svg-bg">
-              <polygon points="0,52 583,95 0,95" class="fill-default"></polygon>
-              <polygon points="0,42 583,95 683,0 0,95" opacity=".2" class="fill-default"></polygon>
-            </svg>
-            <h4 class="display-4 text-white">Design System</h4>
-            <p class="lead text-italic text-white">That’s my skill. I’m not really specifically talented at anything except for the ability to learn. </p>
-          </blockquote>
-        </div>
-      </div>
-      <div class="col-lg-7 p-sm-0">
-        <div class="row">
-          <div class="col-md-6">
-            <div class="info info-hover-warning">
-              <div class="icon icon-shape bg-warning shadow rounded-circle text-primary">
-                <i class="ni ni-satisfied text-white"></i>
-              </div>
-              <h5 class="info-title">Best Quality</h5>
-              <p class="description opacity-8">It becomes harder for us to give others a hand. We get our heart broken by people we love.</p>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="info info-hover-info">
-              <div class="icon icon-shape bg-info shadow rounded-circle text-primary">
-                <i class="ni ni-palette text-white"></i>
-              </div>
-              <h5 class="info-title">Awesome Design</h5>
-              <p class="description opacity-8">As we live, our hearts turn colder. Cause pain is what we go through as we become older.</p>
-            </div>
-          </div>
-        </div>
-        <div class="row mt-lg-4">
-          <div class="col-md-6">
-            <div class="info info-hover-danger">
-              <div class="icon icon-shape bg-danger shadow rounded-circle text-primary">
-                <i class="ni ni-user-run text-white"></i>
-              </div>
-              <h5 class="info-title">Fast Development</h5>
-              <p class="description opacity-8">We’re not always in the position that we want to be at. We’re constantly growing.</p>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="info info-hover-success">
-              <div class="icon icon-shape bg-success shadow rounded-circle text-primary">
-                <i class="ni ni-glasses-2 text-white"></i>
-              </div>
-              <h5 class="info-title">Super Fresh</h5>
-              <p class="description opacity-8">When we lose family over time. What else could rust the heart more over time? Blackgold.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<p><strong>Queue Effective Priority</strong> = <strong>Queue Priority Factor</strong> * <strong>Queue Current Priority</strong></p>
 
-<hr />
-<p><code class="language-plaintext highlighter-rouge">components/features/feature-5.html</code></p>
-<div class="section features features-5">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-8 text-center mx-auto">
-        <h3 class="display-3">Company values</h3>
-        <p class="lead">There’s nothing I wanted to do in life that I wasn’t able to get good at. I’m not really specifically talented at anything except for the ability to learn.</p>
-      </div>
-    </div>
-    <div class="row align-items-center">
-      <div class="col-lg-12 mt-md-5">
-        <div class="row">
-          <div class="col-md-6">
-            <div class="info">
-              <div class="pr-md-5">
-                <div class="icon icon-shape icon-shape-primary shadow rounded-circle mb-4">
-                  <i class="ni ni-atom"></i>
-                </div>
-                <h5 class="display-5">Awesome features</h5>
-                <p>The kit comes with three pre-built pages to help you get started faster.</p>
-                <ul class="list-unstyled">
-                  <li>
-                    <div class="d-flex align-items-center">
-                      <div>
-                        <div class="mr-3">
-                          <i class="ni ni-check-bold"></i>
-                        </div>
-                      </div>
-                      <div>
-                        <p class="mb-0">Beautiful elements</p>
-                      </div>
-                    </div>
-                  </li>
-                  <li>
-                    <div class="d-flex align-items-center">
-                      <div>
-                        <div class="mr-3">
-                          <i class="ni ni-check-bold"></i>
-                        </div>
-                      </div>
-                      <div>
-                        <p class="mb-0">Amazing page examples</p>
-                      </div>
-                    </div>
-                  </li>
-                  <li>
-                    <div class="d-flex align-items-center">
-                      <div>
-                        <div class="mr-3">
-                          <i class="ni ni-check-bold"></i>
-                        </div>
-                      </div>
-                      <div>
-                        <p class="mb-0">Super friendly support team</p>
-                      </div>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="info">
-              <div class="pr-md-5">
-                <div class="icon icon-shape icon-shape-primary shadow rounded-circle mb-4">
-                  <i class="ni ni-money-coins"></i>
-                </div>
-                <h5 class="display-5">Best prices</h5>
-                <p> If you're taught you can’t do anything, you won’t do anything. </p>
-                <ul class="list-unstyled">
-                  <li>
-                    <div class="d-flex align-items-center">
-                      <div>
-                        <div class="mr-3">
-                          <i class="ni ni-check-bold"></i>
-                        </div>
-                      </div>
-                      <div>
-                        <p class="mb-0">Beautiful elements</p>
-                      </div>
-                    </div>
-                  </li>
-                  <li>
-                    <div class="d-flex align-items-center">
-                      <div>
-                        <div class="mr-3">
-                          <i class="ni ni-check-bold"></i>
-                        </div>
-                      </div>
-                      <div>
-                        <p class="mb-0">Amazing page examples</p>
-                      </div>
-                    </div>
-                  </li>
-                  <li>
-                    <div class="d-flex align-items-center">
-                      <div>
-                        <div class="mr-3">
-                          <i class="ni ni-check-bold"></i>
-                        </div>
-                      </div>
-                      <div>
-                        <p class="mb-0">Super friendly support team</p>
-                      </div>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row mt-5">
-          <div class="col-md-6">
-            <div class="info">
-              <div class="pr-md-5">
-                <div class="icon icon-shape icon-shape-primary shadow rounded-circle mb-4">
-                  <i class="ni ni-support-16"></i>
-                </div>
-                <h5 class="display-5">Community support</h5>
-                <p>That’s the main thing people are always controlled by!</p>
-                <ul class="list-unstyled">
-                  <li>
-                    <div class="d-flex align-items-center">
-                      <div>
-                        <div class="mr-3">
-                          <i class="ni ni-check-bold"></i>
-                        </div>
-                      </div>
-                      <div>
-                        <p class="mb-0">Beautiful elements</p>
-                      </div>
-                    </div>
-                  </li>
-                  <li>
-                    <div class="d-flex align-items-center">
-                      <div>
-                        <div class="mr-3">
-                          <i class="ni ni-check-bold"></i>
-                        </div>
-                      </div>
-                      <div>
-                        <p class="mb-0">Amazing page examples</p>
-                      </div>
-                    </div>
-                  </li>
-                  <li>
-                    <div class="d-flex align-items-center">
-                      <div>
-                        <div class="mr-3">
-                          <i class="ni ni-check-bold"></i>
-                        </div>
-                      </div>
-                      <div>
-                        <p class="mb-0">Super friendly support team</p>
-                      </div>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="info">
-              <div class="pr-md-5">
-                <div class="icon icon-shape icon-shape-primary shadow rounded-circle mb-4">
-                  <i class="ni ni-laptop"></i>
-                </div>
-                <h5 class="display-5">Responsive componenets</h5>
-                <p>They're slowed down by their perception of themselves.</p>
-                <ul class="list-unstyled">
-                  <li>
-                    <div class="d-flex align-items-center">
-                      <div>
-                        <div class="mr-3">
-                          <i class="ni ni-check-bold"></i>
-                        </div>
-                      </div>
-                      <div>
-                        <p class="mb-0">Beautiful elements</p>
-                      </div>
-                    </div>
-                  </li>
-                  <li>
-                    <div class="d-flex align-items-center">
-                      <div>
-                        <div class="mr-3">
-                          <i class="ni ni-check-bold"></i>
-                        </div>
-                      </div>
-                      <div>
-                        <p class="mb-0">Amazing page examples</p>
-                      </div>
-                    </div>
-                  </li>
-                  <li>
-                    <div class="d-flex align-items-center">
-                      <div>
-                        <div class="mr-3">
-                          <i class="ni ni-check-bold"></i>
-                        </div>
-                      </div>
-                      <div>
-                        <p class="mb-0">Super friendly support team</p>
-                      </div>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<p>To achieve fairness between queues, when Armada schedules jobs resources are divided based on Queue Effective Priority.</p>
 
-<hr />
-<p><code class="language-plaintext highlighter-rouge">components/features/feature-6.html</code></p>
-<div class="section features-7 bg-secondary fullWidth">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-8 text-center mx-auto">
-        <h3 class="display-3">Follow your dreams</h3>
-        <p class="lead">We’re constantly trying to express ourselves and actualize our dreams. If you have the opportunity to play this game of life you need to appreciate every moment.</p>
-      </div>
-    </div>
-    <div class="row justify-content-center mt-5">
-      <div class="col-lg-12">
-        <div class="row row-grid">
-          <div class="col-lg-4">
-            <div class="card card-lift--hover shadow border-0">
-              <div class="card-body py-5">
-                <div class="icon icon-shape icon-shape-primary rounded-circle mb-4">
-                  <i class="ni ni-check-bold"></i>
-                </div>
-                <h6 class="text-primary text-uppercase">Download Argon</h6>
-                <p class="description mt-3">Because I’m here to follow my dreams and inspire other people to follow their dreams, too. That’s what I’m here for. </p>
-                <a href="#" class="btn btn-primary mt-4">Learn more</a>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-4">
-            <div class="card card-lift--hover shadow border-0">
-              <div class="card-body py-5">
-                <div class="icon icon-shape icon-shape-success rounded-circle mb-4">
-                  <i class="ni ni-istanbul"></i>
-                </div>
-                <h6 class="text-success text-uppercase">Build Something</h6>
-                <p class="description mt-3">Society has put up so many boundaries, so many limitations on what’s right and wrong that it’s almost impossible.</p>
-                <a href="#" class="btn btn-success mt-4">Learn more</a>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-4">
-            <div class="card card-lift--hover shadow border-0">
-              <div class="card-body py-5">
-                <div class="icon icon-shape icon-shape-warning rounded-circle mb-4">
-                  <i class="ni ni-planet"></i>
-                </div>
-                <h6 class="text-warning text-uppercase">Prepare Launch</h6>
-                <p class="description mt-3">Why would anyone pick blue over pink? Pink is obviously a better color.Everyone’s born confident, and everything’s...</p>
-                <a href="#" class="btn btn-warning mt-4">Learn more</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<p>More information about queue priority and scheduling can be found <a href="./priority.md">here</a></p>
 
-<hr />
-<p><code class="language-plaintext highlighter-rouge">components/features/feature-7.html</code></p>
-<div class="section features-6">
-  <div class="container">
-    <div class="row align-items-center">
-      <div class="col-lg-6">
-        <div class="info info-horizontal info-hover-primary">
-          <div class="icon icon-shape icon-shape-info rounded-circle text-white">
-            <i class="ni ni-html5 text-info"></i>
-          </div>
-          <div class="description pl-4">
-            <h5 class="title">For Developers</h5>
-            <p>The time is now for it to be okay to be great. People in this world shun people for being great. For being a bright color. For standing out. But the time is now.</p>
-            <a href="#" class="text-info">Learn more</a>
-          </div>
-        </div>
-        <div class="info info-horizontal info-hover-primary">
-          <div class="icon icon-shape icon-shape-info rounded-circle text-white">
-            <i class="ni ni-app text-info"></i>
-          </div>
-          <div class="description pl-4">
-            <h5 class="title">For Designers</h5>
-            <p>There’s nothing I really wanted to do in life that I wasn’t able to get good at. That’s my skill. I’m not really specifically talented at anything except for the ability to learn.</p>
-            <a href="#" class="text-info">Learn more</a>
-          </div>
-        </div>
-        <div class="info info-horizontal info-hover-primary">
-          <div class="icon icon-shape icon-shape-info rounded-circle text-white">
-            <i class="ni ni-bell-55 text-info"></i>
-          </div>
-          <div class="description pl-4">
-            <h5 class="title">For Beginners</h5>
-            <p>That’s what I do. That’s what I’m here for. Don’t be afraid to be wrong because you can’t learn anything from a compliment. If everything I did failed - which it doesn't.</p>
-            <a href="#" class="text-info">Learn more</a>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-6 col-10 mx-md-auto">
-        <img class="ml-lg-5" src="/assets/img/ill/ill.png" width="100%" />
-      </div>
-    </div>
-  </div>
-</div>
+<h2 id="design">Design</h2>
+<p><img src="./batch-api.svg" alt="Diagram" /></p>
 
-<hr />
-<p><code class="language-plaintext highlighter-rouge">components/features/feature-8.html</code></p>
-<div class="cd-section" id="accordion">
-    <!--     *********     ACCORDION 1      *********      -->
-    <div class="accordion-1">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-6 mx-auto text-center">
-            <h2 class="title mb-3 mt-5">Frequently asked question</h2>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12 ml-auto">
-            <div class="accordion" id="accordionExample">
-              <div class="card">
-                <div class="card-header" id="headingOne">
-                  <h5 class="mb-0">
-                    <button class="btn btn-link w-100 text-primary text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                      How do I order?
-                      <i class="ni ni-bold-down float-right pt-1"></i>
-                    </button>
-                  </h5>
-                </div>
-                <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample" style="">
-                  <div class="card-body opacity-8">
-                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                  </div>
-                </div>
-              </div>
-              <div class="card">
-                <div class="card-header" id="headingTwo">
-                  <h5 class="mb-0">
-                    <button class="btn btn-link w-100 text-primary text-left" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                      How can i make the payment?
-                      <i class="ni ni-bold-down float-right pt-1"></i>
-                    </button>
-                  </h5>
-                </div>
-                <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionExample" style="">
-                  <div class="card-body opacity-8">
-                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                  </div>
-                </div>
-              </div>
-              <div class="card">
-                <div class="card-header" id="headingThree">
-                  <h5 class="mb-0">
-                    <button class="btn btn-link w-100 text-primary text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                      How much time does it take to receive the order?
-                      <i class="ni ni-bold-down float-right pt-1"></i>
-                    </button>
-                  </h5>
-                </div>
-                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
-                  <div class="card-body opacity-8">
-                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                  </div>
-                </div>
-              </div>
-              <div class="card">
-                <div class="card-header" id="headingFour">
-                  <h5 class="mb-0">
-                    <button class="btn btn-link w-100 text-primary text-left" type="button" data-toggle="collapse" data-target="#collapseFour" aria-controls="collapseFour">
-                      Can I resell the products?
-                      <i class="ni ni-bold-down float-right pt-1"></i>
-                    </button>
-                  </h5>
-                </div>
-                <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionExample">
-                  <div class="card-body opacity-8">
-                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                  </div>
-                </div>
-              </div>
-              <div class="card">
-                <div class="card-header" id="headingFifth">
-                  <h5 class="mb-0">
-                    <button class="btn btn-link w-100 text-primary text-left" type="button" data-toggle="collapse" data-target="#collapseFifth" aria-controls="collapseFifth">
-                      Where do I find the shipping details?
-                      <i class="ni ni-bold-down float-right pt-1"></i>
-                    </button>
-                  </h5>
-                </div>
-                <div id="collapseFifth" class="collapse" aria-labelledby="headingFifth" data-parent="#accordionExample">
-                  <div class="card-body opacity-8">
-                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+<h3 id="armada-server">Armada Server</h3>
+<p>The Armada Server is a central component which manages queues of jobs.
+It stores all active jobs in the job database (current implementation use Redis).</p>
+
+<h3 id="cluster-executor">Cluster Executor</h3>
+<p>The Cluster Executor is a component running on each Kubernetes worker cluster. It keeps all pod and node information in memory and manages jobs within the cluster.
+It proactively reports the current state of the cluster and asks for jobs to run.
+Queue Usage is recorded in the database and is used to update priorities of individual queues.
+The executor can also refuse to execute an assigned job and return it.</p>
+
+<h4 id="job-leasing">Job Leasing</h4>
+<p>Executors periodically ask the server for jobs to run, reporting available resources. Armada distributes these available resources among queues according to Queue Effective Priority. 
+Jobs are taken from the top of each queue until the available resource is filled. These jobs are then returned to the executor to be executed on the cluster and marked as leased with a timestamp to show when the lease began.</p>
+
+<p>The executor must regularly renew the lease of all jobs it leases, otherwise leases expire and jobs will be considered failed and executed on different cluster.</p>
+
+<h4 id="job-events">Job Events</h4>
+<p>Job events are used to show when a job reaches a new state, such as submitted, running, completed. They hold generic information about events (such as created-time) along with state specific information (such as exit-code for completed jobs).</p>
+
+<p>Armada records events of all jobs against the job set the job belongs to. Events for a given job set are available through the API.</p>
+
+<p>Armada records all necessary events to fully reconstruct state of the job at any time. This allows us to erase all job data from the jobs database after the job finishes and keep only the events.</p>
+
+<p>The current implementation utilises Redis streams to store job events.</p>
+
 
     </div>
   </div>
@@ -932,32 +292,28 @@
           
           
           <li class="nav-item">
-            <a href="/features" class="nav-link">
-              <span class="nav-link-inner--text">Developer</span>
+            <a href="/development" class="nav-link">
+              <span class="nav-link-inner--text">Development</span>
+            </a>
+          </li>
+          
+          
+          
+
+          
+          
+          
+          <li class="nav-item">
+            <a href="/quickstart" class="nav-link">
+              <span class="nav-link-inner--text">Contribute</span>
             </a>
           </li>
           
           
           
           <li class="nav-item">
-            <a href="/pricing" class="nav-link">
-              <span class="nav-link-inner--text">User Guide</span>
-            </a>
-          </li>
-          
-          
-          
-          <li class="nav-item">
-            <a href="/features" class="nav-link">
-              <span class="nav-link-inner--text">Production</span>
-            </a>
-          </li>
-          
-          
-          
-          <li class="nav-item">
-            <a href="/about" class="nav-link">
-              <span class="nav-link-inner--text">Quickstart</span>
+            <a href="https://github.com/G-Research/armada" class="nav-link">
+              <span class="nav-link-inner--text">Github</span>
             </a>
           </li>
           

@@ -38,6 +38,9 @@
   
 
   
+  <!-- Extra Header JS Code -->
+  <script type="text/javascript"> var element = document.getElementByClassName("nav-item"); element[5].className += "buttton-primary"; </script>
+  
 
 </head>
 
@@ -88,32 +91,50 @@
               
                 
                   <li class="nav-item">
-                    <a href="/features" class="nav-link">
-                      <span class="nav-link-inner--text">Developer</span>
+                    <a href="/development" class="nav-link">
+                      <span class="nav-link-inner--text">Development</span>
+                    </a>
+                  </li>
+                
+              
+                
+                  <li class="nav-item dropdown">
+                    <a href="javascript:;" class="nav-link" data-toggle="dropdown" role="button">
+                      <span class="nav-link-inner--text">Documentation</span>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                      
+                      <a class="dropdown-item" href="/user">
+                        <i class="ni "></i>
+                        User Guide
+                      </a>
+                      
+                      <a class="dropdown-item" href="/production">
+                        <i class="ni "></i>
+                        Production Install
+                      </a>
+                      
+                      <a class="dropdown-item" href="/quickstart">
+                        <i class="ni "></i>
+                        Quickstart
+                      </a>
+                      
+                    </div>
+                  </li>
+                
+              
+                
+                  <li class="nav-item">
+                    <a href="/quickstart" class="nav-link">
+                      <span class="nav-link-inner--text">Contribute</span>
                     </a>
                   </li>
                 
               
                 
                   <li class="nav-item">
-                    <a href="/pricing" class="nav-link">
-                      <span class="nav-link-inner--text">User Guide</span>
-                    </a>
-                  </li>
-                
-              
-                
-                  <li class="nav-item">
-                    <a href="/features" class="nav-link">
-                      <span class="nav-link-inner--text">Production</span>
-                    </a>
-                  </li>
-                
-              
-                
-                  <li class="nav-item">
-                    <a href="/about" class="nav-link">
-                      <span class="nav-link-inner--text">Quickstart</span>
+                    <a href="https://github.com/G-Research/armada" class="nav-link">
+                      <span class="nav-link-inner--text">Github</span>
                     </a>
                   </li>
                 
@@ -154,7 +175,7 @@
     </div>
   </div>
 </header>
-<div class="section features-1">
+<div class="section-lg features-1">
   <div class="container" id="scroll-down">
     <div class="row">
       <div class="col-md-8 mx-auto text-center">
@@ -170,9 +191,6 @@
           </div>
           <h6 class="info-title text-uppercase text-primary">Resource Light</h6>
           <p class="description opacity-8">Armada maintains fair resource share over time (inspired by HTCondor priority)</p>
-          <a href="javascript:;" class="text-primary">More about us
-            <i class="ni ni-bold-right text-primary"></i>
-          </a>
         </div>
       </div>
       <div class="col-lg-3">
@@ -182,9 +200,6 @@
           </div>
           <h6 class="info-title text-uppercase text-success">High Throughput</h6>
           <p class="description opacity-8">Armada can handle large amounts of queued jobs (million+)</p>
-          <a href="javascript:;" class="text-primary">Learn about our products
-            <i class="ni ni-bold-right text-primary"></i>
-          </a>
         </div>
       </div>
       <div class="col-lg-3">
@@ -194,9 +209,6 @@
           </div>
           <h6 class="info-title text-uppercase text-danger">Uninterrupted</h6>
           <p class="description opacity-8">Armada allows adding and removing clusters from the system without disruption</p>
-          <a href="javascript:;" class="text-primary">Check our documentation
-            <i class="ni ni-bold-right text-primary"></i>
-          </a>
         </div>
       </div>
       <div class="col-lg-3">
@@ -206,15 +218,19 @@
           </div>
           <h6 class="info-title text-uppercase text-info">Massive Scale</h6>
           <p class="description opacity-8">By utilizing multiple Kubernetes clusters, the system can scale beyond the limits of a single Kubernetes cluster</p>
-          <a href="javascript:;" class="text-primary">Check our documentation
-            <i class="ni ni-bold-right text-primary"></i>
-          </a>
         </div>
       </div>
-    </div>
+      <div class="col-lg-5"></div>
+        <div class="col-lg-2">
+        <a href="#scroll-down" class="btn btn-primary">
+          Get Started
+        </a>
+        </div>
+      <div class="col-lg-5"></div>
   </div>
 </div>
-  <div class="section features-6">
+</div>
+  <div class="section-md features-6">
     <div class="container">
       <div class="row align-items-center">
         <div class="col-md-8 mx-auto text-center">
@@ -239,7 +255,7 @@
             <div class="description pl-4">
               <h5 class="title">Job</h5>
               <p>Unit of work to be run (described as a Kubernetes PodSpec)</p>
-              <a href="#" class="text-info">Learn more</a>
+              <a href="" class="text-info">Learn more</a>
             </div>
           </div>
           <div class="info info-horizontal info-hover-primary">
@@ -261,7 +277,7 @@
   </div>
   
   <br><br>
-  <div class="section-hero">
+  <div class="section-sm">
     <div class="row">
       <div class="col-lg-7 mr-auto">
         <img class="ml-lg-5" src="/assets/img/ill/bg5-1.svg" />
@@ -271,7 +287,7 @@
         <p class="lead mt-0">Follow the quickstart guide to get Armada up and running locally.</p>
         <br>
         <div class="buttons">
-          <a href="#scroll-down" class="btn btn-primary">
+          <a href="/quickstart" class="btn btn-primary">
             Get Started
           </a>
         </div>
@@ -349,32 +365,28 @@
           
           
           <li class="nav-item">
-            <a href="/features" class="nav-link">
-              <span class="nav-link-inner--text">Developer</span>
+            <a href="/development" class="nav-link">
+              <span class="nav-link-inner--text">Development</span>
+            </a>
+          </li>
+          
+          
+          
+
+          
+          
+          
+          <li class="nav-item">
+            <a href="/quickstart" class="nav-link">
+              <span class="nav-link-inner--text">Contribute</span>
             </a>
           </li>
           
           
           
           <li class="nav-item">
-            <a href="/pricing" class="nav-link">
-              <span class="nav-link-inner--text">User Guide</span>
-            </a>
-          </li>
-          
-          
-          
-          <li class="nav-item">
-            <a href="/features" class="nav-link">
-              <span class="nav-link-inner--text">Production</span>
-            </a>
-          </li>
-          
-          
-          
-          <li class="nav-item">
-            <a href="/about" class="nav-link">
-              <span class="nav-link-inner--text">Quickstart</span>
+            <a href="https://github.com/G-Research/armada" class="nav-link">
+              <span class="nav-link-inner--text">Github</span>
             </a>
           </li>
           

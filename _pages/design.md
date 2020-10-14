@@ -1,7 +1,6 @@
 ---
-title: Features
-subtitle: Everything you need to show off your product features.
-description: Use the Argon Jekyll theme to build a landing page, blog or complete website.
+title: "Design"
+subtitle: 
 featured_image: /assets/img/sections/unsplashs.jpg
 ---
 
@@ -38,7 +37,7 @@ To achieve fairness between queues, when Armada schedules jobs resources are div
 More information about queue priority and scheduling can be found [here](./priority.md)
 
 ## Design
-![Diagram](./batch-api.svg)
+![Diagram](/img/batch-api.svg)
 
 ### Armada Server
 The Armada Server is a central component which manages queues of jobs.
