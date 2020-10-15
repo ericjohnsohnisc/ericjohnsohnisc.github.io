@@ -7,19 +7,19 @@
 
   <!-- Page Info -->
   <link rel="shortcut icon" href="/assets/img/Armada-favicon.png">
-  <title>Development – Armada Project</title>
+  <title>Contribute – Armada Project</title>
   <meta name="description" content="">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title"
-    content="Development – Armada Project">
+    content="Contribute – Armada Project">
   <meta name="twitter:description" content="">
   <meta name="twitter:image:src" content="http://localhost:4000/assets/img/sections/unsplashs.jpg">
 
   <!-- Facebook OpenGraph -->
   <meta property="og:title"
-    content="Development – Armada Project" />
+    content="Contribute – Armada Project" />
   <meta property="og:description" content="" />
   <meta property="og:image" content="http://localhost:4000/assets/img/sections/unsplashs.jpg" />
 
@@ -155,7 +155,7 @@
       <div class="container contentWrapper">
         <div class="row">
           <div class="col-lg-10 mx-auto text-center pt-4">
-            <h2 class="display-2 text-white">Development</h2>
+            <h2 class="display-2 text-white">Contribute</h2>
             <h2 class="lead text-white pl-5 pr-5 pb-3 text-center"></h2>
           </div>
         </div>
@@ -165,187 +165,7 @@
     
 
     <div id="main" class="container">
-      <h1 id="developer-setup">Developer setup</h1>
-
-<h2 id="getting-started">Getting started</h2>
-
-<p>There are many ways you can setup you local environment, this is just a basic quick example of how to setup everything you’ll need to get started running and developing Armada.</p>
-
-<h3 id="pre-requisites">Pre-requisites</h3>
-<p>To follow this section it is assumed you have:</p>
-<ul>
-  <li>Golang &gt;= 1.12 installed (https://golang.org/doc/install)</li>
-  <li><code class="language-plaintext highlighter-rouge">kubectl</code> installed (https://kubernetes.io/docs/tasks/tools/install-kubectl/)</li>
-  <li>Docker installed, configured for the current user</li>
-  <li>This repository cloned. The guide will assume you are in the root directory of this repository</li>
-</ul>
-
-<h3 id="running-armada-locally">Running Armada locally</h3>
-
-<p>There are two options for developing Armada locally.</p>
-
-<h5 id="kind">Kind</h5>
-<p>You can use a <a href="https://github.com/kubernetes-sigs/kind">kind</a> Kubernetes clusters.</p>
-<ul>
-  <li>The advantage of this is it is more like a real kubernetes cluster</li>
-  <li>However it is a bit more effort to set it up and it can only emulate a cluster with as much resource as your computer has</li>
-</ul>
-
-<p>This is recommended if load doesn’t matter or you are working on features that rely on integrating with kubernetes functionality</p>
-
-<h5 id="fake-executor">Fake-executor</h5>
-<p>You can use fake-executor</p>
-
-<ul>
-  <li>It is easy to setup, as it is just a Go program that emulates a kubernetes cluster</li>
-  <li>It allows you emulate clusters much larger than your current machine</li>
-  <li>As the jobs aren’t really running, it won’t properly emulate a real kubernetes cluster</li>
-</ul>
-
-<p>This is recommended when working on features that are purely Armada specific or if you want to get a high load of jobs running through Armada components</p>
-
-<h4 id="setup-kind-development">Setup Kind development</h4>
-
-<ol>
-  <li>Get kind (Installation help <a href="https://kind.sigs.k8s.io/docs/user/quick-start/">here</a>)
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nv">GO111MODULE</span><span class="o">=</span><span class="s2">"on"</span> go get sigs.k8s.io/kind@v0.5.1
-</code></pre></div>    </div>
-  </li>
-  <li>
-    <p>Create kind clusters (you can create any number of clusters)</p>
-
-    <p>As this step is using Docker, it will require root to run</p>
-
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> kind create cluster <span class="nt">--name</span> demoA <span class="nt">--config</span> ./example/kind-config.yaml
- kind create cluster <span class="nt">--name</span> demoB <span class="nt">--config</span> ./example/kind-config.yaml 
-</code></pre></div>    </div>
-  </li>
-  <li>Start Redis
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> docker run <span class="nt">-d</span> <span class="nt">-p</span> 6379:6379 redis
-</code></pre></div>    </div>
-
-    <p>The following steps are shown in a terminal, but for development is it recommended they are run in your IDE</p>
-  </li>
-  <li>Start server in one terminal
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> go run ./cmd/armada/main.go
-</code></pre></div>    </div>
-  </li>
-  <li>Start executor for demoA in a new terminal
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nv">KUBECONFIG</span><span class="o">=</span><span class="si">$(</span>kind get kubeconfig-path <span class="nt">--name</span><span class="o">=</span><span class="s2">"demoA"</span><span class="si">)</span> <span class="nv">ARMADA_APPLICATION_CLUSTERID</span><span class="o">=</span>demoA <span class="nv">ARMADA_METRIC_PORT</span><span class="o">=</span>9001 go run ./cmd/executor/main.go
-</code></pre></div>    </div>
-  </li>
-  <li>Start executor for demoB in a new terminal
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nv">KUBECONFIG</span><span class="o">=</span><span class="si">$(</span>kind get kubeconfig-path <span class="nt">--name</span><span class="o">=</span><span class="s2">"demoB"</span><span class="si">)</span> <span class="nv">ARMADA_APPLICATION_CLUSTERID</span><span class="o">=</span>demoB <span class="nv">ARMADA_METRIC_PORT</span><span class="o">=</span>9002 go run ./cmd/executor/main.go
-</code></pre></div>    </div>
-  </li>
-</ol>
-
-<h4 id="setup-fake-executor-development">Setup Fake-executor development</h4>
-
-<ol>
-  <li>Start Redis
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> docker run <span class="nt">-d</span> <span class="nt">-p</span> 6379:6379 redis
-</code></pre></div>    </div>
-
-    <p>The following steps are shown in a terminal, but for development is it recommended they are run in your IDE</p>
-  </li>
-  <li>Start server in one terminal
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> go run ./cmd/armada/main.go
-</code></pre></div>    </div>
-  </li>
-  <li>Start executor for demoA in a new terminal
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nv">ARMADA_APPLICATION_CLUSTERID</span><span class="o">=</span>demoA <span class="nv">ARMADA_METRIC_PORT</span><span class="o">=</span>9001 go run ./cmd/fakeexecutor/main.go
-</code></pre></div>    </div>
-  </li>
-  <li>Start executor for demoB in a new terminal
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nv">ARMADA_APPLICATION_CLUSTERID</span><span class="o">=</span>demoB <span class="nv">ARMADA_METRIC_PORT</span><span class="o">=</span>9002 go run ./cmd/fakeexecutor/main.go
-</code></pre></div>    </div>
-  </li>
-</ol>
-
-<h4 id="testing-your-setup">Testing your setup</h4>
-
-<ol>
-  <li>Create queue &amp; Submit job
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>go run ./cmd/armadactl/main.go create-queue <span class="nb">test</span> <span class="nt">--priorityFactor</span> 1
-go run ./cmd/armadactl/main.go submit ./example/jobs.yaml
-go run ./cmd/armadactl/main.go watch <span class="nb">test </span>job-set-1
-</code></pre></div>    </div>
-  </li>
-</ol>
-
-<p>For more details on submitting jobs to Armada, see <a href="usage.md#submitting-jobs">here</a>.</p>
-
-<p>Once you submit jobs, you should be able to see pods appearing in your cluster(s), running what you submitted.</p>
-
-<p><strong>Note:</strong> Depending on your Docker setup you might need to load images for jobs you plan to run manually:</p>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kind load docker-image busybox:latest
-</code></pre></div></div>
-
-<h3 id="running-tests">Running tests</h3>
-<p>For unit tests run</p>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make tests
-</code></pre></div></div>
-
-<p>For end to end tests run:</p>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make tests-e2e
-<span class="c"># optionally stop kubernetes cluster which was started by test</span>
-make e2e-stop-cluster
-</code></pre></div></div>
-
-<h2 id="code-generation">Code Generation</h2>
-
-<p>This project uses code generation.</p>
-
-<p>The armada api is defined using proto files which are used to generate Go source code (and the c# client) for our gRPC communication.</p>
-
-<p>To generate source code from proto files:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make proto
-</code></pre></div></div>
-
-<h3 id="usage-metrics">Usage metrics</h3>
-
-<p>Some functionality the executor has is to report how much cpu/memory jobs are actually using.</p>
-
-<p>This is turned on by changing the executor config file to include:</p>
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">metric</span><span class="pi">:</span>
-   <span class="na">exposeQueueUsageMetrics</span><span class="pi">:</span> <span class="no">true</span>
-</code></pre></div></div>
-
-<p>The metrics are calculated by getting values from metrics-server.</p>
-
-<p>When developing locally with Kind, you will also need to deploy metrics server to allow this to work.</p>
-
-<p>The simplest way to do this it to apply this to your kind cluster:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply -f https://gist.githubusercontent.com/hjacobs/69b6844ba8442fcbc2007da316499eb4/raw/5b8678ac5e11d6be45aa98ca40d17da70dcb974f/kind-metrics-server.yaml
-</code></pre></div></div>
-
-<h3 id="command-line-tools">Command-line tools</h3>
-
-<p>Our command-line tools used the cobra framework (https://github.com/spf13/cobra).</p>
-
-<p>You can use the cobra cli to add new commands, the below will describe how to add new commands for <code class="language-plaintext highlighter-rouge">armadactl</code> but it can be applied to any of our command line tools.</p>
-
-<h5 id="steps">Steps</h5>
-
-<p>Get cobra cli tool:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>go get -u github.com/spf13/cobra/cobra
-</code></pre></div></div>
-
-<p>Change to the directory of the command-line tool you are working on:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd ./cmd/armadactl
-</code></pre></div></div>
-
-<p>Use cobra to add new command:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cobra add commandName
-</code></pre></div></div>
-
-<p>You should see a new file appear under <code class="language-plaintext highlighter-rouge">./cmd/armadactl/cmd</code> with the name you specified in the command.</p>
+      
 
     </div>
   </div>
