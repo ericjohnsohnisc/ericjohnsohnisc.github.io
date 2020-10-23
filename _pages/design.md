@@ -1,7 +1,6 @@
 ---
-title: "Design"
+title: 
 subtitle: 
-featured_image: /assets/img/sections/unsplashs.jpg
 ---
 
 # High level design of Armada

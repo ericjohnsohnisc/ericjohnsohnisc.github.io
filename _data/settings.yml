@@ -4,7 +4,7 @@ basic_settings:
 
 header_settings:
   logo_image: /assets/img/brand/Armada-white-rectangle.png
-  mobile_logo_image: /assets/img/brand/blue.png
+  mobile_logo_image: /assets/img/brand/Armada-white-rectangle.png
   # Choose a color for your header [blue, dark, light].
   theme: dark
   # If the page has a featured image, it turns transparent if allow_transparent is set to "yes".
@@ -45,9 +45,6 @@ menu_settings:
         url: '/quickstart'
     - title: 'Contribute'
       url: '/contribute'
-    - title: 'Github'
-      url: 'https://github.com/G-Research/armada'
-
 
 footer_settings:
   footer_tagline: Armada Project
@@ -60,7 +57,7 @@ contact_settings:
 
 social_settings:
   facebook_url: ''
-  twitter_url: ''
+  twitter_url: 'https://twitter.com/GRESEARCHjobs'
   instagram_url: ''
   youtube_url: ''
   vimeo_url: ''
@@ -76,8 +73,5 @@ authors:
 
 advanced_settings:
   analytics_code: 
-  header_js: <script type="text/javascript">
-    var element = document.getElementByClassName("nav-item");
-    element[5].className += "buttton-primary";
-      </script>
+  header_js: 
   footer_js: 
