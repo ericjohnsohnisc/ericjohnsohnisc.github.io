@@ -12,13 +12,18 @@
     <div class="row align-items-center justify-content-md-between">
       <div class="col-md-6">
         <div class="copyright">
-          <span> © {{ 'now' | date: "%Y" }} Armada Project & G-Research</span>
+          <span> © {{ 'now' | date: "%Y" }} Armada Project</span>
         </div>
       </div>
       <div class="col-md-6">
         <ul class="nav nav-footer justify-content-end">
           {% for item in site.data.settings.menu_settings.menu_items %}
           {% if item.submenu_items %}
+          <li class="nav-item">
+            <a href="{{ item.url | relative_url }}" class="nav-link">
+              <span class="nav-link-inner--text">{{ item.title }}</span>
+            </a>
+          </li>
 
           {% else %}
           <li class="nav-item">

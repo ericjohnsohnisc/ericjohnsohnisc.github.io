@@ -14,17 +14,41 @@
 }
 
 .btn-github i {
-    top: -12px !important;
-    left: -12px !important;
-    font-size: 24px !important;
+    top: -16px !important;
+    left: -16px !important;
+    font-size: 32px !important;
+}
+
+/* NAVBAR OVERRIDES */
+
+.navbar-transparent {
+    background-color: #172b4d !important;
+}
+
+/* PAGE HEADER OVERROIDES */
+
+.card-background::after {
+    background: transparent !important;
+}
+
+.page-header.header-filter::before {
+    background: transparent !important;
+}
+
+.page-header.header-filter::after {
+    background: transparent !important;
+}
+
+.display-2 {
+    display: none !important;
 }
 
 /* TYPOGRAPHY OVERRIDES */
 
 h1, h2, h3, h4, h5, h6 {
-    margin-bottom: .7rem !important;
+    margin-bottom: .8rem !important;
 }
 
 ul li {
-    line-height: 28px !important;
+    line-height: 32px !important;
 }

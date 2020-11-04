@@ -1,7 +1,7 @@
 ---
-title: "User Guide"
+title: 
 subtitle: 
-featured_image: /assets/img/sections/unsplashs.jpg
+featured_image: /assets/img/ill/bg_contactus3.svg
 ---
 
 # User Guide
