@@ -13,10 +13,22 @@
     font-size: 24px !important;
 }
 
+.btn-github {
+    color: #222 !important;
+    background-color: #fff !important;
+    border-color: #fff !important;
+}
+
+.btn-github:hover {
+    color: #222 !important;
+    background-color: #fff !important;
+    border-color: #fff !important;
+}
+
 .btn-github i {
-    top: -16px !important;
-    left: -16px !important;
-    font-size: 32px !important;
+    top: -22px !important;
+    left: -22px !important;
+    font-size: 44px !important;
 }
 
 /* NAVBAR OVERRIDES */
@@ -26,6 +38,15 @@
 }
 
 /* PAGE HEADER OVERROIDES */
+
+.page-header.page-header-small {
+    min-height: 36vh !important;
+    margin-bottom: 0px !important;
+}
+
+.page-header-image.card-background {
+    background-size: contain !important;
+}
 
 .card-background::after {
     background: transparent !important;
