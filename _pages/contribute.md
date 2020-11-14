@@ -19,29 +19,19 @@ If you spot a bug, then please raise an issue in our main GitHub project:
 
 Likewise, if you have developed a cool new feature or improvement, then send us a pull request!
 
-If you want to brainstorm a potential new feature, hop. on over to our Slack Channel, listed below.
+If you want to brainstorm a potential new feature, hop on over to our Gitter room, listed below.
 
 
-## Slack
+## Gitter
 
-Sometimes, it's good to hash things out in real time.  We have a Slack channel where you can chat with other Armada developers and get feedback and support (even if it's just moral support!).
+Sometimes, it's good to hash things out in real time.  We have a Gitter community where you can chat with other Armada developers and get feedback and support (even if it's just moral support!).
 
-To join our Slack Channel, use this invite link:
+To join our Gitter community, use this link:
 
-* [Slack Invite](https://join.slack.com/share/zt-i1jgklxh-WYY7TX6K~qVCraDs0ulCuw)
+* [https://gitter.im/ArmadaProject/community](https://gitter.im/ArmadaProject/community)
 
 ## License
 
 Armada is licensed with the Apache 2.0 license.  You can find it published here:
 
 * [https://github.com/G-Research/armada/blob/master/LICENSE](https://github.com/G-Research/armada/blob/master/LICENSE)
-
-## Code of Conduct
-
-The Armada community's Code of Conduct is published here:
-
-* [https://github.com/G-Research/armada/blob/master/CODE_OF_CONDUCT.md](https://github.com/G-Research/armada/blob/master/CODE_OF_CONDUCT.md)
-
-We take the health of our community seriously.  We believe everyone should have a voice and feel welcome participating in the project.  If you feel that there is something amiss within the Armada community, we want to hear about it immediately.  The best way to connect with an admin is at:
-
-* [conduct@armadaproject.io](mailto:conduct@armadaproject.io)
