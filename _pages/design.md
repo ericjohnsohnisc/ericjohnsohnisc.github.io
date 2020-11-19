@@ -37,7 +37,7 @@ To achieve fairness between queues, when Armada schedules jobs resources are div
 More information about queue priority and scheduling can be found [here](./priority.md)
 
 ## Design
-![Diagram](/img/batch-api.svg)
+![Diagram](/assets/img/batch-api.svg)
 
 ### Armada Server
 The Armada Server is a central component which manages queues of jobs.
