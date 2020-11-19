@@ -1,11 +1,17 @@
+/* SECTIONS */
+
 .section-md {
     padding-top: $spacer * 4;
     padding-bottom: $spacer * 2;
 }
 
+/* HEADER */
+
 .github-logo-header {
     margin-left: 1rem !important;
 }
+
+/* FOOTER */
 
 .btn-twitter i {
     top: -12px !important;
@@ -42,6 +48,13 @@
     top: -12px !important;
     left: -9px !important;
     font-size: 24px !important;
+}
+
+/* IMAGES */
+
+.container .img {
+    padding-top: 30px;
+    padding-bottom: 30px;
 }
 
 /* NAVBAR OVERRIDES */
