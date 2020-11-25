@@ -63,7 +63,7 @@
                 <div class="col-6 collapse-brand">
                   
                   <a href="/">
-                    <img src="/assets/img/brand/Armada-white-rectangle.png">
+                    <img src="/assets/img/brand/Armada-dark-rectangle.png">
                   </a>
                   
                 </div>
@@ -87,19 +87,16 @@
                 
               
                 
-                  <li class="nav-item">
-                    <a href="/development" class="nav-link">
-                      <span class="nav-link-inner--text">Development</span>
-                    </a>
-                  </li>
-                
-              
-                
                   <li class="nav-item dropdown">
                     <a href="javascript:;" class="nav-link" data-toggle="dropdown" role="button">
                       <span class="nav-link-inner--text">Documentation</span>
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                      
+                      <a class="dropdown-item" href="/development">
+                        <i class="ni "></i>
+                        Development
+                      </a>
                       
                       <a class="dropdown-item" href="/user">
                         <i class="ni "></i>
@@ -111,12 +108,15 @@
                         Production Install
                       </a>
                       
-                      <a class="dropdown-item" href="/quickstart">
-                        <i class="ni "></i>
-                        Quickstart
-                      </a>
-                      
                     </div>
+                  </li>
+                
+              
+                
+                  <li class="nav-item">
+                    <a href="/quickstart" class="nav-link">
+                      <span class="nav-link-inner--text">Quickstart</span>
+                    </a>
                   </li>
                 
               
@@ -128,8 +128,13 @@
                   </li>
                 
               
-              <li class="nav-item github-logo-header"><a class="" href="https://github.com/G-Research/armada">
+              <li class="nav-item github-logo-header desktop"><a class="" href="https://github.com/G-Research/armada" target="_blank">
                 <img src="/assets/img/brand/GitHub-Mark-Light-120px-plus.png" width="40" height="40"></a>
+              </li>
+              <li class="nav-item mobile">
+                <a href="https://github.com/G-Research/armada" class="nav-link" target="_blank">
+                  <span class="nav-link-inner--text">Github</span>
+                </a>
               </li>
             </ul>
           </div>
@@ -147,7 +152,10 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-5 col-md-7 mr-auto text-left d-flex justify-content-center flex-column">
-          <h3 class="display-3">Armada</h3>
+          <h3 class="display-3 desktop">Armada</h3>
+          <div class="col-lg-7 mobile" style="text-align: center;">
+            <img class="ml-lg-5 mobile-armada" src="/assets/img/brand/armada-under-shadow.svg" />
+          </div>
           <p class="lead mt-0">Armada is an application to achieve high throughput of run-to-completion jobs on multiple Kubernetes clusters. <br /><br />It stores queues for users/projects with pod specifications and creates these pods once there is available resource in one of the connected Kubernetes clusters.</p>
           <br>
           <p><a href="https://circleci.com/gh/G-Research/armada" rel="nofollow"><img src="https://camo.githubusercontent.com/e7f830f920356607471e7e797a849e67e7cf9c46/68747470733a2f2f636972636c6563692e636f6d2f67682f68656c6d2f68656c6d2e7376673f7374796c653d736869656c64" alt="CircleCI" data-canonical-src="https://circleci.com/gh/helm/helm.svg?style=shield" style="max-width:100%;"></a>
@@ -159,7 +167,7 @@
             </a>
           </div>
         </div>
-        <div class="col-lg-7" style="text-align: center;">
+        <div class="col-lg-7 desktop" style="text-align: center;">
           <img class="ml-lg-5" src="/assets/img/brand/armada-under-shadow.svg" />
         </div>
       </div>
@@ -180,7 +188,7 @@
           <div class="icon icon-lg icon-shape icon-shape-primary shadow rounded-circle">
             <i class="ni ni-laptop"></i>
           </div>
-          <h6 class="info-title text-uppercase text-primary">Resource Light</h6>
+          <h6 class="info-title text-uppercase text-primary">Fair-Use Scheduling</h6>
           <p class="description opacity-8">Armada maintains fair resource share over time (inspired by HTCondor priority)</p>
         </div>
       </div>
@@ -211,13 +219,13 @@
           <p class="description opacity-8">By utilizing multiple Kubernetes clusters, the system can scale beyond the limits of a single Kubernetes cluster</p>
         </div>
       </div>
-      <div class="col-lg-5"></div>
-        <div class="col-lg-2">
+        <div class="col-lg-12 text-center">
+          <div class="buttons">
         <a href="/design" class="btn btn-primary">
           Learn More
         </a>
+          </div>
         </div>
-      <div class="col-lg-5"></div>
   </div>
 </div>
 </div>
@@ -231,7 +239,7 @@
         <div class="col-lg-6">
           <div class="info info-horizontal info-hover-primary">
             <div class="icon icon-shape icon-shape-info rounded-circle text-white">
-              <i class="ni ni-html5 text-info"></i>
+              <i class="fa fa-angle-double-right text-info"></i>
             </div>
             <div class="description pl-4">
               <h5 class="title">Queue</h5>
@@ -241,7 +249,7 @@
           </div>
           <div class="info info-horizontal info-hover-primary">
             <div class="icon icon-shape icon-shape-info rounded-circle text-white">
-              <i class="ni ni-app text-info"></i>
+              <i class="fa fa-cube text-info"></i>
             </div>
             <div class="description pl-4">
               <h5 class="title">Job</h5>
@@ -251,7 +259,7 @@
           </div>
           <div class="info info-horizontal info-hover-primary">
             <div class="icon icon-shape icon-shape-info rounded-circle text-white">
-              <i class="ni ni-bell-55 text-info"></i>
+              <i class="fa fa-cubes text-info"></i>
             </div>
             <div class="description pl-4">
               <h5 class="title">Job Set</h5>
@@ -260,7 +268,7 @@
             </div>
           </div>
         </div>
-        <div class="col-lg-6 col-10 mx-md-auto">
+        <div class="col-lg-6 col-10 mx-md-auto desktop">
           <img class="ml-lg-5" src="/assets/img/ill/presentation_bg.png" width="100%">
         </div>
       </div>
@@ -289,6 +297,9 @@
 <br><br>
 <div class="section-md">
   <div class="row">
+    <div class="col-lg-7 mr-auto mobile">
+      <img class="ml-lg-5" src="/assets/img/ill/bg6-2.svg" />
+    </div>
     <div class="col-lg-4 col-md-7 text-left d-flex justify-content-center flex-column">
       <h3 class="display-3">Contribute</h3>
       <p class="lead mt-0">Want to contribute to Armada? Here's all the information you need.</p>
@@ -299,7 +310,7 @@
         </a>
       </div>
     </div>
-    <div class="col-lg-7 mr-auto">
+    <div class="col-lg-7 mr-auto desktop">
       <img class="ml-lg-5" src="/assets/img/ill/bg6-2.svg" />
     </div>
   </div>
@@ -385,19 +396,19 @@
           
           
           <li class="nav-item">
-            <a href="/development" class="nav-link">
-              <span class="nav-link-inner--text">Development</span>
-            </a>
-          </li>
-          
-          
-          
-          <li class="nav-item">
             <a href="" class="nav-link">
               <span class="nav-link-inner--text">Documentation</span>
             </a>
           </li>
 
+          
+          
+          
+          <li class="nav-item">
+            <a href="/quickstart" class="nav-link">
+              <span class="nav-link-inner--text">Quickstart</span>
+            </a>
+          </li>
           
           
           

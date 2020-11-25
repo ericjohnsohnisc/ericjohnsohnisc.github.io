@@ -11,6 +11,16 @@
     margin-left: 1rem !important;
 }
 
+/* BUTTONS */
+
+.btn {
+    min-width: 192px;
+}
+
+.btn-icon-only {
+    min-width: unset !important;
+}
+
 /* FOOTER */
 
 .btn-twitter i {
@@ -124,4 +134,51 @@ h3 {
 
 ul li {
     line-height: 32px !important;
+}
+
+/* HIDE MOBILE ELEMENTS */
+
+.mobile {
+    display: none;
+}
+
+/* RESPONSIVE CODE ONLY! */
+
+@media screen and (max-width:480px) {
+
+    .desktop {
+        display: none !important;
+    }
+
+    .mobile {
+        display: block !important;
+    }
+
+    .nav-footer {
+        display: none !important;
+    }
+
+    .page-header > .container {
+        padding-bottom: 0 !important;
+    }
+
+    .page-header.page-header-small {
+        min-height: 25vh !important;
+        top: 45px;
+    }
+
+    .page-header-image.card-background {
+        background-repeat: no-repeat !important;
+        max-height: 250px !important;
+    }
+
+    img.mobile-armada {
+        height: 250px !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    .buttons a {
+        width: 100% !important;
+    }
+
 }
