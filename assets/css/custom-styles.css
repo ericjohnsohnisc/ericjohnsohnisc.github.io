@@ -1,0 +1,49 @@
+
+/* HEADER */
+
+#header {
+    padding-top: 0px !important;
+    padding-bottom: 0 !important;
+    background-color: #fff !important;
+}
+
+.navbar li a {
+    color: #00458D !important;
+}
+
+.navbar li a:hover {
+    color: #00AAE1 !important;
+}
+
+
+.navbar li a.getstarted:hover {
+    color: #fff !important;
+}
+
+/* LOGO */
+
+.logo img {
+    max-height: unset !important;
+    width: 200px !important;
+}
+
+/* HOME PAGE */
+
+/* HERO SECTION */
+
+#hero {
+    background: #00458D !important;
+}
+
+.btn-hero-1 {
+    margin-right: 30px !important;
+}
+
+/* HIGHLIGHTS SECTION */
+
+#services .row {
+    margin-bottom: 30px !important;
+}
+
+/* CHARTS SECTION */
+
