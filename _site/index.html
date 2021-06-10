@@ -100,51 +100,54 @@
 
         <div class="row">
 
-          <div class="col-lg-7 d-flex flex-column justify-content-center align-items-stretch  order-2 order-lg-1">
+          
+         <div class="col-lg-6 d-flex flex-column align-items-center order-2 order-lg-1 img" style='background-image: url("assets/img/why-us.png");' data-aos="zoom-in" data-aos-delay="150">&nbsp;</div>
+        
 
-            <div class="content">
-              <h3>Learn more about ILGPU</h3>
-              <p>
-                A modern, lightweight & fast GPU compiler for high-performance .Net programs
-              </p>
-            </div>
+        <div class="col-lg-6 d-flex flex-column justify-content-center align-items-stretch  order-1 order-lg-2">
 
-            <div class="accordion-list">
-              <ul>
-                <li>
-                  <a data-bs-toggle="collapse" class="collapse" data-bs-target="#accordion-list-1"><span>01</span> What is ILGPU?? <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
-                  <div id="accordion-list-1" class="collapse show" data-bs-parent=".accordion-list">
-                    <p>
-                      ILGPU is a new JIT (just-in-time) compiler for high-performance GPU programs (also known as kernels) written in .Net-based languages. ILGPU is completely written in C# without any native dependencies which allows you to write GPU programs that are truly portable.
-                    </p>
-                  </div>
-                </li>
-
-                <li>
-                  <a data-bs-toggle="collapse" data-bs-target="#accordion-list-2" class="collapsed"><span>02</span> What does ILGPU do? <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
-                  <div id="accordion-list-2" class="collapse" data-bs-parent=".accordion-list">
-                    <p>
-                      It combines the convenience of C++ AMP with the high performance of CUDA. Functions in the scope of kernels do not have to be annotated (e.g. default C# functions) and are allowed to work on value types. All kernels (including all hardware features like shared memory, atomics and warp shuffles) can be executed and debugged on the CPU using the integrated multi-threaded CPU accelerator.
-                    </p>
-                  </div>
-                </li>
-
-                <li>
-                  <a data-bs-toggle="collapse" data-bs-target="#accordion-list-3" class="collapsed"><span>03</span> Do I need to pay for ILGPU? <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
-                  <div id="accordion-list-3" class="collapse" data-bs-parent=".accordion-list">
-                    <p>
-                      Nope! ILGPU is released under the University of Illinois/NCSA Open Source License. It's a free and non-sponsored project being developed by a professional and passionate compiler, GPU and computer graphics developer. Support the project with contributions or a small donation in order to speed up the development process and to keep the project alive.
-                    </p>
-                  </div>
-                </li>
-
-              </ul>
-            </div>
-
+          <div class="content">
+            <h3>Learn more about ILGPU</h3>
+            <p>
+              A modern, lightweight & fast GPU compiler for high-performance .Net programs
+            </p>
           </div>
 
-          <div class="col-lg-5 align-items-stretch order-1 order-lg-2 img" style='background-image: url("assets/img/why-us.png");' data-aos="zoom-in" data-aos-delay="150">&nbsp;</div>
+          <div class="accordion-list">
+            <ul>
+              <li>
+                <a data-bs-toggle="collapse" class="collapse" data-bs-target="#accordion-list-1"><span>01</span> What is ILGPU?? <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
+                <div id="accordion-list-1" class="collapse show" data-bs-parent=".accordion-list">
+                  <p>
+                    ILGPU is a new JIT (just-in-time) compiler for high-performance GPU programs (also known as kernels) written in .Net-based languages. ILGPU is completely written in C# without any native dependencies which allows you to write GPU programs that are truly portable.
+                  </p>
+                </div>
+              </li>
+
+              <li>
+                <a data-bs-toggle="collapse" data-bs-target="#accordion-list-2" class="collapsed"><span>02</span> What does ILGPU do? <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
+                <div id="accordion-list-2" class="collapse" data-bs-parent=".accordion-list">
+                  <p>
+                    It combines the convenience of C++ AMP with the high performance of CUDA. Functions in the scope of kernels do not have to be annotated (e.g. default C# functions) and are allowed to work on value types. All kernels (including all hardware features like shared memory, atomics and warp shuffles) can be executed and debugged on the CPU using the integrated multi-threaded CPU accelerator.
+                  </p>
+                </div>
+              </li>
+
+              <li>
+                <a data-bs-toggle="collapse" data-bs-target="#accordion-list-3" class="collapsed"><span>03</span> Do I need to pay for ILGPU? <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
+                <div id="accordion-list-3" class="collapse" data-bs-parent=".accordion-list">
+                  <p>
+                    Nope! ILGPU is released under the University of Illinois/NCSA Open Source License. It's a free and non-sponsored project being developed by a professional and passionate compiler, GPU and computer graphics developer. Support the project with contributions or a small donation in order to speed up the development process and to keep the project alive.
+                  </p>
+                </div>
+              </li>
+
+            </ul>
+          </div>
         </div>
+
+        </div>
+
 
       </div>
     </section><!-- End Why Us Section -->
@@ -264,286 +267,7 @@
       </div>
     </section><!-- End Services Section -->
 
-<section id="charts">
-    <div class="container">
-      <div id="chart-option">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-12"><div class="divider"></div></div>
-          </div>
-          <div class="row header">
-            <h3>Comparison to C++ AMP and Cuda</h3>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              <div class="chart clearfix">
-                <div class="features-col col-sm-6">
-                  <div class="header">
-                    Features
-                  </div>
-                  <div class="spec">
-                    <span class="icon brankic-notice2"></span>
-                    .Net Code
-                  </div>
-                  <div class="spec">
-                    <span class="icon brankic-notice2"></span>
-                    C++ Code
-                  </div>
-                  <div class="spec">
-                    <span class="icon brankic-notice2"></span>
-                    Function Annotations Required
-                  </div>
-                  <div class="spec">
-                    <span class="icon brankic-notice2"></span>
-                    NVIDIA GPUs
-                  </div>
-                  <div class="spec">
-                    <span class="icon brankic-notice2"></span>
-                    AMD GPUs
-                  </div>
-                  <div class="spec">
-                    <span class="icon brankic-notice2"></span>
-                    Intel GPUs
-                  </div>
-                  <div class="spec">
-                    <span class="icon brankic-rocket"></span>
-                    High-Level Abstractions (Implicitly Grouped Kernels, ...)
-                  </div>
-                  <div class="spec">
-                    <span class="icon brankic-abacus"></span>
-                    Low-Level Intrinsics
-                  </div>
-                  <div class="spec">
-                    <span class="icon brankic-abacus"></span>
-                    High-Performance Math Functions
-                  </div>
-                  <div class="spec">
-                    <span class="icon brankic-window"></span>
-                    Cross-Platform Support
-                  </div>
-                  <div class="spec">
-                    <span class="icon brankic-window"></span>
-                    Single-Compilation Cross-Platform Support
-                  </div>
-                  <div class="spec">
-                    <span class="icon brankic-window"></span>
-                    Direct Multi-GPU Support
-                  </div>
-                  <div class="spec">
-                    <span class="icon brankic-cogs"></span>
-                    Convenient Algorithm Debugging
-                  </div>
-                  <div class="spec">
-                    <span class="icon brankic-cogs"></span>
-                    Debugging on GPU Hardware
-                  </div>
-                  <div class="spec">
-                    <span class="icon brankic-chronometer"></span>
-                    Kernel Profiling
-                  </div>
-                  <div class="spec">
-                    <span class="icon brankic-loop"></span>
-                    CPU Runtime
-                  </div>
-                  <div class="spec">
-                    <span class="icon brankic-loop"></span>
-                    CPU Runtime with Shared Memory and Low-Level Intrinsics
-                  </div>
-                  <div class="spec last">
-                    <span class="icon brankic-loop"></span>
-                    SIMD CPU Runtime
-                  </div>
-                </div>
-                <div class="plan-col col-sm-2">
-                  <div class="header">
-                    ILGPU
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/checkmark.png" class="check" alt="checkmark" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/empty.png" class="check" alt="empty" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/empty.png" class="check" alt="empty" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/checkmark.png" class="check" alt="checkmark" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/checkmark.png" class="check" alt="scheduled" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/checkmark.png" class="check" alt="scheduled" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/checkmark.png" class="check" alt="checkmark" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/checkmark.png" class="check" alt="checkmark" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/checkmark.png" class="check" alt="checkmark" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/checkmark.png" class="check" alt="scheduled" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/checkmark.png" class="check" alt="checkmark" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/checkmark.png" class="check" alt="checkmark" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/checkmark.png" class="check" alt="checkmark" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/checkmark_partial.png" class="check" alt="scheduled" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/checkmark.png" class="check" alt="scheduled" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/checkmark.png" class="check" alt="checkmark" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/checkmark.png" class="check" alt="checkmark" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/checkmark_scheduled.png" class="check" alt="scheduled" />
-                  </div>
-                </div>
-                <div class="plan-col col-sm-2">
-                  <div class="header">
-                    C++ AMP
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/empty.png" class="check" alt="empty" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/checkmark.png" class="check" alt="checkmark" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/checkmark.png" class="check" alt="checkmark" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/checkmark.png" class="check" alt="checkmark" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/checkmark.png" class="check" alt="scheduled" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/checkmark.png" class="check" alt="checkmark" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/checkmark.png" class="check" alt="checkmark" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/empty.png" class="check" alt="empty" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/empty.png" class="check" alt="empty" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/checkmark.png" class="check" alt="checkmark" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/empty.png" class="check" alt="empty" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/checkmark_partial.png" class="check" alt="empty" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/checkmark.png" class="check" alt="checkmark" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/empty.png" class="check" alt="empty" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/checkmark.png" class="check" alt="checkmark" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/checkmark.png" class="check" alt="checkmark" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/empty.png" class="check" alt="empty" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/checkmark.png" class="check" alt="checkmark" />
-                  </div>
-                </div>
-                <div class="plan-col last col-sm-2">
-                  <div class="header">
-                    Cuda
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/empty.png" class="check" alt="empty" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/checkmark.png" class="check" alt="checkmark" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/checkmark.png" class="check" alt="checkmark" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/checkmark.png" class="check" alt="checkmark" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/empty.png" class="check" alt="scheduled" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/empty.png" class="check" alt="scheduled" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/empty.png" class="check" alt="empty" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/checkmark.png" class="check" alt="checkmark" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/checkmark.png" class="check" alt="checkmark" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/checkmark.png" class="check" alt="checkmark" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/empty.png" class="check" alt="empty" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/checkmark.png" class="check" alt="checkmark" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/empty.png" class="check" alt="empty" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/checkmark.png" class="check" alt="checkmark" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/checkmark.png" class="check" alt="checkmark" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/empty.png" class="check" alt="empty" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/empty.png" class="check" alt="empty" />
-                  </div>
-                  <div class="spec">
-                    <img src="/Content/empty.png" class="check" alt="empty" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <p>
-              Yellow checkmarks indicate partial or limited support.<br />
-              Features marked with a red checkmark will be available in the future. Check the <a href="/Home/Roadmap">Roadmap</a> for details.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+
 
     <!-- ======= Cta Section ======= -->
     <section id="cta" class="cta">
@@ -552,7 +276,7 @@
         <div class="row">
           <div class="col-lg-9 text-center text-lg-start">
             <h3>Ready to get started?</h3>
-            <p></p>
+            <p>Take a look through the documentation, explore the wiki, or join us on the Discord!</p>
           </div>
           <div class="col-lg-3 cta-btn-container text-center">
             <a class="cta-btn align-middle" href="#">Start Now</a>
@@ -568,50 +292,40 @@
 
         <div class="section-title">
           <h2>News</h2>
-          <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
+          <p>Updates and news related to ILGPU and the community.</p>
         </div>
 
         <div class="row">
 
           <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
             <div class="box">
-              <h3>Free Plan</h3>
               
-              <a href="#" class="buy-btn">Get Started</a>
+              <h5>New Talk to the Dev(s) Timeslot 2021!</h5>
+              There will be a weekly talk-to-the-dev(s) meeting on the Discord server every Wednesday from 10-11pm Berlin Time, 8-9am Canberra Time (+1 day, Thursday), 4-5pm New York Time, 1-2pm California Time. Tthe first meeting using the updated time slot will take place on March 3rd 2021. 
+              <br><br>
+              <a href="#" class="buy-btn">Full Article</a>
             </div>
           </div>
+        
 
-          <div class="col-lg-4 mt-4 mt-lg-0" data-aos="fade-up" data-aos-delay="200">
-            <div class="box">
-              <h3>Business Plan</h3>
-              <h4><sup>$</sup>29<span>per month</span></h4>
-              <ul>
-                <li><i class="bx bx-check"></i> Quam adipiscing vitae proin</li>
-                <li><i class="bx bx-check"></i> Nec feugiat nisl pretium</li>
-                <li><i class="bx bx-check"></i> Nulla at volutpat diam uteera</li>
-                <li><i class="bx bx-check"></i> Pharetra massa massa ultricies</li>
-                <li><i class="bx bx-check"></i> Massa ultricies mi quis hendrerit</li>
-              </ul>
-              <a href="#" class="buy-btn">Get Started</a>
-            </div>
+        <div class="col-lg-4 mt-4 mt-lg-0" data-aos="fade-up" data-aos-delay="200">
+          <div class="box">
+            <h5>Major version released February 15th</h5>
+            The new stable version offers significant performance improvements of the generated kernel programs and contains critical resource deallocation fixes. It is strongly recommended to upgrade to this version as soon as possible to avoid resource and GC related deallocation issues.
+            <br><br>
+            <a href="#" class="buy-btn">Full Article</a>
           </div>
-
-          <div class="col-lg-4 mt-4 mt-lg-0" data-aos="fade-up" data-aos-delay="300">
-            <div class="box">
-              <h3>Developer Plan</h3>
-              <h4><sup>$</sup>49<span>per month</span></h4>
-              <ul>
-                <li><i class="bx bx-check"></i> Quam adipiscing vitae proin</li>
-                <li><i class="bx bx-check"></i> Nec feugiat nisl pretium</li>
-                <li><i class="bx bx-check"></i> Nulla at volutpat diam uteera</li>
-                <li><i class="bx bx-check"></i> Pharetra massa massa ultricies</li>
-                <li><i class="bx bx-check"></i> Massa ultricies mi quis hendrerit</li>
-              </ul>
-              <a href="#" class="buy-btn">Get Started</a>
-            </div>
-          </div>
-
         </div>
+
+        <div class="col-lg-4 mt-4 mt-lg-0" data-aos="fade-up" data-aos-delay="300">
+          <div class="box">
+            <h5>Enhanced Progress Visibility</h5>
+            Starting in February 2021, an updated ILGPU version will be available every 6-8 weeks. As the community grows, new features will be explicitly tracked on the GitHub issues page and are linked to their appropriate milestone to which they belong.
+            <br><br><br>
+            <a href="#" class="buy-btn">Full Article</a>
+          </div>
+        </div>
+      </div>
 
       </div>
     </section><!-- End Pricing Section -->

@@ -47,3 +47,27 @@
 
 /* CHARTS SECTION */
 
+.why-us .content {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.why-us .accordion-list {
+    padding-left: 0 !important;
+}
+
+.why-us .img {
+    background-size: 70% 70%;
+}
+
+.cta {
+    background: linear-gradient(rgba(0, 69, 141, 0.9), rgba(0, 69, 141, 0.9)), url("../img/cta-bg.jpg") fixed center center;
+}
+
+.pricing h5 {
+    font-size: 30px;
+    color: #37517e;
+    font-weight: 400;
+    font-family: "Jost", sans-serif;
+    margin-bottom: 25px;
+}
