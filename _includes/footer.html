@@ -26,3 +26,16 @@
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
+
+  <!-- Easter Egg JS -->
+  <script type="text/javascript">
+    function easteregg() {
+    var span = document.getElementById('easter-egg');
+      if (span.textContent == 'ö') {
+        span.textContent = 'œ' ;
+      }
+      else if (span.textContent == 'œ') {
+        span.textContent = 'ö' ;
+      }
+    }
+    </script>

@@ -52,23 +52,30 @@
 
 /* CHARTS SECTION */
 
-#chart-option .col-md-12 {
-    border: 1px solid gray;
+#chart-option {
+    background-color: #fff;
+    box-shadow: 0px 0 25px 0 rgba(0, 0, 0, 0.1);
+    padding: 50px 30px;
 }
+
 
 .features-col {
     float: left !important;
-    width: 40% !important;
+    width: 50% !important;
 }
 
 .features-col .header {
     font-size: 28px !important;
     margin-bottom: 12px !important;
+    background-color: #F3F5FA;
+    min-height: 60px !important;
+    padding-top: 6px !important;
+    text-align: center !important;
 }
 
 .features-col .spec {
-    border-right: 1px solid #00458D !important;
-    border-bottom:1px solid #00458D !important;
+    border-right: 1px solid #37517e !important;
+    min-height: 48px !important;
 }
 
 .plan-col {
@@ -79,21 +86,46 @@
 .plan-col .header {
     font-size: 28px !important;
     margin-bottom: 12px !important;
+    background-color: #F3F5FA;
+    min-height: 60px !important;
+    padding-top: 6px !important;
 }
 
 .plan-col .spec {
-    min-height: 28.8px !important;
-    border-top: 1px solid blue;
-    border-bottom: 1px solid blue;
-}
-
-.plan-col .standard svg {
-    fill: #37517e !important;
+    min-height: 48px !important;
+    border-right: 1px solid #37517e;
 }
 
 .spec h4 {
     color: #37517e !important;
     margin-bottom: 0px !important;
+    font-size: 22px;
+}
+
+.spec .bx-check { 
+    color: #37517e;
+    font-size: 30px;
+}
+
+.spec .bx-check.partial {
+    color: #D9A700 !important;
+}
+
+.spec .bx-check.scheduled {
+    color: #D94900 !important;
+}
+
+.partial {
+    color: #D9A700 !important;
+}
+
+.scheduled {
+    color: #D94900 !important;
+}
+
+.future-support {
+    margin-top: 48px;
+    text-align: center;
 }
 
 .why-us .content {
@@ -111,6 +143,19 @@
 
 .cta {
     background: linear-gradient(rgba(0, 69, 141, 0.9), rgba(0, 69, 141, 0.9)), url("../img/cta-bg.jpg") fixed center center;
+}
+
+.cta-btn-1 {
+    margin-left: 0 !important;
+}
+
+.bxl-discord {
+    font-size: 24px !important;
+}
+
+.bxl-discord:before {
+    position: relative;
+    top: 3px;
 }
 
 .pricing h5 {

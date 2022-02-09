@@ -58,9 +58,9 @@
               <li><a href="#news" class="scrollto">Milestones</a></li>
             </ul>
             </li>
-        <li><a href="https://github.com/m4rs-mt/ILGPU/wiki">Documentation</a></li>
+        <li><a href="/wiki/home">Documentation</a></li>
         <li><a href="https://discord.com/invite/X6RBCff" target="_blank">Discord</a></li>
-        <li><a class="getstarted scrollto" href="#c">Get Started</a></li>
+        <li><a class="getstarted scrollto" href="#cta">Get Started</a></li>
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
 
@@ -173,5 +173,18 @@
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
+
+  <!-- Easter Egg JS -->
+  <script type="text/javascript">
+    function easteregg() {
+    var span = document.getElementById('easter-egg');
+      if (span.textContent == 'ö') {
+        span.textContent = 'œ' ;
+      }
+      else if (span.textContent == 'œ') {
+        span.textContent = 'ö' ;
+      }
+    }
+    </script>
   </body>
 </html>
