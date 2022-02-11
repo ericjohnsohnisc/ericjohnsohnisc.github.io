@@ -1,0 +1,49 @@
+I"P<h2 id="tldr---quick-start">TLDR - Quick Start</h2>
+
+<p>Create a new ILGPU <code class="language-plaintext highlighter-rouge">Context</code> instance that initializes ILGPU.
+Create <code class="language-plaintext highlighter-rouge">Accelerator</code> instances that target specific hardware devices.
+Compile and load the desired kernels and launch them with allocated chunks of memory.
+Retrieve the data and you’re done 😄</p>
+
+<p>Refer to the related <a href="https://github.com/m4rs-mt/ILGPU.Samples/blob/master/Src/SimpleKernel" target="_blank">ILGPU sample</a> for additional insights.</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="err">...</span>
+<span class="err">{</span>
+    <span class="nc">static</span> <span class="k">void</span> <span class="nf">MyKernel</span><span class="p">(</span>
+        <span class="n">Index1</span> <span class="n">index</span><span class="p">,</span> <span class="c1">// The global thread index (1D in this case)</span>
+        <span class="n">ArrayView</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">dataView</span><span class="p">,</span> <span class="c1">// A view to a chunk of memory (1D in this case)</span>
+        <span class="kt">int</span> <span class="n">constant</span><span class="p">)</span> <span class="c1">// A sample uniform constant</span>
+    <span class="p">{</span>
+        <span class="n">dataView</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="p">=</span> <span class="n">index</span> <span class="p">+</span> <span class="n">constant</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// Create the required ILGPU context</span>
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">context</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Context</span><span class="p">();</span>
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">accelerator</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">CudaAccelerator</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+
+        <span class="c1">// accelerator.LoadAutoGroupedStreamKernel creates a typed launcher</span>
+        <span class="c1">// that implicitly uses the default accelerator stream.</span>
+        <span class="c1">// In order to create a launcher that receives a custom accelerator stream</span>
+        <span class="c1">// use: accelerator.LoadAutoGroupedKernel&lt;Index1, ArrayView&lt;int&gt; int&gt;(...)</span>
+        <span class="kt">var</span> <span class="n">myKernel</span> <span class="p">=</span> <span class="n">accelerator</span><span class="p">.</span><span class="n">LoadAutoGroupedStreamKernel</span><span class="p">&lt;</span>
+            <span class="n">Index1</span><span class="p">,</span>
+            <span class="n">ArrayView</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;,</span>
+            <span class="kt">int</span><span class="p">&gt;(</span><span class="n">MyKernel</span><span class="p">);</span>
+
+        <span class="c1">// Allocate some memory</span>
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">buffer</span> <span class="p">=</span> <span class="n">accelerator</span><span class="p">.</span><span class="n">Allocate</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;(</span><span class="m">1024</span><span class="p">);</span>
+        <span class="c1">// Launch buffer.Length many threads and pass a view to buffer</span>
+        <span class="nf">myKernel</span><span class="p">(</span><span class="n">buffer</span><span class="p">.</span><span class="n">Length</span><span class="p">,</span> <span class="n">buffer</span><span class="p">.</span><span class="n">View</span><span class="p">,</span> <span class="m">42</span><span class="p">);</span>
+
+        <span class="c1">// Wait for the kernel to finish...</span>
+        <span class="n">accelerator</span><span class="p">.</span><span class="nf">Synchronize</span><span class="p">();</span>
+
+        <span class="c1">// Resolve data</span>
+        <span class="kt">var</span> <span class="n">data</span> <span class="p">=</span> <span class="n">buffer</span><span class="p">.</span><span class="nf">GetAsArray</span><span class="p">();</span>
+        <span class="c1">// ...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+:ET

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  
+    <title>ILGPU - A Modern GPU Compiler for .Net Programs</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+  
+    <!-- Favicons -->
+    <link href="../assets/img/favicon.png" rel="icon">
+    <link href="../assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+  
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  
+    <!-- Vendor CSS Files -->
+    <link href="../assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="../assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="../assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="../assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+     
+    <script src="https://unpkg.com/boxicons@latest/dist/boxicons.js"></script>
+  
+    <!-- Template Main CSS File -->
+    <link href="../assets/css/style.css" rel="stylesheet">
+
+  <!-- Custom Styles CSS File -->
+  <link href="../assets/css/custom-styles.css" rel="stylesheet">
+    
+  </head>
+  <body class="wiki">
+    <!-- ======= Header ======= -->
+<header id="header" class="fixed-top ">
+    <div class="container d-flex align-items-center">
+
+      <a href="../index.html" class="logo me-auto"><img src="../assets/img/ilgpu-logo.svg" alt="" class="img-fluid"></a>
+
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li class="dropdown"><a>About</a>
+          <ul>
+            <li><a href="../index.html#learn-more" class="scrollto">Learn More</a></li>
+            <li><a href="../index.html#highlights" class="scrollto">Highlights</a></li>
+            <li><a href="../index.html#features">Features</a></li>
+            <li><a href="#../index.htmlnews" class="scrollto">News</a></li>
+            <li><a href="../index.html#faq">FAQ</a></li>
+          </ul>
+          </li>
+          <li class="dropdown"><a class="scrollto" href="../index.html#about">Project</a>
+            <ul>
+              <li><a href="https://github.com/m4rs-mt/ILGPU/" class="scrollto">Sourcecode</a></li>
+              <li><a href="../index.html#features">Releases</a></li>
+              <li><a href="../index.html#news" class="scrollto">Milestones</a></li>
+            </ul>
+            </li>
+        <li><a href="/wiki/home">Documentation</a></li>
+        <li><a href="https://discord.com/invite/X6RBCff" target="_blank">Discord</a></li>
+        <li><a class="getstarted scrollto" href="../index.html#cta">Get Started</a></li>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+
+    </div>
+  </header><!-- End Header -->
+
+
+    <section id="sidebar">
+    <div id="sidebar-header">
+        <h3>Documentation</h3>
+        </div>
+    <nav id="wiki-nav">
+        <h5>Overview</h5>
+        <ul>
+            <li><a href="/wiki/Home.html">Home</a></li> 
+            <li><a href="/wiki/Accelerators-and-Streams.html">Accelerators & Streams</a></li> 
+            <li><a href="/wiki/Memory-Buffers-and-Views.html">Memory Buffers & Views</a></li> 
+            <li><a href="/wiki/Kernels.html">Kernels</a></li> 
+            <li><a href="/wiki/Shared-Memory.html">Shared Memory</a></li> 
+            <li><a href="/wiki/Math-Functions.html">Math Functions</a></li> 
+        </ul>
+        <h5>Advanced</h5>
+        <ul>
+            <li><a href="/wiki/Dynamically-Specialized-Kernels.html">Dynamically Specialized Kernels</a></li> 
+            <li><a href="/wiki/Debugging-and-Profiling.html">Debugging & Profiling</a</li> 
+            <li><a href="/wiki/Inside-ILGPU.html">Inside ILGPU</a></li> 
+        </ul>
+        
+        <h5>Upgrade Guides</h5>
+        <ul>
+            <li><a href="/wiki/Upgrade-v0.8.X-to-v0.9.X.html">v0.8.X to v0.9.X</a></li> 
+            <li><a href="/wiki/Upgrade-v0.8.0-to-v0.8.1.html">v0.8.0 to v0.8.1</a></li> 
+            <li><a href="/wiki/Upgrade-v0.7.X-to-v0.8.X.html">v0.7.X to v0.8.X</a></li> 
+            <li><a href="/wiki/Upgrade-v0.6.X-to-v0.7.X.html">v0.6.X to v0.7.X</a></li> 
+            <li><a href="/wiki/Upgrade-v0.3.X-to-v0.5.X.html">v0.3.X to v0.5.X</a></li> 
+            <li><a href="/wiki/Upgrade-v0.1.X-to-v0.2.X.html">v0.1.X to v0.2.X</a></li> 
+          </ul>
+    </nav>
+
+</section>
+    <section id="wiki-main">
+      <h2 id="accelerators">Accelerators</h2>
+
+<p>Accelerators represent hardware or software GPU devices.
+They store information about different devices and allow memory allocation and kernel loading on a particular device.
+A launch of a kernel on an accelerator is performed asynchronously by default.
+Synchronization with the accelerator or the associated stream is required in order to to wait for completion and to fetch results.</p>
+
+<p>Note that instances of classes that depend on an accelerator reference have to be disposed before disposing of the associated accelerator object.
+However, this does not apply to automatically managed kernels, which are cached inside the accelerator object.</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="err">...</span>
+<span class="err">{</span>
+    <span class="nc">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// Initialize a new ILGPU context</span>
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">context</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Context</span><span class="p">();</span>
+
+        <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">cpuAccelerator</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">CPUAccelerator</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+        <span class="c1">// Perform operations on the CPU</span>
+
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">cudaAccelerator</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">CudaAccelerator</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+        <span class="c1">// Perform operations on the default Cuda device</span>
+
+        <span class="c1">// Iterate over all available accelerators</span>
+        <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">acceleratorId</span> <span class="k">in</span> <span class="n">Accelerator</span><span class="p">.</span><span class="n">Accelerators</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">accl</span> <span class="p">=</span> <span class="n">Accelerator</span><span class="p">.</span><span class="nf">Create</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">acceleratorId</span><span class="p">))</span>
+            <span class="p">{</span>
+                <span class="c1">// Perform operations</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>You can print detailed accelerator information to the stdout stream by invoking the <code class="language-plaintext highlighter-rouge">PrintInformation</code> method. This yields output similar to the following. Sample output of an RTX 3090 using <code class="language-plaintext highlighter-rouge">accelerator.PrintInformation()</code>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Device: GeForce RTX 3090 [ILGPU InstanceId: 20]
+  Cuda device id:                          0
+  Cuda driver version:                     11.2
+  Cuda architecture:                       SM_86
+  Instruction set:                         7.1
+  Clock rate:                              1860 MHz
+  Memory clock rate:                       9751 MHz
+  Memory bus width:                        384-bit
+  Number of multiprocessors:               82
+  Max number of threads/multiprocessor:    1536
+  Max number of threads/group:             1024
+  Max number of total threads:             125952
+  Max dimension of a group size:           (1024, 1024, 64)
+  Max dimension of a grid size:            (2147483647, 65535, 65535)
+  Total amount of global memory:           25769803776 bytes, 24576 MB
+  Total amount of constant memory:         65536 bytes, 64 KB
+  Total amount of shared memory per group: 49152 bytes, 48 KB
+  Total amount of shared memory per mp:    102400 bytes, 100 KB
+  L2 cache size:                           6291456 bytes, 6144 KB
+  Max memory pitch:                        2147483647 bytes
+  Total number of registers per mp:        65536
+  Total number of registers per group:     65536
+  Concurrent copy and kernel execution:    True, with 2 copy engines
+  Driver mode:                             WDDM
+  Has ECC support:                         False
+  Supports managed memory:                 True
+  Supports compute preemption:             True
+  PCI domain id / bus id / device id:      0 / 11 / 0
+  NVML PCI bus id:                         0000:0B:00.0
+</code></pre></div></div>
+
+<h2 id="cuda-and-opencl-accelerators">Cuda and OpenCL Accelerators</h2>
+
+<p>The current Cuda (PTX) backend supports different driver and feature levels.
+The Cuda backend does not require a Cuda SDK to be installed/configured.</p>
+
+<p>An automatic driver detection module selects an appropriate PTX ISA version for your graphics driver.
+However, if you encounter the error message <code class="language-plaintext highlighter-rouge">A PTX jit compilation failed</code> try updating the graphics driver first before diving deeper into this issue.</p>
+
+<p>Use <code class="language-plaintext highlighter-rouge">CudaAccelerator.CudaAccelerators</code> to query all Cuda-compatible GPUs in your system. Use <code class="language-plaintext highlighter-rouge">CLAccelerator.CLAccelerators</code> to query all OpenCL-compatible GPUs in your system.</p>
+
+<p>It is <strong>highly recommended</strong> to use the <code class="language-plaintext highlighter-rouge">CudaAccelerator</code> class for NVIDIA GPUs and the <code class="language-plaintext highlighter-rouge">CLAccelerator</code> class for Intel and AMD GPUs.</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">ILGPU.Runtime.Cuda</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">ILGPU.Runtime.OpenCL</span><span class="p">;</span>
+<span class="k">class</span> <span class="err">...</span>
+<span class="err">{</span>
+    <span class="nc">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="p">...</span>
+        <span class="kt">var</span> <span class="n">allSupportedAccelerators</span> <span class="p">=</span> <span class="n">Accelerator</span><span class="p">.</span><span class="n">Accelerators</span><span class="p">;</span>
+        <span class="kt">var</span> <span class="n">cudaAccelerators</span> <span class="p">=</span> <span class="n">CudaAccelerator</span><span class="p">.</span><span class="n">CudaAccelerators</span><span class="p">;</span>
+        <span class="kt">var</span> <span class="n">supportedCLAccelerators</span> <span class="p">=</span> <span class="n">CLAccelerator</span><span class="p">.</span><span class="n">CLAccelerators</span><span class="p">;</span>
+        <span class="kt">var</span> <span class="n">allCLAccelerators</span> <span class="p">=</span> <span class="n">CLAccelerator</span><span class="p">.</span><span class="n">AllCLAccelerators</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="streams">Streams</h2>
+
+<p><code class="language-plaintext highlighter-rouge">AcceleratorStreams</code> represent async operation queues, which operations can be submitted to.
+Custom accelerator streams have to be synchronized manually.
+Using streams increases the parallellism of applications.
+Every accelerator encapsulates a default accelerator stream that is used for all operations by default.</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="err">...</span>
+<span class="err">{</span>
+    <span class="nc">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="p">...</span>
+
+        <span class="kt">var</span> <span class="n">defaultStream</span> <span class="p">=</span> <span class="n">accelerator</span><span class="p">.</span><span class="n">DefaultStream</span><span class="p">;</span>
+        <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">secondStream</span> <span class="p">=</span> <span class="n">accelerator</span><span class="p">.</span><span class="nf">CreateStream</span><span class="p">())</span>
+        <span class="p">{</span>
+
+            <span class="c1">// Perform actions using default stream...</span>
+
+            <span class="c1">// Perform actions on second stream...</span>
+
+            <span class="c1">// Wait for results from the first stream.</span>
+            <span class="n">defaultStream</span><span class="p">.</span><span class="nf">Synchronize</span><span class="p">();</span>
+
+            <span class="c1">// Use results async compared to operations on the second stream...</span>
+
+            <span class="c1">// Wait for results from the second stream</span>
+            <span class="n">secondStream</span><span class="p">.</span><span class="nf">Synchronize</span><span class="p">();</span>
+
+            <span class="p">...</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+    </section>
+      <!-- ======= Footer ======= -->
+  <footer id="footer">
+
+  
+
+    <div class="container footer-bottom clearfix text-center">
+      <div class="">
+        &copy; Copyright <script type="text/javascript">document.write(new Date().getFullYear());</script> <span>ILGPU</span>. All Rights Reserved.
+      </div>
+      <div class="credits">
+      </div>
+    </div>
+  </footer><!-- End Footer -->
+
+  <div id="preloader"></div>
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="../assets/vendor/aos/aos.js"></script>
+  <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="../assets/vendor/php-email-form/validate.js"></script>
+  <script src="../assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="../assets/vendor/waypoints/noframework.waypoints.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="../assets/js/main.js"></script>
+
+  <!-- Easter Egg JS -->
+  <script type="text/javascript">
+    function easteregg() {
+    var span = document.getElementById('easter-egg');
+      if (span.textContent == 'ö') {
+        span.textContent = 'œ' ;
+      }
+      else if (span.textContent == 'œ') {
+        span.textContent = 'ö' ;
+      }
+    }
+    </script>
+  </body>
+</html>

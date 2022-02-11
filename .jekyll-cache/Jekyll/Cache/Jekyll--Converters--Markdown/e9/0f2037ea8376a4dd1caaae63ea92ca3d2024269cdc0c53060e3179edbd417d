@@ -1,0 +1,115 @@
+I"�&<h2 id="general-notes">General Notes</h2>
+
+<p>A new OpenCL backend has been added that supports OpenCL C 2.0 (or higher) compatible GPUs.
+The OpenCL backend does not require an OpenCL SDK to be installed/configured.
+There is the possibility to query all supported OpenCL accelerators via <code class="language-plaintext highlighter-rouge">CLAccelerator.CLAccelerators</code>.
+Since NVIDIA GPUs typically does not support OpenCL C 2.0 (or higher), they are usually not contained in this list.
+However, if you still want to access those devices via the OpenCL API you can query <code class="language-plaintext highlighter-rouge">CLAccelerators.AllCLAccelerators</code>.
+Note that the global list of all accelerators <code class="language-plaintext highlighter-rouge">Accelerator.Accelerators</code> will contain supported accelerators only.
+It is highly recommended to use the <code class="language-plaintext highlighter-rouge">CudaAccelerator</code> class for NVIDIA GPUs and the <code class="language-plaintext highlighter-rouge">CLAccelerator</code> class for Intel and AMD GPUs.
+Furthermore, it is not necessary to worry about native library dependencies regarding OpenCL (except, of course, for the actual GPU drivers).</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">XMath</code> class has been removed as it contained many software implementations for different platforms that are not related to the actual ILGPU compiler.
+However, there are several math functions that are supported on all platforms which are still exposed via the new <code class="language-plaintext highlighter-rouge">IntrinsicMath</code> class.
+There is also a class <code class="language-plaintext highlighter-rouge">IntrinsicMath.CPU</code> which contains implementations for all math functions for the <code class="language-plaintext highlighter-rouge">CPUAccelerator</code>.
+Please note that these functions are not supported on other accelerators except the <code class="language-plaintext highlighter-rouge">CPUAccelerator</code>.
+If you want to use the full range of math functions refer to the <code class="language-plaintext highlighter-rouge">XMath</code> class of the <code class="language-plaintext highlighter-rouge">ILGPU.Algorithms</code> library.</p>
+
+<p>The new version of the <code class="language-plaintext highlighter-rouge">ILGPU.Algorithms</code> library offers support for a set of commonly used algorithms (like Scan or Reduce).
+Moreover, it offers <code class="language-plaintext highlighter-rouge">GroupExtensions</code> and <code class="language-plaintext highlighter-rouge">WarpExtensions</code> to support group/warp-wide reductions or prefix sums within kernels.</p>
+
+<h2 id="new-algorithms-library">New Algorithms Library</h2>
+
+<p>The new <code class="language-plaintext highlighter-rouge">ILGPU.Algorithms</code> library comes in a separate nuget package.
+In order to use any of the exposed group/warp/math extensions you have to enable the library.
+This setups all internal ILGPU hooks and custom code-generators to emit code that realizes the extensions in the right places.
+This is achieved by using the new extension and intrinsic API.</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">ILGPU.Algorithms</span><span class="p">;</span>
+<span class="k">class</span> <span class="err">...</span>
+<span class="err">{</span>
+    <span class="nc">static</span> <span class="k">void</span> <span class="p">...(...)</span>
+    <span class="p">{</span>
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">context</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Context</span><span class="p">();</span>
+
+        <span class="c1">// Enable all algorithms and extension methods</span>
+        <span class="n">context</span><span class="p">.</span><span class="nf">EnableAlgorithms</span><span class="p">();</span>
+
+        <span class="p">...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="math-functions">Math Functions</h2>
+
+<p>As mentioned <a href="#v07">here</a>, the <code class="language-plaintext highlighter-rouge">XMath</code> class has been removed from the actual GPU compiler framework.
+Leverage the <code class="language-plaintext highlighter-rouge">IntrinsicMath</code> class to use math functions that are available on all supported accelerators.
+If you want to access all math functions use the newly designed <code class="language-plaintext highlighter-rouge">XMath</code> class of the <code class="language-plaintext highlighter-rouge">ILGPU.Algorithms</code> library.</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="err">...</span>
+<span class="err">{</span>
+    <span class="nc">static</span> <span class="k">void</span> <span class="p">...(...)</span>
+    <span class="p">{</span>
+        <span class="c1">// Old way (obsolete and no longer supported)</span>
+        <span class="kt">float</span> <span class="n">x</span> <span class="p">=</span> <span class="n">ILGPU</span><span class="p">.</span><span class="n">XMath</span><span class="p">.</span><span class="nf">Sin</span><span class="p">(...);</span>
+
+        <span class="c1">// New way</span>
+        <span class="c1">// 1) Don't forget to enable algorithm support ;)</span>
+        <span class="n">context</span><span class="p">.</span><span class="nf">EnableAlgorithms</span><span class="p">();</span>
+        
+        <span class="c1">// 2) Use the new XMath class</span>
+        <span class="kt">float</span> <span class="n">x</span> <span class="p">=</span> <span class="n">ILGPU</span><span class="p">.</span><span class="n">Algorithms</span><span class="p">.</span><span class="n">XMath</span><span class="p">.</span><span class="nf">Sin</span><span class="p">(...);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="warp--group-intrinsics">Warp &amp; Group Intrinsics</h2>
+
+<p>Previous versions of ILGPU had several warp-shuffle overloads to expose the native warp and group intrinsics to the programmer.
+However, these functions are typically available for <code class="language-plaintext highlighter-rouge">int</code> and <code class="language-plaintext highlighter-rouge">float</code> data types.
+More complex or larger types required programming of custom <code class="language-plaintext highlighter-rouge">IShuffleOperation</code> interfaces that had to be passed to the shuffle functions.
+This inconvenient way of programming is no longer required.
+The new warp and group intrinsics support generic data structures.
+ILGPU will automatically generate the required code for every target platform and use case.</p>
+
+<p>The intrinsics <code class="language-plaintext highlighter-rouge">Group.Broadcast</code> and <code class="language-plaintext highlighter-rouge">Warp.Broadcast</code> have been added.
+In contrast to <code class="language-plaintext highlighter-rouge">Warp.Shuffle</code>, the <code class="language-plaintext highlighter-rouge">Warp.Broadcast</code> intrinsic requires that all participating threads read from the same lane.
+<code class="language-plaintext highlighter-rouge">Warp.Shuffle</code> supports different source lanes in every thread.
+<code class="language-plaintext highlighter-rouge">Group.Broadcast</code> works like <code class="language-plaintext highlighter-rouge">Warp.Broadcast</code>, but for all threads in a group.</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="err">...</span>
+<span class="err">{</span>
+    <span class="nc">static</span> <span class="k">void</span> <span class="p">...(...)</span>
+    <span class="p">{</span>
+        <span class="n">ComplexDataType</span> <span class="n">y</span> <span class="p">=</span> <span class="p">...;</span>
+        <span class="n">ComplexDataType</span> <span class="n">x</span> <span class="p">=</span> <span class="n">Warp</span><span class="p">.</span><span class="nf">Shuffle</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">threadIdx</span><span class="p">);</span>
+
+        <span class="p">...</span>
+
+        <span class="n">ComplexDataType</span> <span class="n">y</span> <span class="p">=</span> <span class="p">...;</span>
+        <span class="n">ComplexDataType</span> <span class="n">x</span> <span class="p">=</span> <span class="n">Group</span><span class="p">.</span><span class="nf">Broadcast</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">groupIdx</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="grid--group-indices">Grid &amp; Group Indices</h2>
+
+<p>It is no longer required to access grid and group indices via the <code class="language-plaintext highlighter-rouge">GroupedIndex(|2|3) index</code> parameter of a kernel.
+Instead, you can access the static properties <code class="language-plaintext highlighter-rouge">Grid.Index(X|Y|Z)</code> and <code class="language-plaintext highlighter-rouge">Group.Index(X|Y|Z)</code> from every function in the scope of a kernel.
+This simplifies programming of helper methods significantly.
+Furthermore, this also feels natural to experienced Cuda and OpenCL developers.</p>
+
+<p>class …
+{
+    static void …(GroupedIndex index)
+    {
+        // Common ILGPU way (still supported)
+        int gridIdx = index.GridIdx;
+        int groupIdx = index.GroupIdx;</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    // New ILGPU way
+    int gridIdx = Grid.IndexX;
+    int groupIdx = Group.IndexX;
+} }
+</code></pre></div></div>
+:ET

@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  
+    <title>ILGPU - A Modern GPU Compiler for .Net Programs</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+  
+    <!-- Favicons -->
+    <link href="../assets/img/favicon.png" rel="icon">
+    <link href="../assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+  
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  
+    <!-- Vendor CSS Files -->
+    <link href="../assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="../assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="../assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="../assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+     
+    <script src="https://unpkg.com/boxicons@latest/dist/boxicons.js"></script>
+  
+    <!-- Template Main CSS File -->
+    <link href="../assets/css/style.css" rel="stylesheet">
+
+  <!-- Custom Styles CSS File -->
+  <link href="../assets/css/custom-styles.css" rel="stylesheet">
+    
+  </head>
+  <body class="wiki">
+    <!-- ======= Header ======= -->
+<header id="header" class="fixed-top ">
+    <div class="container d-flex align-items-center">
+
+      <a href="../index.html" class="logo me-auto"><img src="../assets/img/ilgpu-logo.svg" alt="" class="img-fluid"></a>
+
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li class="dropdown"><a>About</a>
+          <ul>
+            <li><a href="../index.html#learn-more" class="scrollto">Learn More</a></li>
+            <li><a href="../index.html#highlights" class="scrollto">Highlights</a></li>
+            <li><a href="../index.html#features">Features</a></li>
+            <li><a href="#../index.htmlnews" class="scrollto">News</a></li>
+            <li><a href="../index.html#faq">FAQ</a></li>
+          </ul>
+          </li>
+          <li class="dropdown"><a class="scrollto" href="../index.html#about">Project</a>
+            <ul>
+              <li><a href="https://github.com/m4rs-mt/ILGPU/" class="scrollto">Sourcecode</a></li>
+              <li><a href="../index.html#features">Releases</a></li>
+              <li><a href="../index.html#news" class="scrollto">Milestones</a></li>
+            </ul>
+            </li>
+        <li><a href="/wiki/home">Documentation</a></li>
+        <li><a href="https://discord.com/invite/X6RBCff" target="_blank">Discord</a></li>
+        <li><a class="getstarted scrollto" href="../index.html#cta">Get Started</a></li>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+
+    </div>
+  </header><!-- End Header -->
+
+
+    <section id="sidebar">
+    <div id="sidebar-header">
+        <h3>Documentation</h3>
+        </div>
+    <nav id="wiki-nav">
+        <h5>Overview</h5>
+        <ul>
+            <li><a href="/wiki/Home.html">Home</a></li> 
+            <li><a href="/wiki/Accelerators-and-Streams.html">Accelerators & Streams</a></li> 
+            <li><a href="/wiki/Memory-Buffers-and-Views.html">Memory Buffers & Views</a></li> 
+            <li><a href="/wiki/Kernels.html">Kernels</a></li> 
+            <li><a href="/wiki/Shared-Memory.html">Shared Memory</a></li> 
+            <li><a href="/wiki/Math-Functions.html">Math Functions</a></li> 
+        </ul>
+        <h5>Advanced</h5>
+        <ul>
+            <li><a href="/wiki/Dynamically-Specialized-Kernels.html">Dynamically Specialized Kernels</a></li> 
+            <li><a href="/wiki/Debugging-and-Profiling.html">Debugging & Profiling</a</li> 
+            <li><a href="/wiki/Inside-ILGPU.html">Inside ILGPU</a></li> 
+        </ul>
+        
+        <h5>Upgrade Guides</h5>
+        <ul>
+            <li><a href="/wiki/Upgrade-v0.8.X-to-v0.9.X.html">v0.8.X to v0.9.X</a></li> 
+            <li><a href="/wiki/Upgrade-v0.8.0-to-v0.8.1.html">v0.8.0 to v0.8.1</a></li> 
+            <li><a href="/wiki/Upgrade-v0.7.X-to-v0.8.X.html">v0.7.X to v0.8.X</a></li> 
+            <li><a href="/wiki/Upgrade-v0.6.X-to-v0.7.X.html">v0.6.X to v0.7.X</a></li> 
+            <li><a href="/wiki/Upgrade-v0.3.X-to-v0.5.X.html">v0.3.X to v0.5.X</a></li> 
+            <li><a href="/wiki/Upgrade-v0.1.X-to-v0.2.X.html">v0.1.X to v0.2.X</a></li> 
+          </ul>
+    </nav>
+
+</section>
+    <section id="wiki-main">
+      <h2 id="optimizations-and-compile-time">Optimizations and Compile Time</h2>
+
+<p>ILGPU features a modern parallel processing, transformation and compilation model.
+It allows parallel code generation and transformation phases to reduce compile time and improve overall performance.</p>
+
+<p>However, parallel code generation in the frontend module is disabled by default.
+It can be enabled via the enumeration flag <code class="language-plaintext highlighter-rouge">ContextFlags.EnableParallelCodeGenerationInFrontend</code>.</p>
+
+<p>The global optimization process can be controlled with the enumeration <code class="language-plaintext highlighter-rouge">OptimizationLevel</code>.
+This level can be specified by passing the desired level to the <code class="language-plaintext highlighter-rouge">ILGPU.Context</code> constructor.
+If the optimization level is not explicitly specified, the level is automatically set to <code class="language-plaintext highlighter-rouge">OptimizationLevel.O1</code>.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">OptimizationLevel.O2</code> level uses additional transformations that increase compile time but yield potentially better GPU code.
+For best performance, it is recommended using this mode in <code class="language-plaintext highlighter-rouge">Release</code> builds only.</p>
+
+<h2 id="internal-caches">Internal Caches</h2>
+
+<p>ILGPU uses a set of internal caches to speed up the compilation process.
+The <code class="language-plaintext highlighter-rouge">KernelCache</code> is based on <code class="language-plaintext highlighter-rouge">WeakReference</code>s and its own GC thread to avoid memory leaks.
+As soon as a kernel is disposed by the .Net GC, the ILGPU GC thread can release the associated data structures.
+Although each Accelerator instance is assigned a <code class="language-plaintext highlighter-rouge">MemoryBufferCache</code> instance, ILGPU does not use this cache anywhere.
+It was added to help users write custom accelerator extensions that require temporary memory.
+If you do not use the corresponding <code class="language-plaintext highlighter-rouge">MemoryBufferCache</code>s, you should not get into trouble regarding caching.</p>
+
+<p>Use <code class="language-plaintext highlighter-rouge">Context.ClearCache(ClearCacheMode.Everything)</code> to clear all internal caches to recover allocated memory.
+In addition, each accelerator has its own cache for type information and kernel arguments.
+Use <code class="language-plaintext highlighter-rouge">Accelerator.ClearCache(ClearCacheMode.Everything)</code> to clear the cache on the desired accelerator.
+<strong>Note that clearing the caches is not thread-safe in general; you have to ensure</strong> that there are <strong>no running background threads</strong> trying to compile/load/allocate ILGPU related objects while clearing the caches.</p>
+
+<h2 id="backends">Backends</h2>
+
+<p>A <code class="language-plaintext highlighter-rouge">Backend</code> represents target-specific code-generation functionality for a specific target device.
+It can be used to manually compile kernels for a specific platform.</p>
+
+<p>Note that <strong>you do not have to create custom backend instances</strong> on your own when using the ILGPU runtime.
+Accelerators already carry associated and configured backends that are used for high-level kernel loading.</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="err">...</span>
+<span class="err">{</span>
+    <span class="nc">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">context</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Context</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="c1">// Creats a user-defined MSIL backend for .Net code generation</span>
+            <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">cpuBackend</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">DefaultILBackend</span><span class="p">(</span><span class="n">context</span><span class="p">))</span>
+            <span class="p">{</span>
+                <span class="c1">// Use custom backend</span>
+            <span class="p">}</span>
+
+            <span class="c1">// Creates a user-defined backend for NVIDIA GPUs using compute capability 5.0</span>
+            <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">ptxBackend</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">PTXBackend</span><span class="p">(</span>
+                <span class="n">context</span><span class="p">,</span>
+                <span class="n">PTXArchitecture</span><span class="p">.</span><span class="n">SM_50</span><span class="p">,</span>
+                <span class="n">TargetPlatform</span><span class="p">.</span><span class="n">X64</span><span class="p">))</span>
+            <span class="p">{</span>
+                <span class="c1">// Use custom backend</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="ircontext">IRContext</h2>
+
+<p>An <code class="language-plaintext highlighter-rouge">IRContext</code> manages and caches intermediate-representation (IR) code, which can be reused during the compilation process.
+It can be created using a general ILGPU <code class="language-plaintext highlighter-rouge">Context</code> instance.
+An <code class="language-plaintext highlighter-rouge">IRContext</code> is not tied to a specific <code class="language-plaintext highlighter-rouge">Backend</code> instance and can be reused across different hardware architectures.</p>
+
+<p>Note that the main ILGPU <code class="language-plaintext highlighter-rouge">Context</code> already has an associated <code class="language-plaintext highlighter-rouge">IRContext</code> that is used for all high-level kernel-loading functions.
+Consequently, users are not required to manage their own contexts in general.</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="err">...</span>
+<span class="err">{</span>
+    <span class="nc">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">context</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Context</span><span class="p">();</span>
+
+        <span class="kt">var</span> <span class="n">irContext</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">IRContext</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+        <span class="c1">// ...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="compiling-kernels">Compiling Kernels</h2>
+
+<p>Kernels can be compiled manually by requesting a code-generation operation from the backend yielding a <code class="language-plaintext highlighter-rouge">CompiledKernel</code> object.
+The resulting kernel object can be loaded by an <code class="language-plaintext highlighter-rouge">Accelerator</code> instance from the runtime system.
+Alternatively, you can cast a <code class="language-plaintext highlighter-rouge">CompiledKernel</code> object to its appropriate backend-specific counterpart method in order to access the generated and target-specific assembly code.</p>
+
+<p><em>Note that the default MSIL backend does not provide additional insights, since the <code class="language-plaintext highlighter-rouge">ILBackend</code> does not require custom assembly code.</em></p>
+
+<p>We recommend that you use the <a href="ILGPU-Kernels">high-level kernel-loading concepts of ILGPU</a> instead of the low-level interface.</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="err">...</span>
+<span class="err">{</span>
+    <span class="nc">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">MyKernel</span><span class="p">(</span><span class="n">Index</span> <span class="n">index</span><span class="p">,</span> <span class="p">...)</span>
+    <span class="p">{</span>
+        <span class="c1">// ...</span>
+    <span class="p">}</span>
+
+    <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">context</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Context</span><span class="p">();</span>
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">b</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">PTXBackend</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="p">...);</span>
+        <span class="c1">// Compile kernel using no specific KernelSpecialization settings</span>
+        <span class="kt">var</span> <span class="n">compiledKernel</span> <span class="p">=</span> <span class="n">b</span><span class="p">.</span><span class="nf">Compile</span><span class="p">(</span>
+            <span class="k">typeof</span><span class="p">(...).</span><span class="nf">GetMethod</span><span class="p">(</span><span class="k">nameof</span><span class="p">(</span><span class="n">MyKernel</span><span class="p">),</span> <span class="n">BindingFlags</span><span class="p">.</span><span class="n">Public</span> <span class="p">|</span> <span class="n">BindingFlags</span><span class="p">.</span><span class="n">Static</span><span class="p">),</span>
+            <span class="k">default</span><span class="p">);</span>
+
+        <span class="c1">// Cast kernel to backend-specific PTXCompiledKernel to access the PTX assembly</span>
+        <span class="kt">var</span> <span class="n">ptxKernel</span> <span class="p">=</span> <span class="n">compiledKernel</span> <span class="k">as</span> <span class="n">PTXCompiledKernel</span><span class="p">;</span>
+        <span class="n">System</span><span class="p">.</span><span class="n">IO</span><span class="p">.</span><span class="n">File</span><span class="p">.</span><span class="nf">WriteAllBytes</span><span class="p">(</span><span class="s">"MyKernel.ptx"</span><span class="p">,</span> <span class="n">ptxKernel</span><span class="p">.</span><span class="n">PTXAssembly</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="loading-compiled-kernels">Loading Compiled Kernels</h2>
+
+<p>Compiled kernels have to be loaded by an accelerator first before they can be executed.
+See the <a href="https://github.com/m4rs-mt/ILGPU.Samples/tree/master/Src/LowLevelKernelCompilation">ILGPU low-level kernel sample</a> for details.
+<strong>Note: manually loaded kernels should be disposed manually to have full control over the lifetime of the kernel function in driver memory. You can also rely on the .Net GC to dispose kernels in the background.</strong></p>
+
+<p>An accelerator object offers different functions to load and configure kernels:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">LoadAutoGroupedKernel</code>
+ Loads an implicitly grouped kernel with an automatically determined group size</li>
+  <li><code class="language-plaintext highlighter-rouge">LoadImplicitlyGroupedKernel</code>
+ Loads an implicitly grouped kernel with a custom group size</li>
+  <li><code class="language-plaintext highlighter-rouge">LoadKernel</code>
+ Loads explicitly and implicitly grouped kernels. However, implicitly grouped kernels will be launched with a group size that is equal to the warp size</li>
+</ul>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="err">...</span>
+<span class="err">{</span>
+    <span class="nc">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="p">...</span>
+        <span class="kt">var</span> <span class="n">compiledKernel</span> <span class="p">=</span> <span class="n">backend</span><span class="p">.</span><span class="nf">Compile</span><span class="p">(...);</span>
+
+        <span class="c1">// Load implicitly grouped kernel with an automatically determined group size</span>
+        <span class="kt">var</span> <span class="n">k1</span> <span class="p">=</span> <span class="n">accelerator</span><span class="p">.</span><span class="nf">LoadAutoGroupedKernel</span><span class="p">(</span><span class="n">compiledKernel</span><span class="p">);</span>
+
+        <span class="c1">// Load implicitly grouped kernel with custom group size</span>
+        <span class="kt">var</span> <span class="n">k2</span> <span class="p">=</span> <span class="n">accelerator</span><span class="p">.</span><span class="nf">LoadImplicitlyGroupedKernel</span><span class="p">(</span><span class="n">compiledKernel</span><span class="p">);</span>
+
+        <span class="c1">// Load any kernel (explicitly and implicitly grouped kernels).</span>
+        <span class="c1">// However, implicitly grouped kernels will be dispatched with a group size</span>
+        <span class="c1">// that is equal to the warp size of its associated accelerator</span>
+        <span class="kt">var</span> <span class="n">k3</span> <span class="p">=</span> <span class="n">accelerator</span><span class="p">.</span><span class="nf">LoadKernel</span><span class="p">(</span><span class="n">compiledKernel</span><span class="p">);</span>
+
+        <span class="p">...</span>
+
+        <span class="n">k1</span><span class="p">.</span><span class="nf">Dispose</span><span class="p">();</span>
+        <span class="n">k2</span><span class="p">.</span><span class="nf">Dispose</span><span class="p">();</span>
+        <span class="c1">// Leave K3 to the GC</span>
+        <span class="c1">// ...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="direct-kernel-launching">Direct Kernel Launching</h2>
+
+<p>A loaded kernel can be dispatched using the <code class="language-plaintext highlighter-rouge">Launch</code> method.
+However, the dispatch method takes an object-array as an argument, all arguments are boxed upon invocation and there is not type-safety at this point.
+For performance reasons, we strongly recommend the use of typed kernel launchers that avoid boxing.</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="err">...</span>
+<span class="err">{</span>
+    <span class="nc">static</span> <span class="k">void</span> <span class="nf">MyKernel</span><span class="p">(</span><span class="n">Index</span> <span class="n">index</span><span class="p">,</span> <span class="n">ArrayView</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">data</span><span class="p">,</span> <span class="kt">int</span> <span class="n">c</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="p">=</span> <span class="n">index</span> <span class="p">+</span> <span class="n">c</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="p">...</span>
+        <span class="kt">var</span> <span class="n">buffer</span> <span class="p">=</span> <span class="n">accelerator</span><span class="p">.</span><span class="n">Allocate</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;(</span><span class="m">1024</span><span class="p">);</span>
+
+        <span class="c1">// Load a sample kernel MyKernel</span>
+        <span class="kt">var</span> <span class="n">compiledKernel</span> <span class="p">=</span> <span class="n">backend</span><span class="p">.</span><span class="nf">Compile</span><span class="p">(...);</span>
+        <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">k</span> <span class="p">=</span> <span class="n">accelerator</span><span class="p">.</span><span class="nf">LoadAutoGroupedKernel</span><span class="p">(</span><span class="n">compiledKernel</span><span class="p">))</span>
+        <span class="p">{</span>
+            <span class="n">k</span><span class="p">.</span><span class="nf">Launch</span><span class="p">(</span><span class="n">buffer</span><span class="p">.</span><span class="n">Extent</span><span class="p">,</span> <span class="n">buffer</span><span class="p">.</span><span class="n">View</span><span class="p">,</span> <span class="m">1</span><span class="p">);</span>
+
+            <span class="p">...</span>
+
+            <span class="n">accelerator</span><span class="p">.</span><span class="nf">Synchronize</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="p">...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="typed-kernel-launchers">Typed Kernel Launchers</h2>
+
+<p>Kernel launchers are delegates that provide an alternative to direct kernel invocations.
+These launchers are specialized methods that are dynamically generated and specialized for every kernel.
+They avoid boxing and realize <a href="https://github.com/m4rs-mt/ILGPU.Samples/blob/master/Src/SimpleKernelDelegate">high-performance kernel dispatching</a>.
+You can create a custom kernel launcher using the <code class="language-plaintext highlighter-rouge">CreateLauncherDelegate</code> method.
+It Creates a specialized launcher for the associated kernel.
+Besides all required kernel parameters, it also receives a parameter of type <code class="language-plaintext highlighter-rouge">AcceleratorStream</code> as an argument.</p>
+
+<p>Note that high-level API kernel loading functionality that simply returns a launcher delegate instead of a kernel object.
+These loading methods work similarly to the these versions, e.g. <code class="language-plaintext highlighter-rouge">LoadAutoGroupedStreamKernel</code> loads a kernel with a custom delegate type that is linked to the default accelerator stream.</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="err">...</span>
+<span class="err">{</span>
+    <span class="nc">static</span> <span class="k">void</span> <span class="nf">MyKernel</span><span class="p">(</span><span class="n">Index</span> <span class="n">index</span><span class="p">,</span> <span class="n">ArrayView</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">data</span><span class="p">,</span> <span class="kt">int</span> <span class="n">c</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="p">=</span> <span class="n">index</span> <span class="p">+</span> <span class="n">c</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="p">...</span>
+        <span class="kt">var</span> <span class="n">buffer</span> <span class="p">=</span> <span class="n">accelerator</span><span class="p">.</span><span class="n">Allocate</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;(</span><span class="m">1024</span><span class="p">);</span>
+
+        <span class="c1">// Load a sample kernel MyKernel</span>
+        <span class="kt">var</span> <span class="n">compiledKernel</span> <span class="p">=</span> <span class="n">backend</span><span class="p">.</span><span class="nf">Compile</span><span class="p">(...);</span>
+        <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">k</span> <span class="p">=</span> <span class="n">accelerator</span><span class="p">.</span><span class="nf">LoadAutoGroupedKernel</span><span class="p">(</span><span class="n">compiledKernel</span><span class="p">))</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">launcherWithCustomAcceleratorStream</span> <span class="p">=</span>
+                <span class="n">k</span><span class="p">.</span><span class="n">CreateLauncherDelegate</span><span class="p">&lt;</span><span class="n">AcceleratorStream</span><span class="p">,</span> <span class="n">Index</span><span class="p">,</span> <span class="n">ArrayView</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;&gt;();</span>
+            <span class="nf">launcherWithCustomAcceleratorStream</span><span class="p">(</span><span class="n">someStream</span><span class="p">,</span> <span class="n">buffer</span><span class="p">.</span><span class="n">Extent</span><span class="p">,</span> <span class="n">buffer</span><span class="p">.</span><span class="n">View</span><span class="p">,</span> <span class="m">1</span><span class="p">);</span>
+
+            <span class="p">...</span>
+        <span class="p">}</span>
+
+        <span class="p">...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+    </section>
+      <!-- ======= Footer ======= -->
+  <footer id="footer">
+
+  
+
+    <div class="container footer-bottom clearfix text-center">
+      <div class="">
+        &copy; Copyright <script type="text/javascript">document.write(new Date().getFullYear());</script> <span>ILGPU</span>. All Rights Reserved.
+      </div>
+      <div class="credits">
+      </div>
+    </div>
+  </footer><!-- End Footer -->
+
+  <div id="preloader"></div>
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="../assets/vendor/aos/aos.js"></script>
+  <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="../assets/vendor/php-email-form/validate.js"></script>
+  <script src="../assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="../assets/vendor/waypoints/noframework.waypoints.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="../assets/js/main.js"></script>
+
+  <!-- Easter Egg JS -->
+  <script type="text/javascript">
+    function easteregg() {
+    var span = document.getElementById('easter-egg');
+      if (span.textContent == 'ö') {
+        span.textContent = 'œ' ;
+      }
+      else if (span.textContent == 'œ') {
+        span.textContent = 'ö' ;
+      }
+    }
+    </script>
+  </body>
+</html>

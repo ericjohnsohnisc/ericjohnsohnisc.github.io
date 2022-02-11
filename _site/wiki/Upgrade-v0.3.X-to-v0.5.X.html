@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  
+    <title>ILGPU - A Modern GPU Compiler for .Net Programs</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+  
+    <!-- Favicons -->
+    <link href="../assets/img/favicon.png" rel="icon">
+    <link href="../assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+  
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  
+    <!-- Vendor CSS Files -->
+    <link href="../assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="../assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="../assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="../assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+     
+    <script src="https://unpkg.com/boxicons@latest/dist/boxicons.js"></script>
+  
+    <!-- Template Main CSS File -->
+    <link href="../assets/css/style.css" rel="stylesheet">
+
+  <!-- Custom Styles CSS File -->
+  <link href="../assets/css/custom-styles.css" rel="stylesheet">
+    
+  </head>
+  <body class="wiki">
+    <!-- ======= Header ======= -->
+<header id="header" class="fixed-top ">
+    <div class="container d-flex align-items-center">
+
+      <a href="../index.html" class="logo me-auto"><img src="../assets/img/ilgpu-logo.svg" alt="" class="img-fluid"></a>
+
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li class="dropdown"><a>About</a>
+          <ul>
+            <li><a href="../index.html#learn-more" class="scrollto">Learn More</a></li>
+            <li><a href="../index.html#highlights" class="scrollto">Highlights</a></li>
+            <li><a href="../index.html#features">Features</a></li>
+            <li><a href="#../index.htmlnews" class="scrollto">News</a></li>
+            <li><a href="../index.html#faq">FAQ</a></li>
+          </ul>
+          </li>
+          <li class="dropdown"><a class="scrollto" href="../index.html#about">Project</a>
+            <ul>
+              <li><a href="https://github.com/m4rs-mt/ILGPU/" class="scrollto">Sourcecode</a></li>
+              <li><a href="../index.html#features">Releases</a></li>
+              <li><a href="../index.html#news" class="scrollto">Milestones</a></li>
+            </ul>
+            </li>
+        <li><a href="/wiki/home">Documentation</a></li>
+        <li><a href="https://discord.com/invite/X6RBCff" target="_blank">Discord</a></li>
+        <li><a class="getstarted scrollto" href="../index.html#cta">Get Started</a></li>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+
+    </div>
+  </header><!-- End Header -->
+
+
+    <section id="sidebar">
+    <div id="sidebar-header">
+        <h3>Documentation</h3>
+        </div>
+    <nav id="wiki-nav">
+        <h5>Overview</h5>
+        <ul>
+            <li><a href="/wiki/Home.html">Home</a></li> 
+            <li><a href="/wiki/Accelerators-and-Streams.html">Accelerators & Streams</a></li> 
+            <li><a href="/wiki/Memory-Buffers-and-Views.html">Memory Buffers & Views</a></li> 
+            <li><a href="/wiki/Kernels.html">Kernels</a></li> 
+            <li><a href="/wiki/Shared-Memory.html">Shared Memory</a></li> 
+            <li><a href="/wiki/Math-Functions.html">Math Functions</a></li> 
+        </ul>
+        <h5>Advanced</h5>
+        <ul>
+            <li><a href="/wiki/Dynamically-Specialized-Kernels.html">Dynamically Specialized Kernels</a></li> 
+            <li><a href="/wiki/Debugging-and-Profiling.html">Debugging & Profiling</a</li> 
+            <li><a href="/wiki/Inside-ILGPU.html">Inside ILGPU</a></li> 
+        </ul>
+        
+        <h5>Upgrade Guides</h5>
+        <ul>
+            <li><a href="/wiki/Upgrade-v0.8.X-to-v0.9.X.html">v0.8.X to v0.9.X</a></li> 
+            <li><a href="/wiki/Upgrade-v0.8.0-to-v0.8.1.html">v0.8.0 to v0.8.1</a></li> 
+            <li><a href="/wiki/Upgrade-v0.7.X-to-v0.8.X.html">v0.7.X to v0.8.X</a></li> 
+            <li><a href="/wiki/Upgrade-v0.6.X-to-v0.7.X.html">v0.6.X to v0.7.X</a></li> 
+            <li><a href="/wiki/Upgrade-v0.3.X-to-v0.5.X.html">v0.3.X to v0.5.X</a></li> 
+            <li><a href="/wiki/Upgrade-v0.1.X-to-v0.2.X.html">v0.1.X to v0.2.X</a></li> 
+          </ul>
+    </nav>
+
+</section>
+    <section id="wiki-main">
+      <h2 id="arrayviews-and-variableviews">ArrayViews and VariableViews</h2>
+
+<p>The <code class="language-plaintext highlighter-rouge">ArrayView</code> and <code class="language-plaintext highlighter-rouge">VariableView</code> structures have been adapted to the C# ‘ref’ features.
+This renders explicit <code class="language-plaintext highlighter-rouge">Load</code> and <code class="language-plaintext highlighter-rouge">Store</code> methods obsolete.
+In addition, all methods that accept <code class="language-plaintext highlighter-rouge">VariableView&lt;X&gt;</code> parameter types have been adapted to the parameter types <code class="language-plaintext highlighter-rouge">ref X</code>.
+This applies, for example, to all methods of the class <code class="language-plaintext highlighter-rouge">Atomic</code>.</p>
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="err">...</span>
+<span class="err">{</span>
+    <span class="nc">static</span> <span class="k">void</span> <span class="p">...(...)</span>
+    <span class="p">{</span>
+        <span class="c1">// Old way (obsolete and no longer supported)</span>
+        <span class="n">ArrayView</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">someView</span> <span class="p">=</span> <span class="p">...</span>
+        <span class="kt">var</span> <span class="n">variableView</span> <span class="p">=</span> <span class="n">someView</span><span class="p">.</span><span class="nf">GetVariableView</span><span class="p">(</span><span class="n">X</span><span class="p">);</span>
+        <span class="n">Atomic</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="n">variableView</span><span class="p">);</span>
+        <span class="p">...</span>
+        <span class="n">variableView</span><span class="p">.</span><span class="nf">Store</span><span class="p">(</span><span class="m">42</span><span class="p">);</span>
+
+        <span class="c1">// New way</span>
+        <span class="n">ArrayView</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">someView</span> <span class="p">=</span> <span class="p">...</span>
+        <span class="n">Atomic</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="k">ref</span> <span class="n">someView</span><span class="p">[</span><span class="n">X</span><span class="p">]);</span>
+        <span class="p">...</span>
+        <span class="n">someView</span><span class="p">[</span><span class="n">X</span><span class="p">]</span> <span class="p">=</span> <span class="m">42</span><span class="p">;</span>
+
+        <span class="c1">// or</span>
+        <span class="k">ref</span> <span class="kt">var</span> <span class="n">variable</span> <span class="p">=</span> <span class="k">ref</span> <span class="n">someView</span><span class="p">[</span><span class="n">X</span><span class="p">];</span>
+        <span class="n">variable</span> <span class="p">=</span> <span class="m">42</span><span class="p">;</span>
+
+        <span class="c1">// or</span>
+        <span class="kt">var</span> <span class="n">variableView</span> <span class="p">=</span> <span class="n">someView</span><span class="p">.</span><span class="nf">GetVariableView</span><span class="p">(</span><span class="n">X</span><span class="p">);</span>
+        <span class="n">variableView</span><span class="p">.</span><span class="n">Value</span> <span class="p">=</span> <span class="m">42</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="shared-memory">Shared Memory</h2>
+
+<p>The general concept of shared memory has been redesigned.
+The previous model required <code class="language-plaintext highlighter-rouge">SharedMemoryAttribute</code> attributes on specific parameters that should be allocated in shared memory.
+The new model uses the static class <code class="language-plaintext highlighter-rouge">SharedMemory</code> to allocate this kind of memory procedurally in the scope of kernels.
+This simplifies programming, kernel-delegate creation and enables non-kernel methods to allocate their own pool of shared memory.</p>
+
+<p>Note that array lengths must be constants in this ILGPU version.
+Hence, a dynamic allocation of shared memory is currently not supported.</p>
+
+<p>The kernel loader methods <code class="language-plaintext highlighter-rouge">LoadSharedMemoryKernelX</code> and <code class="language-plaintext highlighter-rouge">LoadSharedMemoryStreamKernelX</code> have been removed.
+They are no longer required, since a kernel does not have to declare its shared memory allocations in the form of additional parameters.</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="err">...</span>
+<span class="err">{</span>
+    <span class="nc">static</span> <span class="k">void</span> <span class="nf">SharedMemoryKernel</span><span class="p">(</span><span class="n">GroupedIndex</span> <span class="n">index</span><span class="p">,</span> <span class="p">...)</span>
+    <span class="p">{</span>
+        <span class="c1">// Allocate an array of 32 integers</span>
+        <span class="n">ArrayView</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">sharedMemoryArray</span> <span class="p">=</span> <span class="n">SharedMemory</span><span class="p">.</span><span class="n">Allocate</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;(</span><span class="m">32</span><span class="p">);</span>
+
+        <span class="c1">// Allocate a single variable of type long in shared memory</span>
+        <span class="k">ref</span> <span class="kt">long</span> <span class="n">sharedMemoryVariable</span> <span class="p">=</span> <span class="k">ref</span> <span class="n">SharedMemory</span><span class="p">.</span><span class="n">Allocate</span><span class="p">&lt;</span><span class="kt">long</span><span class="p">&gt;();</span>
+
+        <span class="p">...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="cpu-debugging">CPU Debugging</h2>
+
+<p>Starting a kernel in debug mode is a common task that developers go through many times a day.
+Although ILGPU has been optimized for performance, you may not wait a few milliseconds every time you start your program to debug a kernel on the CPU.
+For this reason, the context flag <code class="language-plaintext highlighter-rouge">ContextFlags.SkipCPUCodeGeneration</code> has been added.
+It suppresses IR code generation for CPU kernels and uses the .Net runtime directly.
+<em>Warning: This avoids general kernel analysis/verification checks. It should only be used by experienced users.</em></p>
+
+<h2 id="internals">Internals</h2>
+
+<p>The old LLVM-based concept of <code class="language-plaintext highlighter-rouge">CompileUnit</code> objects is obsolete and has been replaced by a completely new IR.
+The new IR leverages <code class="language-plaintext highlighter-rouge">IRContext</code> objects to manage IR objects that are derived from the class <code class="language-plaintext highlighter-rouge">ILGPU.IR.Node</code>.
+Unlike previous versions, an <code class="language-plaintext highlighter-rouge">IRContext</code> is not tied to a specific <code class="language-plaintext highlighter-rouge">Backend</code> instance and can be reused accross different hardware architectures.</p>
+
+<p>The global optimization process can be controlled with the enumeration <code class="language-plaintext highlighter-rouge">OptimizationLevel</code>.
+This level can be specified by passing the desired level to the <code class="language-plaintext highlighter-rouge">ILGPU.Context</code> constructor.
+If the optimization level is not explicitly specified, the level is determined by the current build mode (either <code class="language-plaintext highlighter-rouge">Debug</code> or <code class="language-plaintext highlighter-rouge">Release</code>).</p>
+
+    </section>
+      <!-- ======= Footer ======= -->
+  <footer id="footer">
+
+  
+
+    <div class="container footer-bottom clearfix text-center">
+      <div class="">
+        &copy; Copyright <script type="text/javascript">document.write(new Date().getFullYear());</script> <span>ILGPU</span>. All Rights Reserved.
+      </div>
+      <div class="credits">
+      </div>
+    </div>
+  </footer><!-- End Footer -->
+
+  <div id="preloader"></div>
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="../assets/vendor/aos/aos.js"></script>
+  <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="../assets/vendor/php-email-form/validate.js"></script>
+  <script src="../assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="../assets/vendor/waypoints/noframework.waypoints.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="../assets/js/main.js"></script>
+
+  <!-- Easter Egg JS -->
+  <script type="text/javascript">
+    function easteregg() {
+    var span = document.getElementById('easter-egg');
+      if (span.textContent == 'ö') {
+        span.textContent = 'œ' ;
+      }
+      else if (span.textContent == 'œ') {
+        span.textContent = 'ö' ;
+      }
+    }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,20 @@
+I"Q<h2 id="general-notes">General Notes</h2>
+
+<p>All implicitly grouped kernel launchers have been updated with additional overloads.
+These new methods output additional kernel statistics (e.g. the amount of local memory used in bytes).
+Detailed information can be enabled with the context flag <code class="language-plaintext highlighter-rouge">ContextFlags.EnableKernelStatistics</code>.
+This information is highly similar to the output of <code class="language-plaintext highlighter-rouge">ptxas -v</code>.</p>
+
+<p>The new version features an IR verifier that ensures the integrity of the internal IR. It can be enabled via the context flag <code class="language-plaintext highlighter-rouge">ContextFlags.EnableVerifier</code>.
+This is normally not required. However, if you encounter any problems that might be related to a compiler issue, you can enable the verifier.</p>
+
+<h2 id="optimization-levels">Optimization Levels</h2>
+
+<p>A new optimization level <code class="language-plaintext highlighter-rouge">O2</code> has been added. It is disabled by default, but can be enabled via <code class="language-plaintext highlighter-rouge">OptimizationLevel.O2</code>.</p>
+
+<p>Earlier versions contained <em>Debug</em> and <em>Release</em> versions of the ILGPU compiler.
+The new version contains only the <em>Release</em> build.
+This significantly improves compile time and simplifies the integration with other third-party libraries.
+If you want to enable intrinsic assertions you have to build the compiler from source.
+Alternatively, you can use the IR verifier to ensure the validity of a particular IR program.</p>
+:ET

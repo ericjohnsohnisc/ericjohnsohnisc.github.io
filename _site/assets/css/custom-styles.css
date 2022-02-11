@@ -165,3 +165,63 @@
     font-family: "Jost", sans-serif;
     margin-bottom: 25px;
 }
+
+
+/* FOOTER */
+
+#footer {
+    background-color: #00458D !important;
+}
+
+/* WIKI */
+
+.wiki header {
+    box-shadow: 0px 0 25px 0 rgba(0, 0, 0, 0.1);
+}
+
+#sidebar {
+    position: fixed;
+    top: 100px;
+    bottom: 0;
+    left: 0;
+    padding-bottom: 2em;
+    width: 300px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    height: 100%;
+    color: #9b9b9b;
+    background: #343131;
+    z-index: 200;
+    padding: 0;
+}
+
+#sidebar-header {
+    background-color: #00458D;
+    padding: 30px 20px 20px;
+    margin-bottom: 20px;
+}
+
+#sidebar-header h3 {   
+    margin: 0 0 10px 0;
+    font-weight: 700;
+    color: #fff;
+}
+
+#wiki-nav {
+    padding: 0 20px;
+}
+
+#wiki-nav ul {
+    list-style-type: none;
+}
+
+#wiki-main {
+    margin-left: 300px;
+    padding: 130px 50px;
+    min-height: 92vh;
+}
+
+.wiki #footer {
+    z-index: 300;
+    position: relative;
+}

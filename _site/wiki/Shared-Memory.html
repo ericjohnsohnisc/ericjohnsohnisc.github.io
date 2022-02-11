@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  
+    <title>ILGPU - A Modern GPU Compiler for .Net Programs</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+  
+    <!-- Favicons -->
+    <link href="../assets/img/favicon.png" rel="icon">
+    <link href="../assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+  
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  
+    <!-- Vendor CSS Files -->
+    <link href="../assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="../assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="../assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="../assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+     
+    <script src="https://unpkg.com/boxicons@latest/dist/boxicons.js"></script>
+  
+    <!-- Template Main CSS File -->
+    <link href="../assets/css/style.css" rel="stylesheet">
+
+  <!-- Custom Styles CSS File -->
+  <link href="../assets/css/custom-styles.css" rel="stylesheet">
+    
+  </head>
+  <body class="wiki">
+    <!-- ======= Header ======= -->
+<header id="header" class="fixed-top ">
+    <div class="container d-flex align-items-center">
+
+      <a href="../index.html" class="logo me-auto"><img src="../assets/img/ilgpu-logo.svg" alt="" class="img-fluid"></a>
+
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li class="dropdown"><a>About</a>
+          <ul>
+            <li><a href="../index.html#learn-more" class="scrollto">Learn More</a></li>
+            <li><a href="../index.html#highlights" class="scrollto">Highlights</a></li>
+            <li><a href="../index.html#features">Features</a></li>
+            <li><a href="#../index.htmlnews" class="scrollto">News</a></li>
+            <li><a href="../index.html#faq">FAQ</a></li>
+          </ul>
+          </li>
+          <li class="dropdown"><a class="scrollto" href="../index.html#about">Project</a>
+            <ul>
+              <li><a href="https://github.com/m4rs-mt/ILGPU/" class="scrollto">Sourcecode</a></li>
+              <li><a href="../index.html#features">Releases</a></li>
+              <li><a href="../index.html#news" class="scrollto">Milestones</a></li>
+            </ul>
+            </li>
+        <li><a href="/wiki/home">Documentation</a></li>
+        <li><a href="https://discord.com/invite/X6RBCff" target="_blank">Discord</a></li>
+        <li><a class="getstarted scrollto" href="../index.html#cta">Get Started</a></li>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+
+    </div>
+  </header><!-- End Header -->
+
+
+    <section id="sidebar">
+    <div id="sidebar-header">
+        <h3>Documentation</h3>
+        </div>
+    <nav id="wiki-nav">
+        <h5>Overview</h5>
+        <ul>
+            <li><a href="/wiki/Home.html">Home</a></li> 
+            <li><a href="/wiki/Accelerators-and-Streams.html">Accelerators & Streams</a></li> 
+            <li><a href="/wiki/Memory-Buffers-and-Views.html">Memory Buffers & Views</a></li> 
+            <li><a href="/wiki/Kernels.html">Kernels</a></li> 
+            <li><a href="/wiki/Shared-Memory.html">Shared Memory</a></li> 
+            <li><a href="/wiki/Math-Functions.html">Math Functions</a></li> 
+        </ul>
+        <h5>Advanced</h5>
+        <ul>
+            <li><a href="/wiki/Dynamically-Specialized-Kernels.html">Dynamically Specialized Kernels</a></li> 
+            <li><a href="/wiki/Debugging-and-Profiling.html">Debugging & Profiling</a</li> 
+            <li><a href="/wiki/Inside-ILGPU.html">Inside ILGPU</a></li> 
+        </ul>
+        
+        <h5>Upgrade Guides</h5>
+        <ul>
+            <li><a href="/wiki/Upgrade-v0.8.X-to-v0.9.X.html">v0.8.X to v0.9.X</a></li> 
+            <li><a href="/wiki/Upgrade-v0.8.0-to-v0.8.1.html">v0.8.0 to v0.8.1</a></li> 
+            <li><a href="/wiki/Upgrade-v0.7.X-to-v0.8.X.html">v0.7.X to v0.8.X</a></li> 
+            <li><a href="/wiki/Upgrade-v0.6.X-to-v0.7.X.html">v0.6.X to v0.7.X</a></li> 
+            <li><a href="/wiki/Upgrade-v0.3.X-to-v0.5.X.html">v0.3.X to v0.5.X</a></li> 
+            <li><a href="/wiki/Upgrade-v0.1.X-to-v0.2.X.html">v0.1.X to v0.2.X</a></li> 
+          </ul>
+    </nav>
+
+</section>
+    <section id="wiki-main">
+      <p>ILGPU support both <code class="language-plaintext highlighter-rouge">static</code> and <code class="language-plaintext highlighter-rouge">dynamic</code> shared memory.
+Static shared memory is limited to <code class="language-plaintext highlighter-rouge">statically known</code> allocations which have a known size at compile time of the kernel.
+The latest ILGPU versions allow the use of dynamic shared memory, which can be specified for each kernel launch individually.</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="err">...</span>
+<span class="err">{</span>
+    <span class="nc">static</span> <span class="k">void</span> <span class="nf">SharedMemKernel</span><span class="p">(</span><span class="n">ArrayView</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">data</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// Static memory allocation</span>
+        <span class="kt">var</span> <span class="n">staticMemory</span> <span class="p">=</span> <span class="n">SharedMemory</span><span class="p">.</span><span class="n">Allocate</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;&gt;(</span><span class="m">1024</span><span class="p">);</span>
+
+        <span class="c1">// Use GetDynamic access dynamically specified shared memory</span>
+        <span class="kt">var</span> <span class="n">dynamicMemory</span> <span class="p">=</span> <span class="n">SharedMemory</span><span class="p">.</span><span class="n">GetDynamic</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;&gt;();</span>
+
+        <span class="p">...</span>
+
+        <span class="c1">// Use GetDynamic with a different element type to access</span>
+        <span class="c1">// the same memory region in a different way</span>
+        <span class="kt">var</span> <span class="n">dynamicMemory2</span> <span class="p">=</span> <span class="n">SharedMemory</span><span class="p">.</span><span class="n">GetDynamic</span><span class="p">&lt;</span><span class="kt">double</span><span class="p">&gt;&gt;();</span>
+
+        <span class="p">...</span>
+    <span class="p">}</span>
+
+    <span class="k">static</span> <span class="k">void</span> <span class="p">...(...)</span>
+    <span class="p">{</span>
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">context</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Context</span><span class="p">();</span>
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">accl</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">CudaAccelerator</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+
+        <span class="c1">// Create shared memory configuration using a custom element type.</span>
+        <span class="c1">// Note that this does not need to be the same type that is used in the scope of the kernel.</span>
+        <span class="c1">// Therefore, the following two configurations will allocate the same amount of shared memory:</span>
+        <span class="kt">var</span> <span class="n">config</span> <span class="p">=</span> <span class="n">SharedMemoryConfig</span><span class="p">.</span><span class="n">RequestDynamic</span><span class="p">&lt;</span><span class="kt">byte</span><span class="p">&gt;(&lt;</span><span class="n">GroupSize</span><span class="p">&gt;</span> <span class="p">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">byte</span><span class="p">));</span>
+        <span class="kt">var</span> <span class="n">config2</span> <span class="p">=</span> <span class="n">SharedMemoryConfig</span><span class="p">.</span><span class="n">RequestDynamic</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;(&lt;</span><span class="n">GroupSize</span><span class="p">&gt;);</span>
+
+        <span class="p">...</span>
+        <span class="c1">// Pass the shared memory configuration to the kernel configuration</span>
+        <span class="nf">kernel</span><span class="p">((&lt;</span><span class="n">UserGridDim</span><span class="p">&gt;,</span> <span class="p">&lt;</span><span class="n">UserGroupDim</span><span class="p">&gt;,</span> <span class="n">config</span><span class="p">),</span> <span class="n">buffer</span><span class="p">.</span><span class="n">View</span><span class="p">);</span>
+        <span class="p">...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><em>Note that this feature available on CPU, Cuda and OpenCL accelerators.</em></p>
+
+    </section>
+      <!-- ======= Footer ======= -->
+  <footer id="footer">
+
+  
+
+    <div class="container footer-bottom clearfix text-center">
+      <div class="">
+        &copy; Copyright <script type="text/javascript">document.write(new Date().getFullYear());</script> <span>ILGPU</span>. All Rights Reserved.
+      </div>
+      <div class="credits">
+      </div>
+    </div>
+  </footer><!-- End Footer -->
+
+  <div id="preloader"></div>
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="../assets/vendor/aos/aos.js"></script>
+  <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="../assets/vendor/php-email-form/validate.js"></script>
+  <script src="../assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="../assets/vendor/waypoints/noframework.waypoints.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="../assets/js/main.js"></script>
+
+  <!-- Easter Egg JS -->
+  <script type="text/javascript">
+    function easteregg() {
+    var span = document.getElementById('easter-egg');
+      if (span.textContent == 'ö') {
+        span.textContent = 'œ' ;
+      }
+      else if (span.textContent == 'œ') {
+        span.textContent = 'ö' ;
+      }
+    }
+    </script>
+  </body>
+</html>

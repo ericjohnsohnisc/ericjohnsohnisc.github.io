@@ -1,0 +1,31 @@
+I"<p>The best debugging experience can be achieved with the <code class="language-plaintext highlighter-rouge">CPUAccelerator</code>.
+Debugging with the software emulation layer is very convenient due to the very good properties of the .Net debugging environments.
+Currently, detailed kernel debugging is only possible with the CPU accelerator.
+However, we are currently extending the debugging capabilities to also emulate different GPUs in order to test your algorithms with “virtual GPU devices” without needing to have direct access to the actual GPU devices (more information about this feature can be found <a href="https://github.com/m4rs-mt/ILGPU/pull/402">here</a>.</p>
+
+<p>Assertions on GPU hardware devices can be enabled using the <code class="language-plaintext highlighter-rouge">ContextFlags.EnableAssertions</code> flag (disabled by default when a <code class="language-plaintext highlighter-rouge">Debugger</code> is not attached to the application).
+Note that enabling assertions using this flag will cause them to be enabled in <code class="language-plaintext highlighter-rouge">Release</code> builds as well.
+Be sure to disable this flag if you want to get the best runtime performance.</p>
+
+<p>Source-line based debugging information can be turned on via the flag <code class="language-plaintext highlighter-rouge">ContextFlags.EnableDebugInformation</code> (disabled by default).
+Note that only the new portable PBD format is supported.
+Enabling debug information is essential to identify problems and catch break points on GPU hardware.
+It is also very useful for kernel profiling as you can link the profiling insights to your source lines.
+You may want to disable inlining via <code class="language-plaintext highlighter-rouge">ContextFlags.NoInlining</code> to significantly increase the accuracy of your debugging information at the expense cost of runtime performance.</p>
+
+<p><em>Note that the inspection of variables, registers, and global memory on GPU hardware is currently not supported.</em></p>
+
+<h2 id="named-kernels">Named Kernels</h2>
+
+<p>PR <a href="https://github.com/m4rs-mt/ILGPU/pull/401">#401</a> added support for using either the .Net function name or a custom name as the entry point for each Cuda/OpenCL kernel. This simplifies profiling and debugging because multiple kernels then have different names.</p>
+
+<p><em>Note that custom kernel names have to consist of ASCII characters only. Other characters will be automatically mapped to ‘_’ in the assembly code.</em></p>
+
+<h2 id="printf-like-debugging">PrintF-Like Debugging</h2>
+
+<p>Cuda and OpenCL provide the ability to print/output basic values into the console output stream for debugging. This is especially useful for device-specific concurrency problems that need to be analyzed without changing environment settings. Starting with <a href="https://github.com/m4rs-mt/ILGPU/releases/tag/v0.10.0">v0.10.0</a>, ILGPU provides platform independent support for <code class="language-plaintext highlighter-rouge">Interop.Write</code> and <code class="language-plaintext highlighter-rouge">Interop.WriteLine</code> that accept (very) basic .Net-like format specifiers of the form <code class="language-plaintext highlighter-rouge">Test output {0} and test output {1}</code>.</p>
+
+<p>This string can be formatted to <code class="language-plaintext highlighter-rouge">Test output 1.0 and test output -45</code> using:</p>
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Interop</span><span class="p">.</span><span class="nf">Write</span><span class="p">(</span><span class="s">"Test output {0} and test output {1}"</span><span class="p">,</span> <span class="m">1.0</span><span class="p">,</span> <span class="p">-</span><span class="m">45</span><span class="p">);</span>
+</code></pre></div></div>
+:ET

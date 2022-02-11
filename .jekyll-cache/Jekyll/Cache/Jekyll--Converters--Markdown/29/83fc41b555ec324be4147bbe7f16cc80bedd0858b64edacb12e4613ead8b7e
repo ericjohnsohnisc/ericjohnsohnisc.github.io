@@ -1,0 +1,45 @@
+I"ø<p>Dynamic specialization allows the definition of kernels that will be <code class="language-plaintext highlighter-rouge">specialized/optimized</code> during runtime.
+This allows you to define kernels with <code class="language-plaintext highlighter-rouge">constant values</code> that are not known at compile time of the kernel or application.
+Without knowing the exact values (or ranges of values) of certain parameters, the compilerâ€™s optimization capabilities are limited, e.g. with regard to constant propagation and loop unrolling.</p>
+
+<p>Similar functionality can be achieved by using generic types in a clever way.
+However, dynamic specialization is much more convenient and easier to use.
+Moreover, it is more flexible without leveraging the .Net reflection API to create specialized instances.</p>
+
+<p>Please note that dynamically specialized kernels are precompiled during loading.
+The final compilation step occurs during the first call of a new (non-cached) specialized parameter combination.
+If a parameter combination was used previously, the corresponding specialized kernel instance is called.</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="err">...</span>
+<span class="err">{</span>
+    <span class="nc">static</span> <span class="k">void</span> <span class="nf">GenericKernel</span><span class="p">(</span><span class="n">ArrayView</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">data</span><span class="p">,</span> <span class="kt">int</span> <span class="n">c</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">globalIndex</span> <span class="p">=</span> <span class="n">Grid</span><span class="p">.</span><span class="n">GlobalIndex</span><span class="p">.</span><span class="n">X</span><span class="p">;</span>
+        <span class="c1">// Generates code that loads c and adds the value 2 at runtime of the kernel</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">globalIndex</span><span class="p">]</span> <span class="p">=</span> <span class="n">c</span> <span class="p">+</span> <span class="m">2</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">static</span> <span class="k">void</span> <span class="nf">SpecializedKernel</span><span class="p">(</span><span class="n">ArrayView</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">data</span><span class="p">,</span> <span class="n">SpecializedValue</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">c</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">globalIndex</span> <span class="p">=</span> <span class="n">Grid</span><span class="p">.</span><span class="n">GlobalIndex</span><span class="p">.</span><span class="n">X</span><span class="p">;</span>
+        <span class="c1">// Generates code that has an inlined constant value</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">globalIndex</span><span class="p">]</span> <span class="p">=</span> <span class="n">c</span> <span class="p">+</span> <span class="m">2</span><span class="p">;</span> <span class="c1">// Will be specialized for every value c</span>
+    <span class="p">}</span>
+
+    <span class="k">static</span> <span class="k">void</span> <span class="p">...(...)</span>
+    <span class="p">{</span>
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">context</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Context</span><span class="p">();</span>
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">accl</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">CudaAccelerator</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+
+        <span class="kt">var</span> <span class="n">genericKernel</span> <span class="p">=</span> <span class="n">accl</span><span class="p">.</span><span class="n">LoadStreamKernel</span><span class="p">&lt;</span><span class="n">ArrayView</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;,</span> <span class="kt">int</span><span class="p">&gt;(</span><span class="n">GenericKernel</span><span class="p">);</span>
+        <span class="p">...</span>
+        <span class="nf">genericKernel</span><span class="p">((&lt;</span><span class="n">UserGridDim</span><span class="p">&gt;,</span> <span class="p">&lt;</span><span class="n">UserGroupDim</span><span class="p">&gt;),</span> <span class="n">buffer</span><span class="p">.</span><span class="n">View</span><span class="p">,</span> <span class="m">40</span><span class="p">);</span>
+
+        <span class="kt">var</span> <span class="n">specializedKernel</span> <span class="p">=</span> <span class="n">accl</span><span class="p">.</span><span class="n">LoadStreamKernel</span><span class="p">&lt;</span><span class="n">ArrayView</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;,</span> <span class="n">SpecializedValue</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;&gt;(</span><span class="n">GenericKernel</span><span class="p">);</span>
+        <span class="p">...</span>
+        <span class="nf">specializedKernel</span><span class="p">((&lt;</span><span class="n">UserGridDim</span><span class="p">&gt;,</span> <span class="p">&lt;</span><span class="n">UserGroupDim</span><span class="p">&gt;),</span> <span class="n">buffer</span><span class="p">.</span><span class="n">View</span><span class="p">,</span> <span class="n">SpecializedValue</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="m">40</span><span class="p">));</span>
+        <span class="p">...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+:ET

@@ -1,0 +1,53 @@
+I"›<h2 id="general-upgrade">General Upgrade</h2>
+
+<p>If you rely on the <code class="language-plaintext highlighter-rouge">LightningContext</code> class (of <code class="language-plaintext highlighter-rouge">ILGPU.Lightning</code> v0.1.X) for high-level kernel loading or other high-level operations, you will have to adapt your projects to the API changes.
+The new API does not require a <code class="language-plaintext highlighter-rouge">LightningContext</code> instance.
+Instead, all operations are extension methods to the ILGPU Accelerator class.
+This simplifies programming and makes the general API more consistent.
+Furthermore, kernel caching and convenient kernel loading are now included in the ILGPU runtime system and do not require any <code class="language-plaintext highlighter-rouge">ILGPU.Lightning</code> operations.
+Moreover, if you make use of the low-level kernel-loading functionality of the ILGPU runtime system (in order to avoid additional library dependencies to <code class="language-plaintext highlighter-rouge">ILGPU.Lightning</code>), you will also benefit from the new API changes.</p>
+
+<p>Note that all functions from v0.1.X will still work to ensure backwards compatibility.
+However, they will be removed in future versions.</p>
+
+<h2 id="the-obsolete-lightning-context">The Obsolete Lightning Context</h2>
+
+<p>The <code class="language-plaintext highlighter-rouge">LightningContext</code> class is obsolete and will be removed in future versions.
+It encapsulated an ILGPU <code class="language-plaintext highlighter-rouge">Accelerator</code> instance and provided useful kernel caching and loading features.
+Moreover, all extensions functions (like sorting, for example) were based on a <code class="language-plaintext highlighter-rouge">LightningContext</code>.</p>
+
+<p>We recommend that you replace all occurrences of a <code class="language-plaintext highlighter-rouge">LightningContext</code> with an ILGPU <code class="language-plaintext highlighter-rouge">Accelerator</code>.
+Furthermore, change the <code class="language-plaintext highlighter-rouge">LightningContext</code> creation code with an appropriate accelerator construction from ILGPU.
+Note that kernel caching and loading are now natively provided by an <code class="language-plaintext highlighter-rouge">Accelerator</code> object.</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="err">...</span>
+<span class="err">{</span>
+    <span class="nc">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// Create the required ILGPU context</span>
+        <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">context</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Context</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="c1">// Deprecated code snippets for creating a LightningContext</span>
+            <span class="kt">var</span> <span class="p">...</span> <span class="p">=</span> <span class="n">LightningContext</span><span class="p">.</span><span class="nf">CreateCPUContext</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+            <span class="kt">var</span> <span class="p">...</span> <span class="p">=</span> <span class="n">LightningContext</span><span class="p">.</span><span class="nf">CreateCudaContext</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+            <span class="kt">var</span> <span class="p">...</span> <span class="p">=</span> <span class="n">LightningContext</span><span class="p">.</span><span class="nf">Create</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">acceleratorId</span><span class="p">);</span>
+
+            <span class="c1">// New version: use default ILGPU accelerators and perform</span>
+            <span class="c1">// all required operations on an accelerator instance.</span>
+            <span class="kt">var</span> <span class="p">...</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">CPUAccelerator</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+            <span class="kt">var</span> <span class="p">...</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">CudaAccelerator</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+            <span class="kt">var</span> <span class="p">...</span> <span class="p">=</span> <span class="n">Accelerator</span><span class="p">.</span><span class="nf">Create</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">acceleratorId</span><span class="p">);</span>
+
+
+            <span class="c1">// Old sample for an Initialize command</span>
+            <span class="kt">var</span> <span class="n">lc</span> <span class="p">=</span> <span class="n">LightningContext</span><span class="p">.</span><span class="nf">Create</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="p">...);</span>
+            <span class="n">lc</span><span class="p">.</span><span class="nf">Initialize</span><span class="p">(</span><span class="n">targetView</span><span class="p">);</span>
+
+            <span class="c1">// New version</span>
+            <span class="kt">var</span> <span class="n">accl</span> <span class="p">=</span> <span class="n">Accelerator</span><span class="p">.</span><span class="nf">Create</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">acceleratorId</span><span class="p">);</span>
+            <span class="n">accl</span><span class="p">.</span><span class="nf">Initialize</span><span class="p">(</span><span class="n">targetView</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+:ET

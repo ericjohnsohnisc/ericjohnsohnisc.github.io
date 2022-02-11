@@ -1,0 +1,209 @@
+I"äb<h2 id="general-notes">General Notes</h2>
+
+<p>All explicitly grouped kernel launchers have been updated.
+This simplifies programming and feels more natural for most kernel developers familiar with Cuda and OpenCL.
+New static <code class="language-plaintext highlighter-rouge">Group</code> and <code class="language-plaintext highlighter-rouge">Grid</code> properties provide convenient access to grid and group indices.</p>
+
+<p>Dynamic partial evaluation allows to create specialized kernels that are <i>automagically compiled</i> for you.
+Use the structure type <code class="language-plaintext highlighter-rouge">SpecializedValue&lt;T&gt;</code> on kernel parameters to enable specialization of values at runtime.
+Note that these values must support the <code class="language-plaintext highlighter-rouge">IEquatable</code> interface for them to be cached correctly.
+As soon as a value is found (which could not be found in the cache), the kernel is recompiled in the background with the new specialized value.</p>
+
+<p>Note that the <code class="language-plaintext highlighter-rouge">ILGPU.Index</code> type is now considered obsolete because there is a name ambiguity between <code class="language-plaintext highlighter-rouge">ILGPU.Index</code> and <code class="language-plaintext highlighter-rouge">System.Index</code>.
+Please update your code to use the new type <code class="language-plaintext highlighter-rouge">ILGPU.Index1</code> instead.
+<em>Note further that these index types might be removed in the future.</em></p>
+
+<h2 id="new-kernel-launchers">New Kernel Launchers</h2>
+
+<p>In previous versions, it was necessary to have a kernel parameter of type <code class="language-plaintext highlighter-rouge">GroupedIndex</code> for explicitly grouped kernels.
+Accesses to the current group and grid indices were only possible by accessing this parameter.
+Alternative methods to access group and grid indices were introduced in v0.7.X, in order to create helper methods that can directly access those properties.
+From a software-engineering point of view, this could have been considered the same functionality with two different flavors.
+This <em>issue</em> was corrected in v0.8.
+It also simplifies programming for Cuda and OpenCL developers.</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="err">...</span>
+<span class="err">{</span>
+    <span class="nc">static</span> <span class="k">void</span> <span class="nf">OldKernel</span><span class="p">(</span><span class="n">GroupedIndex</span> <span class="n">index</span><span class="p">,</span> <span class="n">ArrayView</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">data</span><span class="p">)</span>
+    <span class="p">{</span>
+      <span class="kt">var</span> <span class="n">globalIndex</span> <span class="p">=</span> <span class="n">index</span><span class="p">.</span><span class="nf">ComputeGlobalIndex</span><span class="p">();</span>
+      <span class="n">data</span><span class="p">[</span><span class="n">globalIndex</span><span class="p">]</span> <span class="p">=</span> <span class="m">42</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">static</span> <span class="k">void</span> <span class="nf">NewKernel</span><span class="p">(</span><span class="n">ArrayView</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">data</span><span class="p">)</span>
+    <span class="p">{</span>
+      <span class="kt">var</span> <span class="n">globalIndex</span> <span class="p">=</span> <span class="n">Grid</span><span class="p">.</span><span class="n">GlobalIndex</span><span class="p">.</span><span class="n">X</span><span class="p">;</span>
+      <span class="c1">// or</span>
+      <span class="kt">var</span> <span class="n">globalIndex</span> <span class="p">=</span> <span class="n">Group</span><span class="p">.</span><span class="n">IdxX</span> <span class="p">+</span> <span class="n">Grid</span><span class="p">.</span><span class="n">IdxX</span> <span class="p">*</span> <span class="n">Group</span><span class="p">.</span><span class="n">DimX</span><span class="p">;</span>
+
+      <span class="n">data</span><span class="p">[</span><span class="n">globalIndex</span><span class="p">]</span> <span class="p">=</span> <span class="m">42</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">static</span> <span class="k">void</span> <span class="p">...(...)</span>
+    <span class="p">{</span>
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">context</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Context</span><span class="p">();</span>
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">accl</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">CudaAccelerator</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+
+        <span class="c1">// Old way</span>
+        <span class="kt">var</span> <span class="n">oldKernel</span> <span class="p">=</span> <span class="n">accl</span><span class="p">.</span><span class="n">LoadStreamKernel</span><span class="p">&lt;</span><span class="n">GroupedIndex</span><span class="p">,</span> <span class="n">ArrayView</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;&gt;(</span><span class="n">OldKernel</span><span class="p">);</span>
+        <span class="p">...</span>
+        <span class="nf">oldKernel</span><span class="p">(</span><span class="k">new</span> <span class="nf">GroupedIndex</span><span class="p">(&lt;</span><span class="n">GridDim</span><span class="p">&gt;,</span> <span class="p">&lt;</span><span class="n">GroupDim</span><span class="p">&gt;),</span> <span class="n">buffer</span><span class="p">.</span><span class="n">View</span><span class="p">);</span>
+
+        <span class="c1">// New way</span>
+        <span class="kt">var</span> <span class="n">newKernel</span> <span class="p">=</span> <span class="n">accl</span><span class="p">.</span><span class="n">LoadStreamKernel</span><span class="p">&lt;</span><span class="n">ArrayView</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;&gt;(</span><span class="n">NewKernel</span><span class="p">);</span>
+        <span class="p">...</span>
+        <span class="nf">newKernel</span><span class="p">((&lt;</span><span class="n">GridDim</span><span class="p">&gt;,</span> <span class="p">&lt;</span><span class="n">GroupDim</span><span class="p">&gt;),</span> <span class="n">buffer</span><span class="p">.</span><span class="n">View</span><span class="p">);</span>
+        <span class="c1">// Or</span>
+        <span class="nf">newKernel</span><span class="p">(</span><span class="k">new</span> <span class="nf">KernelConfig</span><span class="p">(&lt;</span><span class="n">GridDim</span><span class="p">&gt;,</span> <span class="p">&lt;</span><span class="n">GroupDim</span><span class="p">&gt;),</span> <span class="n">buffer</span><span class="p">.</span><span class="n">View</span><span class="p">);</span>
+
+        <span class="c1">// Or (using dynamic shared memory)</span>
+        <span class="kt">var</span> <span class="n">sharedMemConfig</span>  <span class="p">=</span> <span class="n">SharedMemoryConfig</span><span class="p">.</span><span class="n">RequestDynamic</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;(&lt;</span><span class="n">GroupDim</span><span class="p">&gt;);</span>
+        <span class="nf">newKernel</span><span class="p">((&lt;</span><span class="n">GridDim</span><span class="p">&gt;,</span> <span class="p">&lt;</span><span class="n">GroupDim</span><span class="p">&gt;,</span> <span class="n">sharedMemConfig</span><span class="p">),</span> <span class="n">buffer</span><span class="p">.</span><span class="n">View</span><span class="p">);</span>
+
+        <span class="p">...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="dynamic-shared-memory">Dynamic Shared Memory</h2>
+
+<p>Shared memory has long been supported by ILGPU.
+However, it was limited to <em>statically known</em> allocations which have a known size at compile time of the kernel.
+The new ILGPU version allows the use of dynamic shared memory, which can be specified for each kernel launch individually.</p>
+
+<p>Note that this feature is only available with CPU and Cuda accelerators.
+OpenCL users can use the <strong>Dynamic Specialization</strong> features to emulate this feature.</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="err">...</span>
+<span class="err">{</span>
+    <span class="nc">static</span> <span class="k">void</span> <span class="nf">SharedMemKernel</span><span class="p">(</span><span class="n">ArrayView</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">data</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// Use GetDynamic access dynamically specified shared memory</span>
+        <span class="kt">var</span> <span class="n">dynamicMemory</span> <span class="p">=</span> <span class="n">SharedMemory</span><span class="p">.</span><span class="n">GetDynamic</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;&gt;();</span>
+
+        <span class="p">...</span>
+
+        <span class="c1">// Use GetDynamic with a different element type to access</span>
+        <span class="c1">// the same memory region in a different way</span>
+        <span class="kt">var</span> <span class="n">dynamicMemory2</span> <span class="p">=</span> <span class="n">SharedMemory</span><span class="p">.</span><span class="n">GetDynamic</span><span class="p">&lt;</span><span class="kt">double</span><span class="p">&gt;&gt;();</span>
+
+        <span class="p">...</span>
+    <span class="p">}</span>
+
+    <span class="k">static</span> <span class="k">void</span> <span class="p">...(...)</span>
+    <span class="p">{</span>
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">context</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Context</span><span class="p">();</span>
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">accl</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">CudaAccelerator</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+
+        <span class="c1">// Create shared memory configuration using a custom element type.</span>
+        <span class="c1">// Note that this does not need to be the same type that is used in the scope of the kernel.</span>
+        <span class="c1">// Therefore, the following two configurations will allocate the same amount of shared memory:</span>
+        <span class="kt">var</span> <span class="n">config</span> <span class="p">=</span> <span class="n">SharedMemoryConfig</span><span class="p">.</span><span class="n">RequestDynamic</span><span class="p">&lt;</span><span class="kt">byte</span><span class="p">&gt;(&lt;</span><span class="n">GroupSize</span><span class="p">&gt;</span> <span class="p">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">byte</span><span class="p">));</span>
+        <span class="kt">var</span> <span class="n">config2</span> <span class="p">=</span> <span class="n">SharedMemoryConfig</span><span class="p">.</span><span class="n">RequestDynamic</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;(&lt;</span><span class="n">GroupSize</span><span class="p">&gt;);</span>
+
+        <span class="p">...</span>
+        <span class="c1">// Pass the shared memory configuration to the kernel configuration</span>
+        <span class="nf">kernel</span><span class="p">((&lt;</span><span class="n">GridDim</span><span class="p">&gt;,</span> <span class="p">&lt;</span><span class="n">GroupDim</span><span class="p">&gt;,</span> <span class="n">config</span><span class="p">),</span> <span class="n">buffer</span><span class="p">.</span><span class="n">View</span><span class="p">);</span>
+        <span class="p">...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="dynamic-specialization">Dynamic Specialization</h2>
+
+<p>Dynamic specialization allows the definition of kernels that will be <em>specialized/optimized</em> during runtime.
+This allows you to define kernels with <em>constant values</em> that are not known at compile time of the kernel or application.
+Without knowing the exact values (or ranges of values) of certain parameters, the compilerâ€™s optimization capabilities are limited, e.g. with regard to constant propagation and loop unrolling.</p>
+
+<p>Similar functionality can be achieved by using generic types in a clever way.
+However, dynamic specialization is much more convenient and easier to use.
+Moreover, it is more flexible without leveraging the .Net reflection API to create specialized instances.</p>
+
+<p>Please note that dynamically specialized kernels are precompiled during loading.
+The final compilation step occurs during the first call of a new (non-cached) specialized parameter combination.
+If a parameter combination was used previously, the corresponding specialized kernel instance is called.</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="err">...</span>
+<span class="err">{</span>
+    <span class="nc">static</span> <span class="k">void</span> <span class="nf">GenericKernel</span><span class="p">(</span><span class="n">ArrayView</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">data</span><span class="p">,</span> <span class="kt">int</span> <span class="n">c</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">globalIndex</span> <span class="p">=</span> <span class="n">Grid</span><span class="p">.</span><span class="n">GlobalIndex</span><span class="p">.</span><span class="n">X</span><span class="p">;</span>
+        <span class="c1">// Generates code that loads &lt;i&gt;c&lt;/i&gt; and adds the value &lt;i&gt;2&lt;/i&gt; at runtime of the kernel</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">globalIndex</span><span class="p">]</span> <span class="p">=</span> <span class="n">c</span> <span class="p">+</span> <span class="m">2</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">static</span> <span class="k">void</span> <span class="nf">SpecializedKernel</span><span class="p">(</span><span class="n">ArrayView</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">data</span><span class="p">,</span> <span class="n">SpecializedValue</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">c</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">globalIndex</span> <span class="p">=</span> <span class="n">Grid</span><span class="p">.</span><span class="n">GlobalIndex</span><span class="p">.</span><span class="n">X</span><span class="p">;</span>
+        <span class="c1">// Generates code that has an inlined constant value</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">globalIndex</span><span class="p">]</span> <span class="p">=</span> <span class="n">c</span> <span class="p">+</span> <span class="m">2</span><span class="p">;</span> <span class="c1">// Will be specialized for every value &lt;i&gt;c&lt;/i&gt;</span>
+    <span class="p">}</span>
+
+    <span class="k">static</span> <span class="k">void</span> <span class="p">...(...)</span>
+    <span class="p">{</span>
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">context</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Context</span><span class="p">();</span>
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">accl</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">CudaAccelerator</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+
+        <span class="kt">var</span> <span class="n">genericKernel</span> <span class="p">=</span> <span class="n">accl</span><span class="p">.</span><span class="n">LoadStreamKernel</span><span class="p">&lt;</span><span class="n">ArrayView</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;,</span> <span class="kt">int</span><span class="p">&gt;(</span><span class="n">GenericKernel</span><span class="p">);</span>
+        <span class="p">...</span>
+        <span class="nf">genericKernel</span><span class="p">((&lt;</span><span class="n">GridDim</span><span class="p">&gt;,</span> <span class="p">&lt;</span><span class="n">GroupDim</span><span class="p">&gt;),</span> <span class="n">buffer</span><span class="p">.</span><span class="n">View</span><span class="p">,</span> <span class="m">40</span><span class="p">);</span>
+
+        <span class="kt">var</span> <span class="n">specializedKernel</span> <span class="p">=</span> <span class="n">accl</span><span class="p">.</span><span class="n">LoadStreamKernel</span><span class="p">&lt;</span><span class="n">ArrayView</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;,</span> <span class="n">SpecializedValue</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;&gt;(</span><span class="n">GenericKernel</span><span class="p">);</span>
+        <span class="p">...</span>
+        <span class="nf">specializedKernel</span><span class="p">((&lt;</span><span class="n">GridDim</span><span class="p">&gt;,</span> <span class="p">&lt;</span><span class="n">GroupDim</span><span class="p">&gt;),</span> <span class="n">buffer</span><span class="p">.</span><span class="n">View</span><span class="p">,</span> <span class="n">SpecializedValue</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="m">40</span><span class="p">));</span>
+        <span class="p">...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="new-grid--group-properties">New Grid &amp; Group Properties</h2>
+
+<p>The new version adds revised static <em>Grid</em> and <em>Group</em> properties.
+The cumbersome <em>Index(X|Y|Z)</em> and <em>Dimension(X|Y|Z)</em> properties are now considered obsolete.
+The new (much more convenient) properties <em>Idx(X|Y|Z)</em> and <em>Dim(X|Y|Z)</em> are available to replace the old ones.
+Note that the <em>Index</em> and <em>Dimension</em> properties are still available to accessing all three dimensions of the dispatched <em>Grid</em>s and <em>Group</em>s.</p>
+
+<p>Please update all uses in your programs, as the old properties will be removed in a future version.</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="err">...</span>
+<span class="err">{</span>
+    <span class="nc">static</span> <span class="k">void</span> <span class="nf">GenericKernel</span><span class="p">(</span><span class="n">ArrayView</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">data</span><span class="p">,</span> <span class="kt">int</span> <span class="n">c</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">globalIndex</span> <span class="p">=</span> <span class="n">Grid</span><span class="p">.</span><span class="n">GlobalIndex</span><span class="p">.</span><span class="n">X</span><span class="p">;</span>
+        <span class="c1">// Generates code that loads &lt;i&gt;c&lt;/i&gt; and adds the value &lt;i&gt;2&lt;/i&gt; at runtime of the kernel</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">globalIndex</span><span class="p">]</span> <span class="p">=</span> <span class="n">c</span> <span class="p">+</span> <span class="m">2</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">static</span> <span class="k">void</span> <span class="nf">SpecializedKernel</span><span class="p">(</span><span class="n">ArrayView</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">data</span><span class="p">,</span> <span class="n">SpecializedValue</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">c</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">globalIndex</span> <span class="p">=</span> <span class="n">Grid</span><span class="p">.</span><span class="n">GlobalIndex</span><span class="p">.</span><span class="n">X</span><span class="p">;</span>
+        <span class="c1">// Generates code that has an inlined constant value</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">globalIndex</span><span class="p">]</span> <span class="p">=</span> <span class="n">c</span> <span class="p">+</span> <span class="m">2</span><span class="p">;</span> <span class="c1">// Will be specialized for every value &lt;i&gt;c&lt;/i&gt;</span>
+    <span class="p">}</span>
+
+    <span class="k">static</span> <span class="k">void</span> <span class="p">...(...)</span>
+    <span class="p">{</span>
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">context</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Context</span><span class="p">();</span>
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">accl</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">CudaAccelerator</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+
+        <span class="kt">var</span> <span class="n">genericKernel</span> <span class="p">=</span> <span class="n">accl</span><span class="p">.</span><span class="n">LoadStreamKernel</span><span class="p">&lt;</span><span class="n">ArrayView</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;,</span> <span class="kt">int</span><span class="p">&gt;(</span><span class="n">GenericKernel</span><span class="p">);</span>
+        <span class="p">...</span>
+        <span class="nf">genericKernel</span><span class="p">((&lt;</span><span class="n">GridDim</span><span class="p">&gt;,</span> <span class="p">&lt;</span><span class="n">GroupDim</span><span class="p">&gt;),</span> <span class="n">buffer</span><span class="p">.</span><span class="n">View</span><span class="p">,</span> <span class="m">40</span><span class="p">);</span>
+
+        <span class="kt">var</span> <span class="n">specializedKernel</span> <span class="p">=</span> <span class="n">accl</span><span class="p">.</span><span class="n">LoadStreamKernel</span><span class="p">&lt;</span><span class="n">ArrayView</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;,</span> <span class="n">SpecializedValue</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;&gt;(</span><span class="n">GenericKernel</span><span class="p">);</span>
+        <span class="p">...</span>
+        <span class="nf">specializedKernel</span><span class="p">((&lt;</span><span class="n">GridDim</span><span class="p">&gt;,</span> <span class="p">&lt;</span><span class="n">GroupDim</span><span class="p">&gt;),</span> <span class="n">buffer</span><span class="p">.</span><span class="n">View</span><span class="p">,</span> <span class="n">SpecializedValue</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="m">40</span><span class="p">));</span>
+        <span class="p">...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="unmanaged-type-constraints">Unmanaged Type Constraints</h2>
+
+<p>The new version leverages the newly available <em>umanaged</em> structure type constraint in C# in favor of the <em>struct</em> generic type constraint on buffers, view and functions.
+This ensures that a certain structure has the same representation in managed and unmanaged memory. This in turn allows ILGPU to generate faster code and simplifies the development process:
+The compiler can immediately emit an error message at compile time when a type does not match this particular <em>unmanaged</em> type constraint.</p>
+
+<p>In approx. 90% of all cases you do not need to do anything. However, if you use (or instantiate) generic types that should be considered <em>unmanaged</em>, you have to enable language version <em>8.0</em> of C#.
+Please note that it is also safe to do for programs running on .Net 4.7 or .Net 4.8.</p>
+:ET

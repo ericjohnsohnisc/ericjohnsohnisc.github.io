@@ -1,0 +1,44 @@
+I"¦<p>ILGPU support both <code class="language-plaintext highlighter-rouge">static</code> and <code class="language-plaintext highlighter-rouge">dynamic</code> shared memory.
+Static shared memory is limited to <code class="language-plaintext highlighter-rouge">statically known</code> allocations which have a known size at compile time of the kernel.
+The latest ILGPU versions allow the use of dynamic shared memory, which can be specified for each kernel launch individually.</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="err">...</span>
+<span class="err">{</span>
+    <span class="nc">static</span> <span class="k">void</span> <span class="nf">SharedMemKernel</span><span class="p">(</span><span class="n">ArrayView</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">data</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// Static memory allocation</span>
+        <span class="kt">var</span> <span class="n">staticMemory</span> <span class="p">=</span> <span class="n">SharedMemory</span><span class="p">.</span><span class="n">Allocate</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;&gt;(</span><span class="m">1024</span><span class="p">);</span>
+
+        <span class="c1">// Use GetDynamic access dynamically specified shared memory</span>
+        <span class="kt">var</span> <span class="n">dynamicMemory</span> <span class="p">=</span> <span class="n">SharedMemory</span><span class="p">.</span><span class="n">GetDynamic</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;&gt;();</span>
+
+        <span class="p">...</span>
+
+        <span class="c1">// Use GetDynamic with a different element type to access</span>
+        <span class="c1">// the same memory region in a different way</span>
+        <span class="kt">var</span> <span class="n">dynamicMemory2</span> <span class="p">=</span> <span class="n">SharedMemory</span><span class="p">.</span><span class="n">GetDynamic</span><span class="p">&lt;</span><span class="kt">double</span><span class="p">&gt;&gt;();</span>
+
+        <span class="p">...</span>
+    <span class="p">}</span>
+
+    <span class="k">static</span> <span class="k">void</span> <span class="p">...(...)</span>
+    <span class="p">{</span>
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">context</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Context</span><span class="p">();</span>
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">accl</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">CudaAccelerator</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+
+        <span class="c1">// Create shared memory configuration using a custom element type.</span>
+        <span class="c1">// Note that this does not need to be the same type that is used in the scope of the kernel.</span>
+        <span class="c1">// Therefore, the following two configurations will allocate the same amount of shared memory:</span>
+        <span class="kt">var</span> <span class="n">config</span> <span class="p">=</span> <span class="n">SharedMemoryConfig</span><span class="p">.</span><span class="n">RequestDynamic</span><span class="p">&lt;</span><span class="kt">byte</span><span class="p">&gt;(&lt;</span><span class="n">GroupSize</span><span class="p">&gt;</span> <span class="p">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">byte</span><span class="p">));</span>
+        <span class="kt">var</span> <span class="n">config2</span> <span class="p">=</span> <span class="n">SharedMemoryConfig</span><span class="p">.</span><span class="n">RequestDynamic</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;(&lt;</span><span class="n">GroupSize</span><span class="p">&gt;);</span>
+
+        <span class="p">...</span>
+        <span class="c1">// Pass the shared memory configuration to the kernel configuration</span>
+        <span class="nf">kernel</span><span class="p">((&lt;</span><span class="n">UserGridDim</span><span class="p">&gt;,</span> <span class="p">&lt;</span><span class="n">UserGroupDim</span><span class="p">&gt;,</span> <span class="n">config</span><span class="p">),</span> <span class="n">buffer</span><span class="p">.</span><span class="n">View</span><span class="p">);</span>
+        <span class="p">...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><em>Note that this feature available on CPU, Cuda and OpenCL accelerators.</em></p>
+:ET

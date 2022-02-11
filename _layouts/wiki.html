@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+  {% include header.html %}
+  <body class="wiki">
+    {% include wiki-navbar.html %}
+    {% include wiki-sidebar.html %}
+    <section id="wiki-main">
+      {{ content }}
+    </section>
+    {% include footer.html %}
+  </body>
+</html>
