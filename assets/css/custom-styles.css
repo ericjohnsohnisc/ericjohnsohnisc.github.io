@@ -221,6 +221,16 @@
     min-height: 92vh;
 }
 
+#wiki-main h2 {
+    margin-bottom: 20px !important;
+}
+
+#wiki-main div.highlight {
+    padding: 16px !important;
+    background-color: #F6F8FA !important;
+    border-radius: 6px !important;
+}
+
 .wiki #footer {
     z-index: 300;
     position: relative;

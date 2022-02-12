@@ -6,6 +6,3 @@ title: "" # the name of your site, e.g. ACME Corp.
 sass:
   sass_dir: css
   style: compressed
-
-include:
-  - wiki

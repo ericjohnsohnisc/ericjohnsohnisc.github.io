@@ -47,7 +47,7 @@
             <li><a href="../index.html#learn-more" class="scrollto">Learn More</a></li>
             <li><a href="../index.html#highlights" class="scrollto">Highlights</a></li>
             <li><a href="../index.html#features">Features</a></li>
-            <li><a href="#../index.htmlnews" class="scrollto">News</a></li>
+            <li><a href="../index.html#news" class="scrollto">News</a></li>
             <li><a href="../index.html#faq">FAQ</a></li>
           </ul>
           </li>
@@ -75,52 +75,47 @@
     <nav id="wiki-nav">
         <h5>Overview</h5>
         <ul>
-            <li><a href="/wiki/Home.html">Home</a></li> 
-            <li><a href="/wiki/Accelerators-and-Streams.html">Accelerators & Streams</a></li> 
-            <li><a href="/wiki/Memory-Buffers-and-Views.html">Memory Buffers & Views</a></li> 
-            <li><a href="/wiki/Kernels.html">Kernels</a></li> 
-            <li><a href="/wiki/Shared-Memory.html">Shared Memory</a></li> 
-            <li><a href="/wiki/Math-Functions.html">Math Functions</a></li> 
+            <li><a href="/docs/Home.html">Home</a></li> 
+            <li><a href="/docs/Accelerators-and-Streams.html">Accelerators & Streams</a></li> 
+            <li><a href="/docs/Memory-Buffers-and-Views.html">Memory Buffers & Views</a></li> 
+            <li><a href="/docs/Kernels.html">Kernels</a></li> 
+            <li><a href="/docs/Shared-Memory.html">Shared Memory</a></li> 
+            <li><a href="/docs/Math-Functions.html">Math Functions</a></li> 
         </ul>
         <h5>Advanced</h5>
         <ul>
-            <li><a href="/wiki/Dynamically-Specialized-Kernels.html">Dynamically Specialized Kernels</a></li> 
-            <li><a href="/wiki/Debugging-and-Profiling.html">Debugging & Profiling</a</li> 
-            <li><a href="/wiki/Inside-ILGPU.html">Inside ILGPU</a></li> 
+            <li><a href="/docs/Dynamically-Specialized-Kernels.html">Dynamically Specialized Kernels</a></li> 
+            <li><a href="/docs/Debugging-and-Profiling.html">Debugging & Profiling</a</li> 
+            <li><a href="/docs/Inside-ILGPU.html">Inside ILGPU</a></li> 
         </ul>
         
         <h5>Upgrade Guides</h5>
         <ul>
-            <li><a href="/wiki/Upgrade-v0.8.X-to-v0.9.X.html">v0.8.X to v0.9.X</a></li> 
-            <li><a href="/wiki/Upgrade-v0.8.0-to-v0.8.1.html">v0.8.0 to v0.8.1</a></li> 
-            <li><a href="/wiki/Upgrade-v0.7.X-to-v0.8.X.html">v0.7.X to v0.8.X</a></li> 
-            <li><a href="/wiki/Upgrade-v0.6.X-to-v0.7.X.html">v0.6.X to v0.7.X</a></li> 
-            <li><a href="/wiki/Upgrade-v0.3.X-to-v0.5.X.html">v0.3.X to v0.5.X</a></li> 
-            <li><a href="/wiki/Upgrade-v0.1.X-to-v0.2.X.html">v0.1.X to v0.2.X</a></li> 
+            <li><a href="/docs/Upgrade-v0.8.X-to-v0.9.X.html">v0.8.X to v0.9.X</a></li> 
+            <li><a href="/docs/Upgrade-v0.8.0-to-v0.8.1.html">v0.8.0 to v0.8.1</a></li> 
+            <li><a href="/docs/Upgrade-v0.7.X-to-v0.8.X.html">v0.7.X to v0.8.X</a></li> 
+            <li><a href="/docs/Upgrade-v0.6.X-to-v0.7.X.html">v0.6.X to v0.7.X</a></li> 
+            <li><a href="/docs/Upgrade-v0.3.X-to-v0.5.X.html">v0.3.X to v0.5.X</a></li> 
+            <li><a href="/docs/Upgrade-v0.1.X-to-v0.2.X.html">v0.1.X to v0.2.X</a></li> 
           </ul>
     </nav>
 
 </section>
     <section id="wiki-main">
-      <h2 id="general-notes">General Notes</h2>
+      <h2 id="general">General</h2>
 
-<p>All implicitly grouped kernel launchers have been updated with additional overloads.
-These new methods output additional kernel statistics (e.g. the amount of local memory used in bytes).
-Detailed information can be enabled with the context flag <code class="language-plaintext highlighter-rouge">ContextFlags.EnableKernelStatistics</code>.
-This information is highly similar to the output of <code class="language-plaintext highlighter-rouge">ptxas -v</code>.</p>
+<p>In order to support 64-bit memory buffers and array views, we have introduced the <code class="language-plaintext highlighter-rouge">LongIndexX</code> types that represent (multidimensional) 64-bit index value.
+We have changed the return types of all <code class="language-plaintext highlighter-rouge">Length</code> and <code class="language-plaintext highlighter-rouge">LengthInBytes</code> properties from <code class="language-plaintext highlighter-rouge">int</code> to <code class="language-plaintext highlighter-rouge">long</code>.
+This might affect your code base, if you work with explicit length information from views and buffers.
+Furthermore, if you are using custom index, view or memory buffer implementations, you have to adapt your code to comply with the latest interface definitions or <code class="language-plaintext highlighter-rouge">IArrayView</code>, <code class="language-plaintext highlighter-rouge">IGenericIndex</code> and <code class="language-plaintext highlighter-rouge">IMemoryBuffer</code>.</p>
 
-<p>The new version features an IR verifier that ensures the integrity of the internal IR. It can be enabled via the context flag <code class="language-plaintext highlighter-rouge">ContextFlags.EnableVerifier</code>.
-This is normally not required. However, if you encounter any problems that might be related to a compiler issue, you can enable the verifier.</p>
+<p>It is possible to use 32-bit <code class="language-plaintext highlighter-rouge">IndexX</code> values and 64-bit <code class="language-plaintext highlighter-rouge">LongIndexX</code> values for accessing generic array views.
+This allows programmers to decide whether they want to favor performance (fast 32-bit indexing) or large memory views (slower 64-bit indexing that consumes more 64-bit registers).
+<em>Note that specialized array views working on 32-bit indexes will accept 32-bit <code class="language-plaintext highlighter-rouge">IndexX</code> instances only.</em></p>
 
-<h2 id="optimization-levels">Optimization Levels</h2>
-
-<p>A new optimization level <code class="language-plaintext highlighter-rouge">O2</code> has been added. It is disabled by default, but can be enabled via <code class="language-plaintext highlighter-rouge">OptimizationLevel.O2</code>.</p>
-
-<p>Earlier versions contained <em>Debug</em> and <em>Release</em> versions of the ILGPU compiler.
-The new version contains only the <em>Release</em> build.
-This significantly improves compile time and simplifies the integration with other third-party libraries.
-If you want to enable intrinsic assertions you have to build the compiler from source.
-Alternatively, you can use the IR verifier to ensure the validity of a particular IR program.</p>
+<p>In order to provide backwards compatibility, it is possible to implicitly convert a <code class="language-plaintext highlighter-rouge">System.Int64</code> value into an <code class="language-plaintext highlighter-rouge">Index1</code> value.
+Each conversion operator performs bounds checks that will trigger an assertion in the case on an overflow.
+This allows you to launch your kernels using accesses to <code class="language-plaintext highlighter-rouge">Length</code> and <code class="language-plaintext highlighter-rouge">Extent</code> properties working on 64-bit integer values.</p>
 
     </section>
       <!-- ======= Footer ======= -->

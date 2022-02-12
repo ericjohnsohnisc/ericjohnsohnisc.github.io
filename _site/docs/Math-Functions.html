@@ -47,7 +47,7 @@
             <li><a href="../index.html#learn-more" class="scrollto">Learn More</a></li>
             <li><a href="../index.html#highlights" class="scrollto">Highlights</a></li>
             <li><a href="../index.html#features">Features</a></li>
-            <li><a href="#../index.htmlnews" class="scrollto">News</a></li>
+            <li><a href="../index.html#news" class="scrollto">News</a></li>
             <li><a href="../index.html#faq">FAQ</a></li>
           </ul>
           </li>
@@ -75,47 +75,52 @@
     <nav id="wiki-nav">
         <h5>Overview</h5>
         <ul>
-            <li><a href="/wiki/Home.html">Home</a></li> 
-            <li><a href="/wiki/Accelerators-and-Streams.html">Accelerators & Streams</a></li> 
-            <li><a href="/wiki/Memory-Buffers-and-Views.html">Memory Buffers & Views</a></li> 
-            <li><a href="/wiki/Kernels.html">Kernels</a></li> 
-            <li><a href="/wiki/Shared-Memory.html">Shared Memory</a></li> 
-            <li><a href="/wiki/Math-Functions.html">Math Functions</a></li> 
+            <li><a href="/docs/Home.html">Home</a></li> 
+            <li><a href="/docs/Accelerators-and-Streams.html">Accelerators & Streams</a></li> 
+            <li><a href="/docs/Memory-Buffers-and-Views.html">Memory Buffers & Views</a></li> 
+            <li><a href="/docs/Kernels.html">Kernels</a></li> 
+            <li><a href="/docs/Shared-Memory.html">Shared Memory</a></li> 
+            <li><a href="/docs/Math-Functions.html">Math Functions</a></li> 
         </ul>
         <h5>Advanced</h5>
         <ul>
-            <li><a href="/wiki/Dynamically-Specialized-Kernels.html">Dynamically Specialized Kernels</a></li> 
-            <li><a href="/wiki/Debugging-and-Profiling.html">Debugging & Profiling</a</li> 
-            <li><a href="/wiki/Inside-ILGPU.html">Inside ILGPU</a></li> 
+            <li><a href="/docs/Dynamically-Specialized-Kernels.html">Dynamically Specialized Kernels</a></li> 
+            <li><a href="/docs/Debugging-and-Profiling.html">Debugging & Profiling</a</li> 
+            <li><a href="/docs/Inside-ILGPU.html">Inside ILGPU</a></li> 
         </ul>
         
         <h5>Upgrade Guides</h5>
         <ul>
-            <li><a href="/wiki/Upgrade-v0.8.X-to-v0.9.X.html">v0.8.X to v0.9.X</a></li> 
-            <li><a href="/wiki/Upgrade-v0.8.0-to-v0.8.1.html">v0.8.0 to v0.8.1</a></li> 
-            <li><a href="/wiki/Upgrade-v0.7.X-to-v0.8.X.html">v0.7.X to v0.8.X</a></li> 
-            <li><a href="/wiki/Upgrade-v0.6.X-to-v0.7.X.html">v0.6.X to v0.7.X</a></li> 
-            <li><a href="/wiki/Upgrade-v0.3.X-to-v0.5.X.html">v0.3.X to v0.5.X</a></li> 
-            <li><a href="/wiki/Upgrade-v0.1.X-to-v0.2.X.html">v0.1.X to v0.2.X</a></li> 
+            <li><a href="/docs/Upgrade-v0.8.X-to-v0.9.X.html">v0.8.X to v0.9.X</a></li> 
+            <li><a href="/docs/Upgrade-v0.8.0-to-v0.8.1.html">v0.8.0 to v0.8.1</a></li> 
+            <li><a href="/docs/Upgrade-v0.7.X-to-v0.8.X.html">v0.7.X to v0.8.X</a></li> 
+            <li><a href="/docs/Upgrade-v0.6.X-to-v0.7.X.html">v0.6.X to v0.7.X</a></li> 
+            <li><a href="/docs/Upgrade-v0.3.X-to-v0.5.X.html">v0.3.X to v0.5.X</a></li> 
+            <li><a href="/docs/Upgrade-v0.1.X-to-v0.2.X.html">v0.1.X to v0.2.X</a></li> 
           </ul>
     </nav>
 
 </section>
     <section id="wiki-main">
-      <h2 id="general">General</h2>
+      <p>The default math functions in .Net are realized with static methods from the <code class="language-plaintext highlighter-rouge">Math</code> class.
+However, many operations work on doubles by default (like <code class="language-plaintext highlighter-rouge">Math.Sin</code>) and there is often no float overload.
+This causes many floating-point operations to be performed on 64-bit floats, even when this precision is not required.
+.Net Core and .Net Standard compatible frameworks ship the <code class="language-plaintext highlighter-rouge">MathF</code> class to overcome this limitation.
+ILGPU offers the <code class="language-plaintext highlighter-rouge">IntrinsicMath</code> class that supports basic math operations which are supported on all target platforms.
+The algorithms library offers the <code class="language-plaintext highlighter-rouge">XMath</code> class that has support for all common 32-bit float and 64-bit float math operations.
+Using the 32-bit overloads ensure that the operations are performed on 32-bit floats on the GPU hardware.</p>
 
-<p>In order to support 64-bit memory buffers and array views, we have introduced the <code class="language-plaintext highlighter-rouge">LongIndexX</code> types that represent (multidimensional) 64-bit index value.
-We have changed the return types of all <code class="language-plaintext highlighter-rouge">Length</code> and <code class="language-plaintext highlighter-rouge">LengthInBytes</code> properties from <code class="language-plaintext highlighter-rouge">int</code> to <code class="language-plaintext highlighter-rouge">long</code>.
-This might affect your code base, if you work with explicit length information from views and buffers.
-Furthermore, if you are using custom index, view or memory buffer implementations, you have to adapt your code to comply with the latest interface definitions or <code class="language-plaintext highlighter-rouge">IArrayView</code>, <code class="language-plaintext highlighter-rouge">IGenericIndex</code> and <code class="language-plaintext highlighter-rouge">IMemoryBuffer</code>.</p>
+<h3 id="fast-math">Fast Math</h3>
+<p>Fast-math can be enabled using the <code class="language-plaintext highlighter-rouge">ContextFlags.FastMath</code> flag and enables the use of fast (and unprecise) math functions.
+Unlike previous versions, the fast-math mode applies to all math instructions. Even to default math operations like <code class="language-plaintext highlighter-rouge">x / y</code>.</p>
 
-<p>It is possible to use 32-bit <code class="language-plaintext highlighter-rouge">IndexX</code> values and 64-bit <code class="language-plaintext highlighter-rouge">LongIndexX</code> values for accessing generic array views.
-This allows programmers to decide whether they want to favor performance (fast 32-bit indexing) or large memory views (slower 64-bit indexing that consumes more 64-bit registers).
-<em>Note that specialized array views working on 32-bit indexes will accept 32-bit <code class="language-plaintext highlighter-rouge">IndexX</code> instances only.</em></p>
-
-<p>In order to provide backwards compatibility, it is possible to implicitly convert a <code class="language-plaintext highlighter-rouge">System.Int64</code> value into an <code class="language-plaintext highlighter-rouge">Index1</code> value.
-Each conversion operator performs bounds checks that will trigger an assertion in the case on an overflow.
-This allows you to launch your kernels using accesses to <code class="language-plaintext highlighter-rouge">Length</code> and <code class="language-plaintext highlighter-rouge">Extent</code> properties working on 64-bit integer values.</p>
+<h3 id="forced-32-bit-math">Forced 32-bit Math</h3>
+<p>Your kernels might rely on third-party functions that are not under your control.
+These functions typically depend on the default .Net <code class="language-plaintext highlighter-rouge">Math</code> class, and thus, work on 64-bit floating-point operations.
+You can force the use of 32-bit floating-point operations in all cases using the <code class="language-plaintext highlighter-rouge">ContextFlags.Force32BitMath</code> flag.
+Caution: all doubles will be considered as floats to circumvent issues with third-party code.
+However, this also affects the address computations of array-view elements.
+Avoid the use of this flag unless you know exactly what you are doing.</p>
 
     </section>
       <!-- ======= Footer ======= -->
