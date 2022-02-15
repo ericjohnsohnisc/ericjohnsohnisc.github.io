@@ -33,6 +33,7 @@
   <link href="../assets/css/custom-styles.css" rel="stylesheet">
     
   </head>
+
   <body class="wiki">
     <!-- ======= Header ======= -->
 <header id="header" class="fixed-top ">
@@ -70,20 +71,30 @@
 
     <section id="sidebar">
     <div id="sidebar-header">
-        <h3>Documentation</h3>
+        <h4>Documentation</h4>
         </div>
     <nav id="wiki-nav">
-        <h5>Overview</h5>
+        <h5>Primers</h5>
         <ul>
-            <li><a href="/docs/Home.html">Home</a></li> 
+            <li><a href="/docs/Readme.html">Home</a></li> 
+            <li><a href="/docs/Primer_00.html">Setting Up ILGPU</a></li>
+            <li><a href="/docs/Primer_01.html">A GPU Is Not A CPU</a></li>
+            <li><a href="/docs/Primer_02.html">Memory & Bandwidth Threads</a></li>
+        </ul>
+        <h5>Beginner</h5>
+        <ul>
+            <li><a href="/docs/Tutorial_01.html">Context & Accelerators</a></li> 
+            <li><a href="/docs/Tutorial_02.html">Setting Up ILGPU</a></li>
+            <li><a href="/docs/Tutorial_03.html">A GPU Is Not A CPU</a></li>
+            <li><a href="/docs/Tutorial_04.html">Memory & Bandwidth Threads</a></li>
+        </ul>
+        <h5>Advanced</h5>
+        <ul>
             <li><a href="/docs/Accelerators-and-Streams.html">Accelerators & Streams</a></li> 
             <li><a href="/docs/Memory-Buffers-and-Views.html">Memory Buffers & Views</a></li> 
             <li><a href="/docs/Kernels.html">Kernels</a></li> 
             <li><a href="/docs/Shared-Memory.html">Shared Memory</a></li> 
             <li><a href="/docs/Math-Functions.html">Math Functions</a></li> 
-        </ul>
-        <h5>Advanced</h5>
-        <ul>
             <li><a href="/docs/Dynamically-Specialized-Kernels.html">Dynamically Specialized Kernels</a></li> 
             <li><a href="/docs/Debugging-and-Profiling.html">Debugging & Profiling</a</li> 
             <li><a href="/docs/Inside-ILGPU.html">Inside ILGPU</a></li> 
@@ -99,6 +110,26 @@
             <li><a href="/docs/Upgrade-v0.1.X-to-v0.2.X.html">v0.1.X to v0.2.X</a></li> 
           </ul>
     </nav>
+
+    <div class="box">
+        <span dd-toggle="theme" class="df">
+          <div id="toggle_theme" class="dd-theme__switcher">
+            <span class="dd-theme__switcher-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" class="dd-icon icon-tabler icon-tabler-sun" width="24" height="24"
+                viewBox="0 0 24 24" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" />
+                <circle cx="12" cy="12" r="4" />
+                <path d="M3 12h1M12 3v1M20 12h1M12 20v1M5.6 5.6l.7 .7M18.4 5.6l-.7 .7M17.7 17.7l.7 .7M6.3 17.7l-.7 .7" />
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" class="dd-icon icon-tabler icon-tabler-moon" width="24" height="24"
+                viewBox="0 0 24 24" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" />
+                <path d="M16.2 4a9.03 9.03 0 1 0 3.9 12a6.5 6.5 0 1 1 -3.9 -12" />
+              </svg>
+            </span>
+          </div>
+          &nbsp;<label class="box-lbl" for="toggle_theme"><strong>Toggle Light/Dark Theme</strong></label>
+      </div>
 
 </section>
     <section id="wiki-main">
@@ -311,6 +342,12 @@ The compiler can immediately emit an error message at compile time when a type d
 <p>In approx. 90% of all cases you do not need to do anything. However, if you use (or instantiate) generic types that should be considered <em>unmanaged</em>, you have to enable language version <em>8.0</em> of C#.
 Please note that it is also safe to do for programs running on .Net 4.7 or .Net 4.8.</p>
 
+      <div class="f5 contribution">
+    <h2>Help us make these docs great!</h2>
+    <p>All ILGPU docs are open source. See something that's wrong or unclear? Submit a pull request.</p>
+        <a class="btn" href="https://github.com/m4rs-mt/ILGPU/edit/master/Docs/Upgrade-v0.7.X-to-v0.8.X.md" target="_blank" rel="noopener"><svg aria-hidden="true" role="img" class="octicon mr-1" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" style="display:inline-block;user-select:none;vertical-align:text-bottom;overflow:visible"><path fill-rule="evenodd" d="M7.177 3.073L9.573.677A.25.25 0 0110 .854v4.792a.25.25 0 01-.427.177L7.177 3.427a.25.25 0 010-.354zM3.75 2.5a.75.75 0 100 1.5.75.75 0 000-1.5zm-2.25.75a2.25 2.25 0 113 2.122v5.256a2.251 2.251 0 11-1.5 0V5.372A2.25 2.25 0 011.5 3.25zM11 2.5h-1V4h1a1 1 0 011 1v5.628a2.251 2.251 0 101.5 0V5A2.5 2.5 0 0011 2.5zm1 10.25a.75.75 0 111.5 0 .75.75 0 01-1.5 0zM3.75 12a.75.75 0 100 1.5.75.75 0 000-1.5z"></path></svg>Make a contribution</a>
+        <p class="color-fg-muted f6 mt-2">Or,<!-- --> <a href="https://github.com/m4rs-mt/ILGPU#general-contribution-guidelines" target="_blank" rel="noopener">learn how to contribute.</a></p>
+    </div>
     </section>
       <!-- ======= Footer ======= -->
   <footer id="footer">
@@ -353,5 +390,29 @@ Please note that it is also safe to do for programs running on .Net 4.7 or .Net 
       }
     }
     </script>
+    <div>
+      <script type="text/javascript">
+        // Set the theme from localStorage(if exist) || or set default light
+let theme = window.localStorage.getItem('theme') || 'light';
+// Activate the current theme (using class)
+body.classList = theme;
+// Available Themes
+let available_themes = document.querySelectorAll('[dd-theme]');
+
+/** Light / Dark theme Toggle */
+// Toggle Dark / Light theme
+let _toggler = document.querySelector('[dd-toggle]');
+_toggler.addEventListener('click', toggleTheme);
+// Function: toggle theme(light & dark)
+function toggleTheme() {
+ // Toggle light / dark theme
+ ( theme == 'light' ? theme = 'dark' : theme = 'light');
+ // Apply class to body
+ body.classList = theme;
+ // Store theme var to localStorage
+ window.localStorage.setItem('theme', theme );
+}
+      </script>
+    </div>
   </body>
 </html>

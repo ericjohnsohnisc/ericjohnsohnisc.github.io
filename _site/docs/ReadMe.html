@@ -133,30 +133,118 @@
 
 </section>
     <section id="wiki-main">
-      <h2 id="general-notes">General Notes</h2>
+      <h1 id="ilgpu-tutorials">ILGPU Tutorials</h1>
 
-<p>All implicitly grouped kernel launchers have been updated with additional overloads.
-These new methods output additional kernel statistics (e.g. the amount of local memory used in bytes).
-Detailed information can be enabled with the context flag <code class="language-plaintext highlighter-rouge">ContextFlags.EnableKernelStatistics</code>.
-This information is highly similar to the output of <code class="language-plaintext highlighter-rouge">ptxas -v</code>.</p>
+<h2 id="primers-how-a-gpu-works">Primers (How a GPU works)</h2>
 
-<p>The new version features an IR verifier that ensures the integrity of the internal IR. It can be enabled via the context flag <code class="language-plaintext highlighter-rouge">ContextFlags.EnableVerifier</code>.
-This is normally not required. However, if you encounter any problems that might be related to a compiler issue, you can enable the verifier.</p>
+<p>This series introduces how a GPU works and what ILGPU does. If you have programmed with CUDA or OpenCL 
+before you can probably skip 01 and 02.</p>
 
-<h2 id="optimization-levels">Optimization Levels</h2>
+<p>00 <a href="Primer_00.md">Setting up ILGPU</a> (ILGPU version 1.0.0)</p>
 
-<p>A new optimization level <code class="language-plaintext highlighter-rouge">O2</code> has been added. It is disabled by default, but can be enabled via <code class="language-plaintext highlighter-rouge">OptimizationLevel.O2</code>.</p>
+<p>01 <a href="Primer_01.md">A GPU is not a CPU</a> (ILGPU version 1.0.0)</p>
+<blockquote>
+  <p>This page will provide a quick rundown the basics of how kernels (think GPU programs) run.</p>
+</blockquote>
 
-<p>Earlier versions contained <em>Debug</em> and <em>Release</em> versions of the ILGPU compiler.
-The new version contains only the <em>Release</em> build.
-This significantly improves compile time and simplifies the integration with other third-party libraries.
-If you want to enable intrinsic assertions you have to build the compiler from source.
-Alternatively, you can use the IR verifier to ensure the validity of a particular IR program.</p>
+<p>02 <a href="Primer_02.md">Memory and bandwidth and threads. Oh my!</a></p>
+<blockquote>
+  <p>This will hopefully give you a better understanding of how memory works in hardware and the performance
+implications.</p>
+</blockquote>
+
+<h2 id="beginner-how-ilgpu-works">Beginner (How ILGPU works)</h2>
+
+<p>This series is meant to be a brief overview of ILGPU and how to use it. It assumes you have at least a little knowledge of how Cuda or OpenCL work. 
+If you need a primer look to something like <a href="https://developer.nvidia.com/about-cuda">this for Cuda</a> or <a href="https://www.khronos.org/opencl/">this for OpenCL</a></p>
+
+<p>01 <a href="Tutorial_01.md">Context and Accelerators</a></p>
+<blockquote>
+  <p>This tutorial covers the creating the Context and Accelerator objects which setup ILGPU for use. 
+It’s mostly boiler plate and does no computation but it does print info about your GPU if you have one.
+There is some advice about ILGPU in here that makes it worth the quick read.</p>
+
+  <p>See Also:</p>
+
+  <p><a href="https://github.com/m4rs-mt/ILGPU/tree/master/Samples/DeviceInfo">Device Info Sample</a></p>
+</blockquote>
+
+<p>02 <a href="Tutorial_02.md">MemoryBuffers and ArrayViews</a></p>
+<blockquote>
+  <p>This tutorial covers the basics for Host / Device memory management.</p>
+
+  <p>See Also:</p>
+
+  <p><a href="https://github.com/m4rs-mt/ILGPU/tree/master/Samples/SimpleAlloc">Simple Allocation Sample</a></p>
+</blockquote>
+
+<p>03 <a href="Tutorial_03.md">Kernels and Simple Programs</a></p>
+<blockquote>
+  <p>This is where it all comes together. This covers actual code, on the actual GPU (or the CPU if you are testing / dont have a GPU).</p>
+
+  <p>See Also:</p>
+
+  <p><a href="https://github.com/m4rs-mt/ILGPU/tree/master/Samples/SimpleKernel">Simple Kernel Sample</a></p>
+
+  <p><a href="https://github.com/m4rs-mt/ILGPU/tree/master/Samples/SimpleMath">Simple Math Sample</a></p>
+</blockquote>
+
+<p>04 <a href="Tutorial_04.md">Structs and the N-body problem</a></p>
+<blockquote>
+  <p>This tutorial actually does something! We use computing the N-body problem as a sample of how to better manage Host / Device memory.</p>
+</blockquote>
+
+<h2 id="beginner-ii-something-more-interesting">Beginner II (Something more interesting)</h2>
+
+<p>Well at least I think. This is where I will put ILGPUView bitmap shader things I (or other people if they want to) eventually write. Below are the few I have planned / think would be easy.</p>
+
+<ol>
+  <li>Ray Tracing in One Weekend based raytracer</li>
+  <li>Cloud Simulation</li>
+  <li>2D Physics Simulation</li>
+  <li>Other things I see on shadertoy</li>
+</ol>
+
+<h1 id="advanced-resources">Advanced Resources</h1>
+
+<h2 id="samples">Samples</h2>
+<p>They cover a wide swath of uses for ILGPU including much of the more complex things that ILGPU is capable of.
+<a href="https://github.com/m4rs-mt/ILGPU/tree/master/Samples">There are too many to list out so I will just link to the repository.</a></p>
+
+<h2 id="overview">Overview</h2>
+
+<p><a href="Memory-Buffers-and-Views.md">MemoryBuffers &amp; Views</a></p>
+
+<p><a href="Kernels.md">Kernels</a></p>
+
+<p><a href="Shared-Memory.md">Shared Memory</a></p>
+
+<p><a href="Math-Functions.md">Math Functions</a></p>
+
+<p><a href="Dynamically-Specialized-Kernels.md">Dynamically Specialized Kernels</a></p>
+
+<p><a href="Debugging-and-Profiling.md">Debugging &amp; Profiling</a></p>
+
+<p><a href="Inside-ILGPU.md">Inside ILGPU</a></p>
+
+<h2 id="upgrade-guides">Upgrade Guides</h2>
+
+<p><a href="Upgrade-v0.1.X-to-v0.2.X.md">Upgrade v0.1.X to v0.2.X</a></p>
+
+<p><a href="Upgrade-v0.3.X-to-v0.5.X.md">Upgrade v0.3.X to v0.5.X</a></p>
+
+<p><a href="Upgrade-v0.6.X-to-v0.7.X.md">Upgrade v0.6.X to v0.7.X</a></p>
+
+<p><a href="Upgrade-v0.7.X-to-v0.8.X.md">Upgrade v0.7.X to v0.8.X</a></p>
+
+<p><a href="Upgrade-v0.8.0-to-v0.8.1.md">Upgrade v0.8.0 to v0.8.1</a></p>
+
+<p><a href="Upgrade-v0.8.X-to-v0.9.X.md">Upgrade v0.8.X to v0.9.X</a></p>
 
       <div class="f5 contribution">
     <h2>Help us make these docs great!</h2>
     <p>All ILGPU docs are open source. See something that's wrong or unclear? Submit a pull request.</p>
-        <a class="btn" href="https://github.com/m4rs-mt/ILGPU/edit/master/Docs/Upgrade-v0.8.0-to-v0.8.1.md" target="_blank" rel="noopener"><svg aria-hidden="true" role="img" class="octicon mr-1" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" style="display:inline-block;user-select:none;vertical-align:text-bottom;overflow:visible"><path fill-rule="evenodd" d="M7.177 3.073L9.573.677A.25.25 0 0110 .854v4.792a.25.25 0 01-.427.177L7.177 3.427a.25.25 0 010-.354zM3.75 2.5a.75.75 0 100 1.5.75.75 0 000-1.5zm-2.25.75a2.25 2.25 0 113 2.122v5.256a2.251 2.251 0 11-1.5 0V5.372A2.25 2.25 0 011.5 3.25zM11 2.5h-1V4h1a1 1 0 011 1v5.628a2.251 2.251 0 101.5 0V5A2.5 2.5 0 0011 2.5zm1 10.25a.75.75 0 111.5 0 .75.75 0 01-1.5 0zM3.75 12a.75.75 0 100 1.5.75.75 0 000-1.5z"></path></svg>Make a contribution</a>
+        <a class="btn" href="https://github.com/m4rs-mt/ILGPU/edit/master/Docs/ReadMe.md" target="_blank" rel="noopener"><svg aria-hidden="true" role="img" class="octicon mr-1" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" style="display:inline-block;user-select:none;vertical-align:text-bottom;overflow:visible"><path fill-rule="evenodd" d="M7.177 3.073L9.573.677A.25.25 0 0110 .854v4.792a.25.25 0 01-.427.177L7.177 3.427a.25.25 0 010-.354zM3.75 2.5a.75.75 0 100 1.5.75.75 0 000-1.5zm-2.25.75a2.25 2.25 0 113 2.122v5.256a2.251 2.251 0 11-1.5 0V5.372A2.25 2.25 0 011.5 3.25zM11 2.5h-1V4h1a1 1 0 011 1v5.628a2.251 2.251 0 101.5 0V5A2.5 2.5 0 0011 2.5zm1 10.25a.75.75 0 111.5 0 .75.75 0 01-1.5 0zM3.75 12a.75.75 0 100 1.5.75.75 0 000-1.5z"></path></svg>Make a contribution</a>
         <p class="color-fg-muted f6 mt-2">Or,<!-- --> <a href="https://github.com/m4rs-mt/ILGPU#general-contribution-guidelines" target="_blank" rel="noopener">learn how to contribute.</a></p>
     </div>
     </section>

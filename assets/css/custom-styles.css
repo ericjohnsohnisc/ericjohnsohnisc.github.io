@@ -1,4 +1,12 @@
 
+:root {
+    --transition: all .5s;
+  }
+
+* {
+    transition: var(--transition);
+  }
+
 /* HEADER */
 
 #header {
@@ -190,18 +198,22 @@
     overflow-y: hidden;
     height: 100%;
     color: #9b9b9b;
-    background: #343131;
+    background: #002C5A;
     z-index: 200;
     padding: 0;
 }
 
+#sidebar h5 {
+    color: #fff !important;
+}
+
 #sidebar-header {
     background-color: #00458D;
-    padding: 30px 20px 20px;
+    padding: 20px 20px 10px;
     margin-bottom: 20px;
 }
 
-#sidebar-header h3 {   
+#sidebar-header h4 {   
     margin: 0 0 10px 0;
     font-weight: 700;
     color: #fff;
@@ -225,13 +237,100 @@
     margin-bottom: 20px !important;
 }
 
-#wiki-main div.highlight {
-    padding: 16px !important;
+#wiki-main h3 {
+    margin-bottom: 16px !important;
+}
+
+.highlight pre {
+    padding: 30px !important;
     background-color: #F6F8FA !important;
     border-radius: 6px !important;
+}
+
+.nc, .n {
+    color: #d63384 !important;
+}
+
+.nf {
+    color: #222ECF !important;
+}
+
+.wiki a.btn {
+    padding: 8px 20px;
+    border-radius: 50px;
+    color: #00458D;
+    font-size: 14px;
+    border: 2px solid #47b2e4;
+    font-weight: 600;
+}
+
+.wiki a.btn:hover {
+    color: #fff !important;
+    background-color: #47b2e4;;
+}
+
+.octicon {
+    margin-right: 4px;
 }
 
 .wiki #footer {
     z-index: 300;
     position: relative;
 }
+
+/* THEME SWITCHER */
+
+.dd-icon {
+    stroke: var(--clr-text);
+  }
+  .dd-theme__switcher {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+  }
+  .dd-theme__switcher .dd-theme__switcher-btn {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    transition: var(--transition);
+    top: 0;
+  }
+  body.light .dd-theme__switcher .dd-theme__switcher-btn {
+    top: -24px;
+  }
+  .theme--label {
+    display: flex;
+    align-items: center;
+    border: 2px solid var(--clr-element);
+    padding: 5px 10px;
+    border-radius: 4px;
+    margin: 0 10px;
+    cursor: pointer;
+  }
+  .theme--label span {
+    position: relative;
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    border-radius: 25px;
+    margin-right: 10px;
+  }
+
+  .theme--label[dd-theme].active {
+    color: var(--bg);
+    background: var(--clr-element);
+  }
+  .theme--label[dd-theme].active span { background: var(--bg); }
+
+  .dark, body[color-theme="dark"] {
+    --bg: #182227;
+    --bg-light: rgba(255, 255, 255, .15);
+    --clr-text: #FCE8Ec;
+    --clr-text-light: #FCE8Ecbb;
+    --clr-element: #FFABC2;
+    --clr-element-hover: #FFABC2bb;
+    --clr-shadow: rgba(0, 0, 0, .2);
+  }

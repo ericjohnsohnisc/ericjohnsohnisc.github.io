@@ -1,0 +1,421 @@
+I"8�<h1 id="structs">Structs</h1>
+
+<p>As we saw in the <a href="Tutorial_02.md">memory tutorial</a> programs need data.
+However a problem arises when we use ILGPU because it restricts how you can store, move, allocate, and access data.
+This is mostly due to the fact that ILGPU is turning C# code into lower level languages.</p>
+
+<h2 id="how-do-we-deal-with-this">How do we deal with this?</h2>
+<p><em>Data is data is data.</em></p>
+
+<blockquote>
+  <p>Note: this example is a console version of the N-body template of my ILGPUView project.
+When this is more ready I will include a link, but ILGPUView will allow you to see the result in realtime.</p>
+</blockquote>
+
+<h3 id="n-body-example">N-Body Example</h3>
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">ILGPU</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">ILGPU.Algorithms</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">ILGPU.Runtime</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Drawing</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Drawing.Imaging</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Runtime.InteropServices</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="nc">Program</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">Context</span> <span class="n">context</span> <span class="p">=</span> <span class="n">Context</span><span class="p">.</span><span class="nf">Create</span><span class="p">(</span><span class="n">builder</span> <span class="p">=&gt;</span> <span class="n">builder</span><span class="p">.</span><span class="nf">Default</span><span class="p">().</span><span class="nf">EnableAlgorithms</span><span class="p">());</span>
+        <span class="n">Accelerator</span> <span class="n">device</span> <span class="p">=</span> <span class="n">context</span><span class="p">.</span><span class="nf">GetPreferredDevice</span><span class="p">(</span><span class="n">preferCPU</span><span class="p">:</span> <span class="k">false</span><span class="p">)</span>
+                                  <span class="p">.</span><span class="nf">CreateAccelerator</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+
+        <span class="kt">int</span> <span class="n">width</span> <span class="p">=</span> <span class="m">500</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">height</span> <span class="p">=</span> <span class="m">500</span><span class="p">;</span>
+        
+        <span class="c1">// my GPU can handle around 10,000 when using the struct of arrays</span>
+        <span class="kt">int</span> <span class="n">particleCount</span> <span class="p">=</span> <span class="m">100</span><span class="p">;</span> 
+
+        <span class="kt">byte</span><span class="p">[]</span> <span class="n">h_bitmapData</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[</span><span class="n">width</span> <span class="p">*</span> <span class="n">height</span> <span class="p">*</span> <span class="m">3</span><span class="p">];</span>
+
+        <span class="k">using</span> <span class="nn">MemoryBuffer2D</span><span class="p">&lt;</span><span class="n">Vec3</span><span class="p">,</span> <span class="n">Stride2D</span><span class="p">.</span><span class="n">DenseY</span><span class="p">&gt;</span> <span class="n">canvasData</span> <span class="p">=</span> <span class="n">device</span><span class="p">.</span><span class="n">Allocate2DDenseY</span><span class="p">&lt;</span><span class="n">Vec3</span><span class="p">&gt;(</span><span class="k">new</span> <span class="nf">Index2D</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">));</span>
+        <span class="k">using</span> <span class="nn">MemoryBuffer1D</span><span class="p">&lt;</span><span class="kt">byte</span><span class="p">,</span> <span class="n">Stride1D</span><span class="p">.</span><span class="n">Dense</span><span class="p">&gt;</span> <span class="n">d_bitmapData</span> <span class="p">=</span> <span class="n">device</span><span class="p">.</span><span class="n">Allocate1D</span><span class="p">&lt;</span><span class="kt">byte</span><span class="p">&gt;(</span><span class="n">width</span> <span class="p">*</span> <span class="n">height</span> <span class="p">*</span> <span class="m">3</span><span class="p">);</span>
+
+        <span class="n">CanvasData</span> <span class="n">c</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">CanvasData</span><span class="p">(</span><span class="n">canvasData</span><span class="p">,</span> <span class="n">d_bitmapData</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">);</span>
+
+        <span class="k">using</span> <span class="nn">HostParticleSystem</span> <span class="n">h_particleSystem</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">HostParticleSystem</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="n">particleCount</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">);</span>
+
+        <span class="kt">var</span> <span class="n">frameBufferToBitmap</span> <span class="p">=</span> <span class="n">device</span><span class="p">.</span><span class="n">LoadAutoGroupedStreamKernel</span><span class="p">&lt;</span><span class="n">Index2D</span><span class="p">,</span> <span class="n">CanvasData</span><span class="p">&gt;(</span><span class="n">CanvasData</span><span class="p">.</span><span class="n">CanvasToBitmap</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">particleProcessingKernel</span> <span class="p">=</span> <span class="n">device</span><span class="p">.</span><span class="n">LoadAutoGroupedStreamKernel</span><span class="p">&lt;</span><span class="n">Index1D</span><span class="p">,</span> <span class="n">CanvasData</span><span class="p">,</span> <span class="n">ParticleSystem</span><span class="p">&gt;(</span><span class="n">ParticleSystem</span><span class="p">.</span><span class="n">particleKernel</span><span class="p">);</span>
+
+        <span class="c1">//process 100 N-body ticks</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="m">100</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+        <span class="p">{</span>
+            <span class="nf">particleProcessingKernel</span><span class="p">(</span><span class="n">particleCount</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">h_particleSystem</span><span class="p">.</span><span class="n">deviceParticleSystem</span><span class="p">);</span>
+            <span class="n">device</span><span class="p">.</span><span class="nf">Synchronize</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="nf">frameBufferToBitmap</span><span class="p">(</span><span class="n">canvasData</span><span class="p">.</span><span class="n">Extent</span><span class="p">.</span><span class="nf">ToIntIndex</span><span class="p">(),</span> <span class="n">c</span><span class="p">);</span>
+        <span class="n">device</span><span class="p">.</span><span class="nf">Synchronize</span><span class="p">();</span>
+
+        <span class="n">d_bitmapData</span><span class="p">.</span><span class="nf">CopyToCPU</span><span class="p">(</span><span class="n">h_bitmapData</span><span class="p">);</span>
+
+        <span class="c1">//bitmap magic that ignores bitmap striding, be careful some sizes will mess up the striding</span>
+        <span class="k">using</span> <span class="nn">Bitmap</span> <span class="n">b</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Bitmap</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span> <span class="p">*</span> <span class="m">3</span><span class="p">,</span> <span class="n">PixelFormat</span><span class="p">.</span><span class="n">Format24bppRgb</span><span class="p">,</span> <span class="n">Marshal</span><span class="p">.</span><span class="nf">UnsafeAddrOfPinnedArrayElement</span><span class="p">(</span><span class="n">h_bitmapData</span><span class="p">,</span> <span class="m">0</span><span class="p">));</span>
+        <span class="n">b</span><span class="p">.</span><span class="nf">Save</span><span class="p">(</span><span class="s">"out.bmp"</span><span class="p">);</span>
+        <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"Wrote 100 iterations of N-body simulation to out.bmp"</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">struct</span> <span class="nc">CanvasData</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="n">ArrayView2D</span><span class="p">&lt;</span><span class="n">Vec3</span><span class="p">,</span> <span class="n">Stride2D</span><span class="p">.</span><span class="n">DenseY</span><span class="p">&gt;</span> <span class="n">canvas</span><span class="p">;</span>
+        <span class="k">public</span> <span class="n">ArrayView1D</span><span class="p">&lt;</span><span class="kt">byte</span><span class="p">,</span> <span class="n">Stride1D</span><span class="p">.</span><span class="n">Dense</span><span class="p">&gt;</span> <span class="n">bitmapData</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">width</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">height</span><span class="p">;</span>
+
+        <span class="k">public</span> <span class="nf">CanvasData</span><span class="p">(</span><span class="n">ArrayView2D</span><span class="p">&lt;</span><span class="n">Vec3</span><span class="p">,</span> <span class="n">Stride2D</span><span class="p">.</span><span class="n">DenseY</span><span class="p">&gt;</span> <span class="n">canvas</span><span class="p">,</span> <span class="n">ArrayView1D</span><span class="p">&lt;</span><span class="kt">byte</span><span class="p">,</span> <span class="n">Stride1D</span><span class="p">.</span><span class="n">Dense</span><span class="p">&gt;</span> <span class="n">bitmapData</span><span class="p">,</span> <span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">height</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="n">canvas</span> <span class="p">=</span> <span class="n">canvas</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="n">bitmapData</span> <span class="p">=</span> <span class="n">bitmapData</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="n">width</span> <span class="p">=</span> <span class="n">width</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="n">height</span> <span class="p">=</span> <span class="n">height</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">void</span> <span class="nf">setColor</span><span class="p">(</span><span class="n">Index2D</span> <span class="n">index</span><span class="p">,</span> <span class="n">Vec3</span> <span class="n">c</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">((</span><span class="n">index</span><span class="p">.</span><span class="n">X</span> <span class="p">&gt;=</span> <span class="m">0</span><span class="p">)</span> <span class="p">&amp;&amp;</span> <span class="p">(</span><span class="n">index</span><span class="p">.</span><span class="n">X</span> <span class="p">&lt;</span> <span class="n">canvas</span><span class="p">.</span><span class="n">IntExtent</span><span class="p">.</span><span class="n">X</span><span class="p">)</span> <span class="p">&amp;&amp;</span> <span class="p">(</span><span class="n">index</span><span class="p">.</span><span class="n">Y</span> <span class="p">&gt;=</span> <span class="m">0</span><span class="p">)</span> <span class="p">&amp;&amp;</span> <span class="p">(</span><span class="n">index</span><span class="p">.</span><span class="n">Y</span> <span class="p">&lt;</span> <span class="n">canvas</span><span class="p">.</span><span class="n">IntExtent</span><span class="p">.</span><span class="n">Y</span><span class="p">))</span>
+            <span class="p">{</span>
+                <span class="n">canvas</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="p">=</span> <span class="n">c</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">CanvasToBitmap</span><span class="p">(</span><span class="n">Index2D</span> <span class="n">index</span><span class="p">,</span> <span class="n">CanvasData</span> <span class="n">c</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">Vec3</span> <span class="n">color</span> <span class="p">=</span> <span class="n">c</span><span class="p">.</span><span class="n">canvas</span><span class="p">[</span><span class="n">index</span><span class="p">];</span>
+
+            <span class="kt">int</span> <span class="n">bitmapIndex</span> <span class="p">=</span> <span class="p">((</span><span class="n">index</span><span class="p">.</span><span class="n">Y</span> <span class="p">*</span> <span class="n">c</span><span class="p">.</span><span class="n">width</span><span class="p">)</span> <span class="p">+</span> <span class="n">index</span><span class="p">.</span><span class="n">X</span><span class="p">)</span> <span class="p">*</span> <span class="m">3</span><span class="p">;</span>
+
+            <span class="n">c</span><span class="p">.</span><span class="n">bitmapData</span><span class="p">[</span><span class="n">bitmapIndex</span><span class="p">]</span> <span class="p">=</span> <span class="p">(</span><span class="kt">byte</span><span class="p">)(</span><span class="m">255.99f</span> <span class="p">*</span> <span class="n">color</span><span class="p">.</span><span class="n">x</span><span class="p">);</span>
+            <span class="n">c</span><span class="p">.</span><span class="n">bitmapData</span><span class="p">[</span><span class="n">bitmapIndex</span> <span class="p">+</span> <span class="m">1</span><span class="p">]</span> <span class="p">=</span> <span class="p">(</span><span class="kt">byte</span><span class="p">)(</span><span class="m">255.99f</span> <span class="p">*</span> <span class="n">color</span><span class="p">.</span><span class="n">y</span><span class="p">);</span>
+            <span class="n">c</span><span class="p">.</span><span class="n">bitmapData</span><span class="p">[</span><span class="n">bitmapIndex</span> <span class="p">+</span> <span class="m">2</span><span class="p">]</span> <span class="p">=</span> <span class="p">(</span><span class="kt">byte</span><span class="p">)(</span><span class="m">255.99f</span> <span class="p">*</span> <span class="n">color</span><span class="p">.</span><span class="n">z</span><span class="p">);</span>
+
+            <span class="n">c</span><span class="p">.</span><span class="n">canvas</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Vec3</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">HostParticleSystem</span> <span class="p">:</span> <span class="n">IDisposable</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="n">MemoryBuffer1D</span><span class="p">&lt;</span><span class="n">Particle</span><span class="p">,</span> <span class="n">Stride1D</span><span class="p">.</span><span class="n">Dense</span><span class="p">&gt;</span> <span class="n">particleData</span><span class="p">;</span>
+        <span class="k">public</span> <span class="n">ParticleSystem</span> <span class="n">deviceParticleSystem</span><span class="p">;</span>
+
+        <span class="k">public</span> <span class="nf">HostParticleSystem</span><span class="p">(</span><span class="n">Accelerator</span> <span class="n">device</span><span class="p">,</span> <span class="kt">int</span> <span class="n">particleCount</span><span class="p">,</span> <span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">height</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">Particle</span><span class="p">[]</span> <span class="n">particles</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Particle</span><span class="p">[</span><span class="n">particleCount</span><span class="p">];</span>
+            <span class="n">Random</span> <span class="n">rng</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Random</span><span class="p">();</span>
+
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">particleCount</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+            <span class="p">{</span>
+                <span class="n">Vec3</span> <span class="n">pos</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Vec3</span><span class="p">((</span><span class="kt">float</span><span class="p">)</span><span class="n">rng</span><span class="p">.</span><span class="nf">NextDouble</span><span class="p">()</span> <span class="p">*</span> <span class="n">width</span><span class="p">,</span> <span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="n">rng</span><span class="p">.</span><span class="nf">NextDouble</span><span class="p">()</span> <span class="p">*</span> <span class="n">height</span><span class="p">,</span> <span class="m">1</span><span class="p">);</span>
+                <span class="n">particles</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Particle</span><span class="p">(</span><span class="n">pos</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="n">particleData</span> <span class="p">=</span> <span class="n">device</span><span class="p">.</span><span class="nf">Allocate1D</span><span class="p">(</span><span class="n">particles</span><span class="p">);</span>
+            <span class="n">deviceParticleSystem</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">ParticleSystem</span><span class="p">(</span><span class="n">particleData</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">void</span> <span class="nf">Dispose</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="n">particleData</span><span class="p">.</span><span class="nf">Dispose</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">struct</span> <span class="nc">ParticleSystem</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="n">ArrayView1D</span><span class="p">&lt;</span><span class="n">Particle</span><span class="p">,</span> <span class="n">Stride1D</span><span class="p">.</span><span class="n">Dense</span><span class="p">&gt;</span> <span class="n">particles</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">float</span> <span class="n">gc</span><span class="p">;</span>
+        <span class="k">public</span> <span class="n">Vec3</span> <span class="n">centerPos</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">float</span> <span class="n">centerMass</span><span class="p">;</span>
+
+        <span class="k">public</span> <span class="nf">ParticleSystem</span><span class="p">(</span><span class="n">ArrayView1D</span><span class="p">&lt;</span><span class="n">Particle</span><span class="p">,</span> <span class="n">Stride1D</span><span class="p">.</span><span class="n">Dense</span><span class="p">&gt;</span> <span class="n">particles</span><span class="p">,</span> <span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">height</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="n">particles</span> <span class="p">=</span> <span class="n">particles</span><span class="p">;</span>
+
+            <span class="n">gc</span> <span class="p">=</span> <span class="m">0.001f</span><span class="p">;</span>
+
+            <span class="n">centerPos</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Vec3</span><span class="p">(</span><span class="m">0.5f</span> <span class="p">*</span> <span class="n">width</span><span class="p">,</span> <span class="m">0.5f</span> <span class="p">*</span> <span class="n">height</span><span class="p">,</span> <span class="m">0</span><span class="p">);</span>
+            <span class="n">centerMass</span> <span class="p">=</span> <span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="n">particles</span><span class="p">.</span><span class="n">Length</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="n">Vec3</span> <span class="nf">update</span><span class="p">(</span><span class="kt">int</span> <span class="n">ID</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">particles</span><span class="p">[</span><span class="n">ID</span><span class="p">].</span><span class="nf">update</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">ID</span><span class="p">);</span>
+            <span class="k">return</span> <span class="n">particles</span><span class="p">[</span><span class="n">ID</span><span class="p">].</span><span class="n">position</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">particleKernel</span><span class="p">(</span><span class="n">Index1D</span> <span class="n">index</span><span class="p">,</span> <span class="n">CanvasData</span> <span class="n">c</span><span class="p">,</span> <span class="n">ParticleSystem</span> <span class="n">p</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">Vec3</span> <span class="n">pos</span> <span class="p">=</span> <span class="n">p</span><span class="p">.</span><span class="nf">update</span><span class="p">(</span><span class="n">index</span><span class="p">);</span>
+            <span class="n">Index2D</span> <span class="n">position</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Index2D</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span><span class="n">pos</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">pos</span><span class="p">.</span><span class="n">y</span><span class="p">);</span>
+            <span class="n">c</span><span class="p">.</span><span class="nf">setColor</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="k">new</span> <span class="nf">Vec3</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="m">1</span><span class="p">));</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">struct</span> <span class="nc">Particle</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="n">Vec3</span> <span class="n">position</span><span class="p">;</span>
+        <span class="k">public</span> <span class="n">Vec3</span> <span class="n">velocity</span><span class="p">;</span>
+        <span class="k">public</span> <span class="n">Vec3</span> <span class="n">acceleration</span><span class="p">;</span>
+
+        <span class="k">public</span> <span class="nf">Particle</span><span class="p">(</span><span class="n">Vec3</span> <span class="n">position</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="n">position</span> <span class="p">=</span> <span class="n">position</span><span class="p">;</span>
+            <span class="n">velocity</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Vec3</span><span class="p">();</span>
+            <span class="n">acceleration</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Vec3</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">void</span> <span class="nf">updateAcceleration</span><span class="p">(</span><span class="n">ParticleSystem</span> <span class="n">d</span><span class="p">,</span> <span class="kt">int</span> <span class="n">ID</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">acceleration</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Vec3</span><span class="p">();</span>
+
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">d</span><span class="p">.</span><span class="n">particles</span><span class="p">.</span><span class="n">Length</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+            <span class="p">{</span>
+                <span class="n">Vec3</span> <span class="n">otherPos</span><span class="p">;</span>
+                <span class="kt">float</span> <span class="n">mass</span><span class="p">;</span>
+
+                <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="p">==</span> <span class="n">ID</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="c1">//creates a mass at the center of the screen</span>
+                    <span class="n">otherPos</span> <span class="p">=</span> <span class="n">d</span><span class="p">.</span><span class="n">centerPos</span><span class="p">;</span>
+                    <span class="n">mass</span> <span class="p">=</span> <span class="n">d</span><span class="p">.</span><span class="n">centerMass</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">else</span>
+                <span class="p">{</span>
+                    <span class="n">otherPos</span> <span class="p">=</span> <span class="n">d</span><span class="p">.</span><span class="n">particles</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">position</span><span class="p">;</span>
+                    <span class="n">mass</span> <span class="p">=</span> <span class="m">1f</span><span class="p">;</span>
+                <span class="p">}</span>
+
+                <span class="kt">float</span> <span class="n">deltaPosLength</span> <span class="p">=</span> <span class="p">(</span><span class="n">position</span> <span class="p">-</span> <span class="n">otherPos</span><span class="p">).</span><span class="nf">length</span><span class="p">();</span>
+                <span class="kt">float</span> <span class="n">temp</span> <span class="p">=</span> <span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">gc</span> <span class="p">*</span> <span class="n">mass</span><span class="p">)</span> <span class="p">/</span> <span class="n">XMath</span><span class="p">.</span><span class="nf">Pow</span><span class="p">(</span><span class="n">deltaPosLength</span><span class="p">,</span> <span class="m">3f</span><span class="p">);</span>
+                <span class="n">acceleration</span> <span class="p">+=</span> <span class="p">(</span><span class="n">otherPos</span> <span class="p">-</span> <span class="n">position</span><span class="p">)</span> <span class="p">*</span> <span class="n">temp</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">void</span> <span class="nf">updatePosition</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="n">position</span> <span class="p">=</span> <span class="n">position</span> <span class="p">+</span> <span class="n">velocity</span> <span class="p">+</span> <span class="n">acceleration</span> <span class="p">*</span> <span class="m">0.5f</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">void</span> <span class="nf">updateVelocity</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="n">velocity</span> <span class="p">=</span> <span class="n">velocity</span> <span class="p">+</span> <span class="n">acceleration</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">void</span> <span class="nf">update</span><span class="p">(</span><span class="n">ParticleSystem</span> <span class="n">particles</span><span class="p">,</span> <span class="kt">int</span> <span class="n">ID</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="nf">updateAcceleration</span><span class="p">(</span><span class="n">particles</span><span class="p">,</span> <span class="n">ID</span><span class="p">);</span>
+            <span class="nf">updatePosition</span><span class="p">();</span>
+            <span class="nf">updateVelocity</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">public</span> <span class="k">struct</span> <span class="nc">Vec3</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="kt">float</span> <span class="n">x</span><span class="p">;</span>
+    <span class="k">public</span> <span class="kt">float</span> <span class="n">y</span><span class="p">;</span>
+    <span class="k">public</span> <span class="kt">float</span> <span class="n">z</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="nf">Vec3</span><span class="p">(</span><span class="kt">float</span> <span class="n">x</span><span class="p">,</span> <span class="kt">float</span> <span class="n">y</span><span class="p">,</span> <span class="kt">float</span> <span class="n">z</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="n">x</span> <span class="p">=</span> <span class="n">x</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="n">y</span> <span class="p">=</span> <span class="n">y</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="n">z</span> <span class="p">=</span> <span class="n">z</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="n">Vec3</span> <span class="k">operator</span> <span class="p">+(</span><span class="n">Vec3</span> <span class="n">v1</span><span class="p">,</span> <span class="n">Vec3</span> <span class="n">v2</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">Vec3</span><span class="p">(</span><span class="n">v1</span><span class="p">.</span><span class="n">x</span> <span class="p">+</span> <span class="n">v2</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">v1</span><span class="p">.</span><span class="n">y</span> <span class="p">+</span> <span class="n">v2</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="n">v1</span><span class="p">.</span><span class="n">z</span> <span class="p">+</span> <span class="n">v2</span><span class="p">.</span><span class="n">z</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="n">Vec3</span> <span class="k">operator</span> <span class="p">-(</span><span class="n">Vec3</span> <span class="n">v1</span><span class="p">,</span> <span class="n">Vec3</span> <span class="n">v2</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">Vec3</span><span class="p">(</span><span class="n">v1</span><span class="p">.</span><span class="n">x</span> <span class="p">-</span> <span class="n">v2</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">v1</span><span class="p">.</span><span class="n">y</span> <span class="p">-</span> <span class="n">v2</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="n">v1</span><span class="p">.</span><span class="n">z</span> <span class="p">-</span> <span class="n">v2</span><span class="p">.</span><span class="n">z</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="n">Vec3</span> <span class="k">operator</span> <span class="p">*(</span><span class="n">Vec3</span> <span class="n">v1</span><span class="p">,</span> <span class="kt">float</span> <span class="n">v</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">Vec3</span><span class="p">(</span><span class="n">v1</span><span class="p">.</span><span class="n">x</span> <span class="p">*</span> <span class="n">v</span><span class="p">,</span> <span class="n">v1</span><span class="p">.</span><span class="n">y</span> <span class="p">*</span> <span class="n">v</span><span class="p">,</span> <span class="n">v1</span><span class="p">.</span><span class="n">z</span> <span class="p">*</span> <span class="n">v</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="kt">float</span> <span class="nf">length</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="n">XMath</span><span class="p">.</span><span class="nf">Sqrt</span><span class="p">(</span><span class="n">x</span> <span class="p">*</span> <span class="n">x</span> <span class="p">+</span> <span class="n">y</span> <span class="p">*</span> <span class="n">y</span> <span class="p">+</span> <span class="n">z</span> <span class="p">*</span> <span class="n">z</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="ok-this-is-a-long-one">Ok, this is a long one.</h2>
+<p>I am not going to explain every line like I did with the kernel example.</p>
+
+<p>I will however explain each struct. Lets start with the easy ones.</p>
+
+<h3 id="vec3--particle">Vec3 &amp;&amp; Particle</h3>
+
+<p>These are just simple data structures. C# is super nice lets you create member functions and 
+constructors for structs.</p>
+
+<h3 id="canvasdata">CanvasData</h3>
+
+<p>You can just create a struct that holds ArrayViews and pass them to kernels. The issue with this is it seperates the MemoryBuffer and ArrayView into two different places.
+There is nothing wrong with this but I think it leads to messy code. My attempt to fix this is the pattern that HostParticleSystem uses.</p>
+
+<h3 id="particlesystem--hostparticlesystem">ParticleSystem &amp;&amp; HostParticleSystem</h3>
+
+<p>You need to manage both sides of memory, Host and Device. IDisposable allows you to use the super convient “using” patterns but requires a class.
+The solution is simple, have a host side class that creates a device side struct.</p>
+
+<h2 id="this-sample-code-works-but">This sample code works… BUT</h2>
+<p>This code can be MUCH faster.</p>
+
+<h1 id="array-of-structs-vs-struct-of-arrays">Array of Structs VS Struct of Arrays</h1>
+<p>The ParticleSystem struct follows a pattern called an array of structs, because its data is stored in an array of structs.
+In RAM the array of structs(Particles) looks like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>p0:
+    pos
+    vel
+    accel
+p1:
+    pos
+    vel
+    accel
+</code></pre></div></div>
+
+<p>Consider what happens when the GPU loads the pos value from memory. The GPU is loading multiple pieces of data at a time. 
+If the loads are “coherent” or how I think of it “chunked together” they will be MUCH faster.</p>
+
+<p>We can do this my simply having 3 arrays. This causes memory to look like this:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pos0
+pos1
+
+vel0
+vel1
+
+accel0
+accel1
+
+</code></pre></div></div>
+
+<p>This pattern is called a struct of arrays.</p>
+
+<p>As you can see from the example it is much more complex to deal with, but at a particle count of 50,000 it is 5 times faster.</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">HostParticleSystemStructOfArrays</span> <span class="p">:</span> <span class="n">IDisposable</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="kt">int</span> <span class="n">particleCount</span><span class="p">;</span>
+    <span class="k">public</span> <span class="n">MemoryBuffer1D</span><span class="p">&lt;</span><span class="n">Vec3</span><span class="p">,</span> <span class="n">Stride1D</span><span class="p">.</span><span class="n">Dense</span><span class="p">&gt;</span> <span class="n">positions</span><span class="p">;</span>
+    <span class="k">public</span> <span class="n">MemoryBuffer1D</span><span class="p">&lt;</span><span class="n">Vec3</span><span class="p">,</span> <span class="n">Stride1D</span><span class="p">.</span><span class="n">Dense</span><span class="p">&gt;</span> <span class="n">velocities</span><span class="p">;</span>
+    <span class="k">public</span> <span class="n">MemoryBuffer1D</span><span class="p">&lt;</span><span class="n">Vec3</span><span class="p">,</span> <span class="n">Stride1D</span><span class="p">.</span><span class="n">Dense</span><span class="p">&gt;</span> <span class="n">accelerations</span><span class="p">;</span>
+    <span class="k">public</span> <span class="n">ParticleSystemStructOfArrays</span> <span class="n">deviceParticleSystem</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="nf">HostParticleSystemStructOfArrays</span><span class="p">(</span><span class="n">Accelerator</span> <span class="n">device</span><span class="p">,</span> <span class="kt">int</span> <span class="n">particleCount</span><span class="p">,</span> <span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">height</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="n">particleCount</span> <span class="p">=</span> <span class="n">particleCount</span><span class="p">;</span>
+        <span class="n">Vec3</span><span class="p">[]</span> <span class="n">poses</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Vec3</span><span class="p">[</span><span class="n">particleCount</span><span class="p">];</span>
+        <span class="n">Random</span> <span class="n">rng</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Random</span><span class="p">();</span>
+
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">particleCount</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+        <span class="p">{</span>
+            <span class="n">poses</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Vec3</span><span class="p">((</span><span class="kt">float</span><span class="p">)</span><span class="n">rng</span><span class="p">.</span><span class="nf">NextDouble</span><span class="p">()</span> <span class="p">*</span> <span class="n">width</span><span class="p">,</span> <span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="n">rng</span><span class="p">.</span><span class="nf">NextDouble</span><span class="p">()</span> <span class="p">*</span> <span class="n">height</span><span class="p">,</span> <span class="m">1</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="n">positions</span> <span class="p">=</span> <span class="n">device</span><span class="p">.</span><span class="nf">Allocate1D</span><span class="p">(</span><span class="n">poses</span><span class="p">);</span>
+        <span class="n">velocities</span> <span class="p">=</span> <span class="n">device</span><span class="p">.</span><span class="n">Allocate1D</span><span class="p">&lt;</span><span class="n">Vec3</span><span class="p">&gt;(</span><span class="n">particleCount</span><span class="p">);</span>
+        <span class="n">accelerations</span> <span class="p">=</span> <span class="n">device</span><span class="p">.</span><span class="n">Allocate1D</span><span class="p">&lt;</span><span class="n">Vec3</span><span class="p">&gt;(</span><span class="n">particleCount</span><span class="p">);</span>
+
+        <span class="n">velocities</span><span class="p">.</span><span class="nf">MemSetToZero</span><span class="p">();</span>
+        <span class="n">accelerations</span><span class="p">.</span><span class="nf">MemSetToZero</span><span class="p">();</span>
+
+        <span class="n">deviceParticleSystem</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">ParticleSystemStructOfArrays</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">velocities</span><span class="p">,</span> <span class="n">accelerations</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">void</span> <span class="nf">Dispose</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">positions</span><span class="p">.</span><span class="nf">Dispose</span><span class="p">();</span>
+        <span class="n">velocities</span><span class="p">.</span><span class="nf">Dispose</span><span class="p">();</span>
+        <span class="n">accelerations</span><span class="p">.</span><span class="nf">Dispose</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">public</span> <span class="k">struct</span> <span class="nc">ParticleSystemStructOfArrays</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="n">ArrayView1D</span><span class="p">&lt;</span><span class="n">Vec3</span><span class="p">,</span> <span class="n">Stride1D</span><span class="p">.</span><span class="n">Dense</span><span class="p">&gt;</span> <span class="n">positions</span><span class="p">;</span>
+    <span class="k">public</span> <span class="n">ArrayView1D</span><span class="p">&lt;</span><span class="n">Vec3</span><span class="p">,</span> <span class="n">Stride1D</span><span class="p">.</span><span class="n">Dense</span><span class="p">&gt;</span> <span class="n">velocities</span><span class="p">;</span>
+    <span class="k">public</span> <span class="n">ArrayView1D</span><span class="p">&lt;</span><span class="n">Vec3</span><span class="p">,</span> <span class="n">Stride1D</span><span class="p">.</span><span class="n">Dense</span><span class="p">&gt;</span> <span class="n">accelerations</span><span class="p">;</span>
+    <span class="k">public</span> <span class="kt">float</span> <span class="n">gc</span><span class="p">;</span>
+    <span class="k">public</span> <span class="n">Vec3</span> <span class="n">centerPos</span><span class="p">;</span>
+    <span class="k">public</span> <span class="kt">float</span> <span class="n">centerMass</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="nf">ParticleSystemStructOfArrays</span><span class="p">(</span><span class="n">ArrayView1D</span><span class="p">&lt;</span><span class="n">Vec3</span><span class="p">,</span> <span class="n">Stride1D</span><span class="p">.</span><span class="n">Dense</span><span class="p">&gt;</span> <span class="n">positions</span><span class="p">,</span> <span class="n">ArrayView1D</span><span class="p">&lt;</span><span class="n">Vec3</span><span class="p">,</span> <span class="n">Stride1D</span><span class="p">.</span><span class="n">Dense</span><span class="p">&gt;</span> <span class="n">velocities</span><span class="p">,</span> <span class="n">ArrayView1D</span><span class="p">&lt;</span><span class="n">Vec3</span><span class="p">,</span> <span class="n">Stride1D</span><span class="p">.</span><span class="n">Dense</span><span class="p">&gt;</span> <span class="n">accelerations</span><span class="p">,</span> <span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">height</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="n">positions</span> <span class="p">=</span> <span class="n">positions</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="n">velocities</span> <span class="p">=</span> <span class="n">velocities</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="n">accelerations</span> <span class="p">=</span> <span class="n">accelerations</span><span class="p">;</span>
+        <span class="n">gc</span> <span class="p">=</span> <span class="m">0.001f</span><span class="p">;</span>
+        <span class="n">centerPos</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Vec3</span><span class="p">(</span><span class="m">0.5f</span> <span class="p">*</span> <span class="n">width</span><span class="p">,</span> <span class="m">0.5f</span> <span class="p">*</span> <span class="n">height</span><span class="p">,</span> <span class="m">0</span><span class="p">);</span>
+        <span class="n">centerMass</span> <span class="p">=</span> <span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="n">positions</span><span class="p">.</span><span class="n">Length</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">void</span> <span class="nf">updateAcceleration</span><span class="p">(</span><span class="kt">int</span> <span class="n">ID</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">accelerations</span><span class="p">[</span><span class="n">ID</span><span class="p">]</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Vec3</span><span class="p">();</span>
+
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">positions</span><span class="p">.</span><span class="n">Length</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+        <span class="p">{</span>
+            <span class="n">Vec3</span> <span class="n">otherPos</span><span class="p">;</span>
+            <span class="kt">float</span> <span class="n">mass</span><span class="p">;</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="p">==</span> <span class="n">ID</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="c1">//creates a mass at the center of the screen</span>
+                <span class="n">otherPos</span> <span class="p">=</span> <span class="n">centerPos</span><span class="p">;</span>
+                <span class="n">mass</span> <span class="p">=</span> <span class="n">centerMass</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">else</span>
+            <span class="p">{</span>
+                <span class="n">otherPos</span> <span class="p">=</span> <span class="n">positions</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+                <span class="n">mass</span> <span class="p">=</span> <span class="m">1f</span><span class="p">;</span>
+            <span class="p">}</span>
+
+            <span class="kt">float</span> <span class="n">deltaPosLength</span> <span class="p">=</span> <span class="p">(</span><span class="n">positions</span><span class="p">[</span><span class="n">ID</span><span class="p">]</span> <span class="p">-</span> <span class="n">otherPos</span><span class="p">).</span><span class="nf">length</span><span class="p">();</span>
+            <span class="kt">float</span> <span class="n">temp</span> <span class="p">=</span> <span class="p">(</span><span class="n">gc</span> <span class="p">*</span> <span class="n">mass</span><span class="p">)</span> <span class="p">/</span> <span class="n">XMath</span><span class="p">.</span><span class="nf">Pow</span><span class="p">(</span><span class="n">deltaPosLength</span><span class="p">,</span> <span class="m">3f</span><span class="p">);</span>
+            <span class="n">accelerations</span><span class="p">[</span><span class="n">ID</span><span class="p">]</span> <span class="p">+=</span> <span class="p">(</span><span class="n">otherPos</span> <span class="p">-</span> <span class="n">positions</span><span class="p">[</span><span class="n">ID</span><span class="p">])</span> <span class="p">*</span> <span class="n">temp</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">particleKernel</span><span class="p">(</span><span class="n">Index1D</span> <span class="n">index</span><span class="p">,</span> <span class="n">CanvasData</span> <span class="n">c</span><span class="p">,</span> <span class="n">ParticleSystemStructOfArrays</span> <span class="n">p</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">Vec3</span> <span class="n">pos</span> <span class="p">=</span> <span class="n">p</span><span class="p">.</span><span class="nf">update</span><span class="p">(</span><span class="n">index</span><span class="p">);</span>
+        <span class="n">Index2D</span> <span class="n">position</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Index2D</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span><span class="n">pos</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">pos</span><span class="p">.</span><span class="n">y</span><span class="p">);</span>
+        <span class="n">c</span><span class="p">.</span><span class="nf">setColor</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="k">new</span> <span class="nf">Vec3</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="m">1</span><span class="p">));</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">void</span> <span class="nf">updatePosition</span><span class="p">(</span><span class="kt">int</span> <span class="n">ID</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">positions</span><span class="p">[</span><span class="n">ID</span><span class="p">]</span> <span class="p">=</span> <span class="n">positions</span><span class="p">[</span><span class="n">ID</span><span class="p">]</span> <span class="p">+</span> <span class="n">velocities</span><span class="p">[</span><span class="n">ID</span><span class="p">]</span> <span class="p">+</span> <span class="n">accelerations</span><span class="p">[</span><span class="n">ID</span><span class="p">]</span> <span class="p">*</span> <span class="m">0.5f</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">void</span> <span class="nf">updateVelocity</span><span class="p">(</span><span class="kt">int</span> <span class="n">ID</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">velocities</span><span class="p">[</span><span class="n">ID</span><span class="p">]</span> <span class="p">=</span> <span class="n">velocities</span><span class="p">[</span><span class="n">ID</span><span class="p">]</span> <span class="p">+</span> <span class="n">accelerations</span><span class="p">[</span><span class="n">ID</span><span class="p">];</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="n">Vec3</span> <span class="nf">update</span><span class="p">(</span><span class="kt">int</span> <span class="n">ID</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nf">updateAcceleration</span><span class="p">(</span><span class="n">ID</span><span class="p">);</span>
+        <span class="nf">updatePosition</span><span class="p">(</span><span class="n">ID</span><span class="p">);</span>
+        <span class="nf">updateVelocity</span><span class="p">(</span><span class="n">ID</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">positions</span><span class="p">[</span><span class="n">ID</span><span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+:ET
