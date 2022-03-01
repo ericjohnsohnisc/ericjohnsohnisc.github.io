@@ -6,3 +6,12 @@ title: "ILGPU" # the name of your site, e.g. ACME Corp.
 sass:
   sass_dir: css
   style: compressed
+
+collections:
+ pages:
+    output: true
+    permalink: /:name
+
+include:
+ - _pages
+

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  
+    <title>ILGPU - A Modern GPU Compiler for .Net Programs</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+  
+    <!-- Favicons -->
+    <link href="../assets/img/favicon.png" rel="icon">
+    <link href="../assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+  
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  
+    <!-- Vendor CSS Files -->
+    <link href="../assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="../assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="../assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="../assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+     
+    <script src="https://unpkg.com/boxicons@latest/dist/boxicons.js"></script>
+  
+    <!-- Template Main CSS File -->
+    <link href="../assets/css/style.css" rel="stylesheet">
+
+  <!-- Custom Styles CSS File -->
+  <link href="../assets/css/custom-styles.css" rel="stylesheet">
+    
+  </head>
+
+  <body class="wiki">
+    <!-- ======= Header ======= -->
+<header id="header" class="fixed-top ">
+    <div class="container d-flex align-items-center">
+
+      <a href="../index.html" class="logo me-auto"><img src="../assets/img/ilgpu-logo.svg" alt="" class="img-fluid"></a>
+
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li class="dropdown"><a>About</a>
+          <ul>
+            <li><a href="../index.html#learn-more" class="scrollto">Learn More</a></li>
+            <li><a href="../index.html#highlights" class="scrollto">Highlights</a></li>
+            <li><a href="../index.html#features">Features</a></li>
+            <li><a href="../index.html#news" class="scrollto">News</a></li>
+            <li><a href="../index.html#faq">FAQ</a></li>
+          </ul>
+          </li>
+          <li class="dropdown"><a class="scrollto" href="../index.html#about">Project</a>
+            <ul>
+              <li><a href="https://github.com/m4rs-mt/ILGPU/" class="scrollto">Sourcecode</a></li>
+              <li><a href="../index.html#features">Releases</a></li>
+              <li><a href="../index.html#news" class="scrollto">Milestones</a></li>
+            </ul>
+            </li>
+        <li><a href="/wiki/home">Documentation</a></li>
+        <li><a href="https://discord.com/invite/X6RBCff" target="_blank">Discord</a></li>
+        <li><a class="getstarted scrollto" href="../index.html#cta">Get Started</a></li>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+
+    </div>
+  </header><!-- End Header -->
+
+
+    <section id="sidebar">
+    <div id="sidebar-header">
+        <h4>Documentation</h4>
+        </div>
+    <nav id="wiki-nav">
+        <h5>Primers</h5>
+        <ul>
+            <li><a href="/docs/Readme.html">Home</a></li> 
+            <li><a href="/docs/Primer_00.html">Setting Up ILGPU</a></li>
+            <li><a href="/docs/Primer_01.html">A GPU Is Not A CPU</a></li>
+            <li><a href="/docs/Primer_02.html">Memory & Bandwidth Threads</a></li>
+        </ul>
+        <h5>Beginner</h5>
+        <ul>
+            <li><a href="/docs/Tutorial_01.html">Context & Accelerators</a></li> 
+            <li><a href="/docs/Tutorial_02.html">Setting Up ILGPU</a></li>
+            <li><a href="/docs/Tutorial_03.html">A GPU Is Not A CPU</a></li>
+            <li><a href="/docs/Tutorial_04.html">Memory & Bandwidth Threads</a></li>
+        </ul>
+        <h5>Advanced</h5>
+        <ul>
+            <li><a href="/docs/Accelerators-and-Streams.html">Accelerators & Streams</a></li> 
+            <li><a href="/docs/Memory-Buffers-and-Views.html">Memory Buffers & Views</a></li> 
+            <li><a href="/docs/Kernels.html">Kernels</a></li> 
+            <li><a href="/docs/Shared-Memory.html">Shared Memory</a></li> 
+            <li><a href="/docs/Math-Functions.html">Math Functions</a></li> 
+            <li><a href="/docs/Dynamically-Specialized-Kernels.html">Dynamically Specialized Kernels</a></li> 
+            <li><a href="/docs/Debugging-and-Profiling.html">Debugging & Profiling</a</li> 
+            <li><a href="/docs/Inside-ILGPU.html">Inside ILGPU</a></li> 
+        </ul>
+        
+        <h5>Upgrade Guides</h5>
+        <ul>
+            <li><a href="/docs/Upgrade-v0.8.X-to-v0.9.X.html">v0.8.X to v0.9.X</a></li> 
+            <li><a href="/docs/Upgrade-v0.8.0-to-v0.8.1.html">v0.8.0 to v0.8.1</a></li> 
+            <li><a href="/docs/Upgrade-v0.7.X-to-v0.8.X.html">v0.7.X to v0.8.X</a></li> 
+            <li><a href="/docs/Upgrade-v0.6.X-to-v0.7.X.html">v0.6.X to v0.7.X</a></li> 
+            <li><a href="/docs/Upgrade-v0.3.X-to-v0.5.X.html">v0.3.X to v0.5.X</a></li> 
+            <li><a href="/docs/Upgrade-v0.1.X-to-v0.2.X.html">v0.1.X to v0.2.X</a></li> 
+          </ul>
+    </nav>
+
+    <div class="box">
+        <span dd-toggle="theme" class="df">
+          <div id="toggle_theme" class="dd-theme__switcher">
+            <span class="dd-theme__switcher-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" class="dd-icon icon-tabler icon-tabler-sun" width="24" height="24"
+                viewBox="0 0 24 24" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" />
+                <circle cx="12" cy="12" r="4" />
+                <path d="M3 12h1M12 3v1M20 12h1M12 20v1M5.6 5.6l.7 .7M18.4 5.6l-.7 .7M17.7 17.7l.7 .7M6.3 17.7l-.7 .7" />
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" class="dd-icon icon-tabler icon-tabler-moon" width="24" height="24"
+                viewBox="0 0 24 24" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" />
+                <path d="M16.2 4a9.03 9.03 0 1 0 3.9 12a6.5 6.5 0 1 1 -3.9 -12" />
+              </svg>
+            </span>
+          </div>
+          &nbsp;<label class="box-lbl" for="toggle_theme"><strong>Toggle Light/Dark Theme</strong></label>
+      </div>
+
+</section>
+    <section id="wiki-main">
+      <h2 id="memory-buffers">Memory Buffers</h2>
+
+<p><code class="language-plaintext highlighter-rouge">MemoryBuffer</code> represent allocated memory regions (allocated arrays) of a given value type on specific accelerators.
+Data can be copied to and from any accelerator using sync or async copy operations <a href="Streams">using Streams</a>.
+ILGPU supports linear, 2D and 3D buffers out of the box, whereas nD-buffers can also be allocated and managed using custom index types.</p>
+
+<p>Note that <code class="language-plaintext highlighter-rouge">MemoryBuffers</code> <em>should be</em> disposed manually and cannot be passed to kernels; only views to memory regions can be passed to kernels.
+Should be refers to the fact that all memory buffers will be automatically released by either the <code class="language-plaintext highlighter-rouge">GC</code> or disposing the parent <code class="language-plaintext highlighter-rouge">Accelerator</code> instance in ILGPU. However, it is <strong>highly recommended</strong> to dispose buffer instances manually in order to have explicit and immediate control over all memory allocations on a GPU device.</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="err">...</span>
+<span class="err">{</span>
+    <span class="nc">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">MyKernel</span><span class="p">(</span><span class="n">Index</span> <span class="n">index</span><span class="p">,</span> <span class="p">...)</span>
+    <span class="p">{</span>
+        <span class="c1">// ...</span>
+    <span class="p">}</span>
+
+    <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">context</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Context</span><span class="p">();</span>
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">accelerator</span> <span class="p">=</span> <span class="p">...;</span>
+
+        <span class="c1">// Allocate a memory buffer on the current accelerator device.</span>
+        <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">buffer</span> <span class="p">=</span> <span class="n">accelerator</span><span class="p">.</span><span class="n">Allocat</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;(</span><span class="m">1024</span><span class="p">))</span>
+        <span class="p">{</span>
+            <span class="p">...</span>
+        <span class="p">}</span> <span class="c1">// Dispose the buffer after performing all operations</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="array-views">Array Views</h2>
+
+<p><code class="language-plaintext highlighter-rouge">ArrayViews</code> realize views to specific memory-buffer regions.
+Views comprise pointers and length information.
+They can be passed to kernels and simplify index computations.</p>
+
+<p>Similar to memory buffers, there are specialized views for 1D, 2D and 3D scenarios.
+However, it is also possible to use the generic structure <code class="language-plaintext highlighter-rouge">ArrayView&lt;Type, IndexType&gt;</code> to create views to nD-regions.</p>
+
+<p>Accesses on <code class="language-plaintext highlighter-rouge">ArrayViews</code> are bounds-checked via <code class="language-plaintext highlighter-rouge">Debug</code> assertions.
+Hence, these checks are not performed in <code class="language-plaintext highlighter-rouge">Release</code> mode, which benefits performance.
+You can even enable bounds checks in <code class="language-plaintext highlighter-rouge">Release</code> builds by specifying the context flag <code class="language-plaintext highlighter-rouge">ContextFlags.EnableAssertions</code>.</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="err">...</span>
+<span class="err">{</span>
+    <span class="nc">static</span> <span class="k">void</span> <span class="nf">MyKernel</span><span class="p">(</span><span class="n">Index</span> <span class="n">index</span><span class="p">,</span> <span class="n">ArrayView</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">view1</span><span class="p">,</span> <span class="n">ArrayView</span><span class="p">&lt;</span><span class="kt">float</span><span class="p">&gt;</span> <span class="n">view2</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nf">ConvertToFloatSample</span><span class="p">(</span>
+            <span class="n">view1</span><span class="p">.</span><span class="nf">GetSubView</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="n">view1</span><span class="p">.</span><span class="n">Length</span> <span class="p">/</span> <span class="m">2</span><span class="p">),</span>
+            <span class="n">view2</span><span class="p">.</span><span class="nf">GetSubView</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="n">view2</span><span class="p">.</span><span class="n">Length</span> <span class="p">/</span> <span class="m">2</span><span class="p">));</span>
+    <span class="p">}</span>
+
+    <span class="k">static</span> <span class="k">void</span> <span class="nf">ConvertToFloatSample</span><span class="p">(</span><span class="n">ArrayView</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">source</span><span class="p">,</span> <span class="n">ArrayView</span><span class="p">&lt;</span><span class="kt">float</span><span class="p">&gt;</span> <span class="n">target</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">Index</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">,</span> <span class="n">e</span> <span class="p">=</span> <span class="n">source</span><span class="p">.</span><span class="n">Extent</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">e</span><span class="p">;</span> <span class="p">++</span><span class="n">i</span><span class="p">)</span>
+            <span class="n">target</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">=</span> <span class="n">source</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="p">}</span>
+
+    <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="p">...</span>
+        <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">buffer</span> <span class="p">=</span> <span class="n">accelerator</span><span class="p">.</span><span class="n">Allocat</span><span class="p">&amp;</span><span class="n">lt</span><span class="p">...&amp;</span><span class="nf">gt</span><span class="p">(...))</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">mainView</span> <span class="p">=</span> <span class="n">buffer</span><span class="p">.</span><span class="n">View</span><span class="p">;</span>
+            <span class="kt">var</span> <span class="n">subView</span> <span class="p">=</span> <span class="n">mainView</span><span class="p">.</span><span class="nf">GetSubView</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">1024</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="optimized-32-bit-and-64-bit-memory-accesses">Optimized 32-bit and 64-bit Memory Accesses</h3>
+<p>All addresses on a 64-bit GPU system will be represented using 64-bit addresses under the hood.
+The only difference between the accesses is whether you use a 32-bit or a 64-bit offset.
+ILGPU differentiates between both scenarios: it uses 32-bit integer math in the case of 32-bit offsets in your program and 64-bit integer math to compute the offsets in the 64-bit world. However, the actual address computation uses 64-bit integer math.</p>
+
+<p>In the case of 32-bit offsets it uses ASM sequences like:</p>
+<pre><code class="language-asm">mul.wide.u32 %rd4, %r1, 4;
+add.u64      %rd3, %rd1, %rd4;
+</code></pre>
+<p>where <code class="language-plaintext highlighter-rouge">r1</code> is the 32-bit offset computed in your kernel program, <code class="language-plaintext highlighter-rouge">4</code> is the constant size in bytes of your access (an integer in this case) and <code class="language-plaintext highlighter-rouge">rd1</code> is the source buffer address in your GPU memory in a 64-bit register. However, if the offset is a 64-bit integer, ILGPU uses an efficient multiply-add operation working on 64-bit integers like:</p>
+<pre><code class="language-asm">mad.lo.u64    %rd4, %rd3, 4, %rd1;
+</code></pre>
+
+<p>When accessing views using 32-bit indices, the resulting index operation will be performed on 32-bit offsets for performance reasons.
+As a result, this operation can overflow when using a 2D 32-bit based <code class="language-plaintext highlighter-rouge">Index2</code>, for instance.
+If you already know, that your offsets will not fit into a 32-bit integer, you have to use 64-bit offsets in your kernel.</p>
+
+<p>If you rely on 64-bit offsets, the emitted indexing operating will be slightly more expensive in terms of register usage and computational overhead (at least conceptually). The actual runtime difference depends on your kernel program.</p>
+
+<h2 id="variable-views">Variable Views</h2>
+
+<p>A <code class="language-plaintext highlighter-rouge">VariableView</code> is a specialized array view that points to exactly one element.
+<code class="language-plaintext highlighter-rouge">VariableViews</code> are useful since default ‘C# ref’ variables cannot be stored in structures, for instance.</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="err">...</span>
+<span class="err">{</span>
+    <span class="nc">struct</span> <span class="n">DataView</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="n">VariableView</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">Variable</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">static</span> <span class="k">void</span> <span class="nf">MyKernel</span><span class="p">(</span><span class="n">Index</span> <span class="n">index</span><span class="p">,</span> <span class="n">DataView</span> <span class="n">view</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// ...</span>
+    <span class="p">}</span>
+
+    <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// ...</span>
+        <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">buffer</span> <span class="p">=</span> <span class="n">accelerator</span><span class="p">.</span><span class="n">Allocat</span><span class="p">&lt;...&gt;(...))</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">mainView</span> <span class="p">=</span> <span class="n">buffer</span><span class="p">.</span><span class="n">View</span><span class="p">;</span>
+            <span class="kt">var</span> <span class="n">firstElementView</span> <span class="p">=</span> <span class="n">mainView</span><span class="p">.</span><span class="nf">GetVariableView</span><span class="p">(</span><span class="m">0</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+      <div class="f5 contribution">
+    <h2>Help us make these docs great!</h2>
+    <p>All ILGPU docs are open source. See something that's wrong or unclear? Submit a pull request.</p>
+        <a class="btn" href="https://github.com/m4rs-mt/ILGPU/edit/master/Docs/Memory-Buffers-and-Views.md" target="_blank" rel="noopener"><svg aria-hidden="true" role="img" class="octicon mr-1" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" style="display:inline-block;user-select:none;vertical-align:text-bottom;overflow:visible"><path fill-rule="evenodd" d="M7.177 3.073L9.573.677A.25.25 0 0110 .854v4.792a.25.25 0 01-.427.177L7.177 3.427a.25.25 0 010-.354zM3.75 2.5a.75.75 0 100 1.5.75.75 0 000-1.5zm-2.25.75a2.25 2.25 0 113 2.122v5.256a2.251 2.251 0 11-1.5 0V5.372A2.25 2.25 0 011.5 3.25zM11 2.5h-1V4h1a1 1 0 011 1v5.628a2.251 2.251 0 101.5 0V5A2.5 2.5 0 0011 2.5zm1 10.25a.75.75 0 111.5 0 .75.75 0 01-1.5 0zM3.75 12a.75.75 0 100 1.5.75.75 0 000-1.5z"></path></svg>Make a contribution</a>
+        <p class="color-fg-muted f6 mt-2">Or,<!-- --> <a href="https://github.com/m4rs-mt/ILGPU#general-contribution-guidelines" target="_blank" rel="noopener">learn how to contribute.</a></p>
+    </div>
+    </section>
+      <!-- ======= Footer ======= -->
+  <footer id="footer">
+
+  
+
+    <div class="container footer-bottom clearfix text-center">
+      <div class="">
+        &copy; Copyright <script type="text/javascript">document.write(new Date().getFullYear());</script> <span>ILGPU</span>. All Rights Reserved.
+      </div>
+      <div class="credits">
+      </div>
+    </div>
+  </footer><!-- End Footer -->
+
+  <div id="preloader"></div>
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="../assets/vendor/aos/aos.js"></script>
+  <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="../assets/vendor/php-email-form/validate.js"></script>
+  <script src="../assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="../assets/vendor/waypoints/noframework.waypoints.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="../assets/js/main.js"></script>
+
+  <!-- Easter Egg JS -->
+  <script type="text/javascript">
+    function easteregg() {
+    var span = document.getElementById('easter-egg');
+      if (span.textContent == 'ö') {
+        span.textContent = 'œ' ;
+      }
+      else if (span.textContent == 'œ') {
+        span.textContent = 'ö' ;
+      }
+    }
+    </script>
+    <div>
+      <script type="text/javascript">
+        // Set the theme from localStorage(if exist) || or set default light
+let theme = window.localStorage.getItem('theme') || 'light';
+// Activate the current theme (using class)
+body.classList = theme;
+// Available Themes
+let available_themes = document.querySelectorAll('[dd-theme]');
+
+/** Light / Dark theme Toggle */
+// Toggle Dark / Light theme
+let _toggler = document.querySelector('[dd-toggle]');
+_toggler.addEventListener('click', toggleTheme);
+// Function: toggle theme(light & dark)
+function toggleTheme() {
+ // Toggle light / dark theme
+ ( theme == 'light' ? theme = 'dark' : theme = 'light');
+ // Apply class to body
+ body.classList = theme;
+ // Store theme var to localStorage
+ window.localStorage.setItem('theme', theme );
+}
+      </script>
+    </div>
+  </body>
+</html>
