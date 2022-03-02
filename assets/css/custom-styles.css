@@ -1,26 +1,30 @@
-
-:root {
-    --transition: all .5s;
-  }
-
-* {
-    transition: var(--transition);
-  }
-
 /* HEADER */
 
 #header {
-    padding-top: 0px !important;
-    padding-bottom: 0 !important;
-    background-color: #fff !important;
+    padding-top: 23px !important;
+    padding-bottom: 23px !important;
+    background-color: #fff;
+}
+
+#header.header-scrolled {
+    background: #fff;
+    box-shadow: 0px 0 25px 0 rgba(0, 0, 0, 0.1);
+}
+
+.logo:after {
+    content: url("/assets/img/ilgpu-logo-light.svg");
 }
 
 .navbar li a {
-    color: #00458D !important;
+    color: #00458D;
 }
 
 .navbar li a:hover {
     color: #00AAE1 !important;
+}
+
+.navbar li a.getstarted {
+    color: #00458D !important;
 }
 
 
@@ -183,7 +187,7 @@
 
 /* WIKI */
 
-.wiki header {
+.light header {
     box-shadow: 0px 0 25px 0 rgba(0, 0, 0, 0.1);
 }
 
@@ -197,7 +201,6 @@
     overflow-x: hidden;
     overflow-y: hidden;
     height: 100%;
-    color: #9b9b9b;
     background: #002C5A;
     z-index: 200;
     padding: 0;
@@ -243,7 +246,7 @@
 
 .highlight pre {
     padding: 30px !important;
-    background-color: #F6F8FA !important;
+    background-color: #F6F8FA;
     border-radius: 6px !important;
 }
 
@@ -277,60 +280,3 @@
     z-index: 300;
     position: relative;
 }
-
-/* THEME SWITCHER */
-
-.dd-icon {
-    stroke: var(--clr-text);
-  }
-  .dd-theme__switcher {
-    position: relative;
-    overflow: hidden;
-    display: inline-block;
-    width: 25px;
-    height: 25px;
-    cursor: pointer;
-  }
-  .dd-theme__switcher .dd-theme__switcher-btn {
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    transition: var(--transition);
-    top: 0;
-  }
-  body.light .dd-theme__switcher .dd-theme__switcher-btn {
-    top: -24px;
-  }
-  .theme--label {
-    display: flex;
-    align-items: center;
-    border: 2px solid var(--clr-element);
-    padding: 5px 10px;
-    border-radius: 4px;
-    margin: 0 10px;
-    cursor: pointer;
-  }
-  .theme--label span {
-    position: relative;
-    display: inline-block;
-    width: 25px;
-    height: 25px;
-    border-radius: 25px;
-    margin-right: 10px;
-  }
-
-  .theme--label[dd-theme].active {
-    color: var(--bg);
-    background: var(--clr-element);
-  }
-  .theme--label[dd-theme].active span { background: var(--bg); }
-
-  .dark, body[color-theme="dark"] {
-    --bg: #182227;
-    --bg-light: rgba(255, 255, 255, .15);
-    --clr-text: #FCE8Ec;
-    --clr-text-light: #FCE8Ecbb;
-    --clr-element: #FFABC2;
-    --clr-element-hover: #FFABC2bb;
-    --clr-shadow: rgba(0, 0, 0, .2);
-  }
