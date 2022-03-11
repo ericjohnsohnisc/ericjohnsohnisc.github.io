@@ -15,6 +15,14 @@
     content: url("/assets/img/ilgpu-logo-light.svg");
 }
 
+.navbar a {
+    color: #00458D;
+}
+
+.navbar a:hover {
+    color: #00AAE1 !important;
+}
+
 .navbar li a {
     color: #00458D;
 }
@@ -60,6 +68,15 @@
 
 #services .row {
     margin-bottom: 30px !important;
+}
+
+.image-holder {
+    margin-left: 15%;
+    margin-top: 4%;
+}
+
+.image-holder img {
+    max-width: 85%;
 }
 
 /* CHARTS SECTION */
@@ -153,6 +170,8 @@
     background-size: 70% 70%;
 }
 
+/* GET STARTED */
+
 .cta {
     background: linear-gradient(rgba(0, 69, 141, 0.9), rgba(0, 69, 141, 0.9)), url("../img/cta-bg.jpg") fixed center center;
 }
@@ -178,6 +197,11 @@
     margin-bottom: 25px;
 }
 
+/* NEWS */
+
+.excerpt {
+    min-height: 168px;
+}
 
 /* FOOTER */
 
@@ -258,6 +282,14 @@
     color: #222ECF !important;
 }
 
+.contribution {
+    margin-top: 60px;
+    box-shadow: 0px 0 25px 0 rgba(0, 0, 0, 0.1);
+    width: 50%;
+    padding: 50px 30px;
+    border-radius: 6px;
+}
+
 .wiki a.btn {
     padding: 8px 20px;
     border-radius: 50px;
@@ -272,6 +304,21 @@
     background-color: #47b2e4;;
 }
 
+.contribution a.btn {
+    padding: 8px 20px;
+    border-radius: 50px;
+    color: #00458D;
+    font-size: 14px;
+    border: 2px solid #47b2e4;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.contribution a.btn:hover {
+    color: #fff !important;
+    background-color: #47b2e4;;
+}
+
 .octicon {
     margin-right: 4px;
 }
@@ -279,4 +326,26 @@
 .wiki #footer {
     z-index: 300;
     position: relative;
+}
+
+/* NEWS */
+
+.news {
+    min-height: 100vh; 
+    display: flex; 
+    flex-direction: column;
+}
+
+.news header {
+    box-shadow: 0px 0 25px 0 rgba(0, 0, 0, 0.1);
+}
+
+.news .inner-page {
+    margin-top: 90px;
+    padding-bottom: 10px;
+}
+
+#related {
+    padding-top: 0;
+    padding-bottom: 90px;
 }

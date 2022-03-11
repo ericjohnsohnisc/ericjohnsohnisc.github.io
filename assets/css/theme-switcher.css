@@ -85,6 +85,14 @@ pre code {
     color: var(--clr-text-light);
 }
 
+.dark .contribution {
+  background-color: var(--bg-light);
+}
+
+.dark .contribution .btn {
+  color: #47b2e4;
+}
+
 /* THEME SWITCHER */
 
 .box {
