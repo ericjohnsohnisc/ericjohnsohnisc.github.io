@@ -16,7 +16,7 @@
 }
 
 .navbar a {
-    color: #00458D;
+    color: #00458D !important;
 }
 
 .navbar a:hover {
@@ -24,7 +24,7 @@
 }
 
 .navbar li a {
-    color: #00458D;
+    color: #00458D !important;
 }
 
 .navbar li a:hover {
