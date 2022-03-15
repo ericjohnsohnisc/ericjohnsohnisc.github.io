@@ -9,7 +9,7 @@ In this tutorial we actually do work on the GPU!
 I think the easiest way to explain this is taking the simplest example I can think of and decomposing it. 
 
 This is a modified version of the sample from Primer 01.
-```C#
+```c#
 using ILGPU;
 using ILGPU.Runtime;
 using System;
@@ -76,7 +76,7 @@ MemoryBuffer1D<int, Stride1D.Dense> deviceOutput = accelerator.Allocate1D<int>(1
 
 Loads some example data into the device memory, using dense striding.
 
-```C#
+```c#
 int[] hostOutput = deviceOutput.GetAsArray1D();
 ```
 
@@ -126,7 +126,7 @@ try to avoid branches<sup>1</sup> and code that would change in different kernel
 to avoid is threads that are running different instructions, this is called divergence.
 
 #### The loaded instance of a kernel.
-```C#
+```c#
 Action<Index1D, ArrayView<int>, ArrayView<int>> loadedKernel = 
     accelerator.LoadAutoGroupedStreamKernel<Index1D, ArrayView<int>, ArrayView<int>>(Kernel);
 ```
