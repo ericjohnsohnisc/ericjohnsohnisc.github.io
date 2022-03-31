@@ -61,7 +61,7 @@ public static class Program
 ## The following parts already have detailed explainations in other tutorials:
 
 #### [Context and an accelerator.](Tutorial_01.md)
-```C#
+```c#
 Context context = Context.CreateDefault();
 Accelerator accelerator = context.GetPreferredDevice(preferCPU: false)
                             .CreateAccelerator(context);
@@ -69,7 +69,7 @@ Accelerator accelerator = context.GetPreferredDevice(preferCPU: false)
 Creates an Accelerator using GetPreferredDevice to hopefully get the "best" device.
 
 #### [Some kind of data and output device memory](Tutorial_02.md)
-```C#
+```c#
 MemoryBuffer1D<int, Stride1D.Dense> deviceData = accelerator.Allocate1D(new int[] { 0, 1, 2, 4, 5, 6, 7, 8, 9 });
 MemoryBuffer1D<int, Stride1D.Dense> deviceOutput = accelerator.Allocate1D<int>(10_000);
 ```
@@ -86,7 +86,7 @@ After we run the kernel we need to get the data as host memory to use it in CPU 
 Ok now we get to the juicy bits.
 
 #### The kernel function definition.
-```C#
+```c#
 static void Kernel(Index1 i, ArrayView<int> data, ArrayView<int> output)
 {
     output[i] = data[i % data.Length];
@@ -140,7 +140,7 @@ explicitly compile it.
 If you are having issues compiling code try testing with the CPUAccelerator.
 
 #### The actual kernel call and device synchronize.
-```C#
+```c#
 loadedKernel((int)deviceOutput.Length, deviceData.View, deviceOutput.View);
 accelerator.Synchronize();
 ```
